@@ -1,0 +1,8 @@
+REAL_MYSQL_E2E 2026-08-18
+health={"status":"UP","groups":["liveness","readiness"]}
+mysql=healthy (mysql:8.4, 127.0.0.1:3307->3306)
+flyway=MySQL 8.4 V1 migration applied successfully
+flow=admin login -> bank -> draft -> publish -> student practice -> wrong submit -> idempotent retry -> wrong-question aggregation
+submit={"sessionId":1,"totalScore":0,"maxScore":5,"answers":[{"questionId":1,"correct":false,"score":0}]}
+wrong=[{"questionId":1,"wrongCount":1}]
+result=PASS

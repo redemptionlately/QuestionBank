@@ -1,0 +1,35 @@
+spring:
+  application:
+    name: question-bank-m0
+  datasource:
+    url: ${DB_URL:jdbc:mysql://localhost:3307/question_bank?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC}
+    username: ${DB_USERNAME:question_bank}
+    password: ${DB_PASSWORD:question_bank}
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    open-in-view: false
+    properties:
+      hibernate:
+        format_sql: false
+  flyway:
+    enabled: true
+    validate-on-migrate: true
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics
+  endpoint:
+    health:
+      probes:
+        enabled: true
+server:
+  error:
+    include-message: never
+app:
+  token-ttl: PT8H
+  rate-limit:
+    capacity: 300
+    window: PT1M

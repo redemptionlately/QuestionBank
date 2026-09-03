@@ -1,0 +1,18 @@
+# 必须会背会写
+
+- Auth、Bank、Practice 三个模块分别围绕用户认证、题库版本、练习聚合；调用方向是 `Controller -> Service -> Repository -> MySQL`
+- 每个请求都同时受到身份边界、资源边界、状态边界和数据边界约束；通过角色不代表拥有具体 bank/session
+- MySQL 是正式事实来源，HTTP 响应是 DTO 投影，`submission_result_json` 保存提交结果快照用于幂等重放
+- M0 模块依赖骨架是：
+  ```text
+  auth.CurrentUser -> bank.BankController -> bank.BankService -> bank.*Repository
+  auth.CurrentUser -> practice.PracticeController -> practice.PracticeService -> practice.*Repository
+  ```
+- 源码索引（会背会写）：[BankController.java](../../../../projects/java-question-bank-m0/src/main/java/com/allen/questionbank/bank/BankController.java) 第 20-51 行和 [PracticeController.java](../../../../projects/java-question-bank-m0/src/main/java/com/allen/questionbank/practice/PracticeController.java) 第 21-44 行的接口入口与 DTO 投影
+
+# 必须理解
+
+- 模块化单体按领域包隔离，保留本地调用、本地事务和简单调试；只有流量、团队或故障边界证明需要时才拆服务
+- Controller 不承载判分，Repository 不承载授权，Entity 方法维护自身状态不变量；跨模块事实仍通过 Service 组合
+- 源码索引（必须理解）：[BankService.java](../../../../projects/java-question-bank-m0/src/main/java/com/allen/questionbank/bank/BankService.java) 第 25-100 行与 [PracticeService.java](../../../../projects/java-question-bank-m0/src/main/java/com/allen/questionbank/practice/PracticeService.java) 第 33-152 行的模块职责边界
+- 关键索引：[README.md](../../../../projects/java-question-bank-m0/README.md)、[bank package](../../../../projects/java-question-bank-m0/src/main/java/com/allen/questionbank/bank)、[practice package](../../../../projects/java-question-bank-m0/src/main/java/com/allen/questionbank/practice)；官方：[Spring Modulith](https://docs.spring.io/spring-modulith/reference/)

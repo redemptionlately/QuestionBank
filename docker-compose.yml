@@ -1,0 +1,24 @@
+services:
+  mysql:
+    image: mysql:8.4
+    container_name: question-bank-m0-mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: question_bank
+      MYSQL_USER: question_bank
+      MYSQL_PASSWORD: question_bank
+      MYSQL_ROOT_PASSWORD: root_password_change_me
+    ports:
+      - "127.0.0.1:3307:3306"
+    volumes:
+      - question_bank_mysql:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-uquestion_bank", "-pquestion_bank"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+volumes:
+  question_bank_mysql:
+    name: question-bank-m0_question_bank_mysql
+    external: true
