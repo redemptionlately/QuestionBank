@@ -13,10 +13,10 @@
       for (int v : graph[u]) if (!visited[v]) { visited[v] = true; q.add(v); }
   }
   ```
-- 外部源码索引（会背会写）：[Java ArrayDeque](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/ArrayDeque.html)、[PriorityQueue](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/PriorityQueue.html)；[树/图 INDEX](../../../../AI_Infra/Phases_book/algorithm/4_链表_树与_LCA/INDEX.md)
+- 外部源码索引（会背会写）：[Java ArrayDeque](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/ArrayDeque.html)、[PriorityQueue](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/PriorityQueue.html)；[树/图 INDEX](../../../AI_Infra/Phases_book/algorithm/4_链表_树与_LCA/INDEX.md)
 
 # 必须理解
 
 - 树是无环连通图；递归深度过大可能耗尽 Java 栈，图搜索必须明确有向/无向、重复边、断开图和权值条件
 - 外部源码索引（必须理解）：[CP-Algorithms BFS](https://cp-algorithms.com/graph/breadth-first-search.html)、[Dijkstra](https://cp-algorithms.com/graph/dijkstra.html)、[DSU](https://cp-algorithms.com/data_structures/disjoint_set_union.html)
-- 题面索引：[树与 LCA INDEX](../../../../AI_Infra/Phases_book/algorithm/4_链表_树与_LCA/INDEX.md)、[图论与最短路 INDEX](../../../../AI_Infra/Phases_book/algorithm/5_图论与最短路/INDEX.md)；官方：[Graph](https://cp-algorithms.com/graph/)
+- 题面索引：[树与 LCA INDEX](../../../AI_Infra/Phases_book/algorithm/4_链表_树与_LCA/INDEX.md)、[图论与最短路 INDEX](../../../AI_Infra/Phases_book/algorithm/5_图论与最短路/INDEX.md)；官方：[Graph](https://cp-algorithms.com/graph/)

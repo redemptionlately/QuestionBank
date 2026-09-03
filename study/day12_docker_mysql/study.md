@@ -13,11 +13,11 @@
       healthcheck:
         test: ["CMD-SHELL", "mysqladmin ping -h localhost -uquestion_bank -pquestion_bank"]
   ```
-- 源码索引（会背会写）：[docker-compose.yml](../../../../projects/java-question-bank-m0/docker-compose.yml) 的 mysql service、ports、volume、healthcheck 字段；[application.yml](../../../../projects/java-question-bank-m0/src/main/resources/application.yml) 的 datasource/Flyway/JPA 配置
+- 源码索引（会背会写）：[docker-compose.yml](../../docker-compose.yml) 的 mysql service、ports、volume、healthcheck 字段；[application.yml](../../src/main/resources/application.yml) 的 datasource/Flyway/JPA 配置
 
 # 必须理解
 
 - `healthcheck` 不等于业务 E2E；Flyway schema history 记录版本和 checksum，防止每次启动重复建表
 - 删除 container 通常保留 volume；删除 volume 会删除数据库持久状态，容器健康与数据恢复是两个概念
-- 源码索引（必须理解）：[docker-compose.yml](../../../../projects/java-question-bank-m0/docker-compose.yml) 的 `depends_on`/health 依赖；[V1__m0_schema.sql](../../../../projects/java-question-bank-m0/src/main/resources/db/migration/V1__m0_schema.sql) 与 [V2__m0_query_indexes.sql](../../../../projects/java-question-bank-m0/src/main/resources/db/migration/V2__m0_query_indexes.sql) 的迁移顺序
-- 关键配置：[docker-compose.yml](../../../../projects/java-question-bank-m0/docker-compose.yml)、[application.yml](../../../../projects/java-question-bank-m0/src/main/resources/application.yml)；官方：[Compose](https://docs.docker.com/compose/)、[MySQL Image](https://hub.docker.com/_/mysql)
+- 源码索引（必须理解）：[docker-compose.yml](../../docker-compose.yml) 的 `depends_on`/health 依赖；[V1__m0_schema.sql](../../src/main/resources/db/migration/V1__m0_schema.sql) 与 [V2__m0_query_indexes.sql](../../src/main/resources/db/migration/V2__m0_query_indexes.sql) 的迁移顺序
+- 关键配置：[docker-compose.yml](../../docker-compose.yml)、[application.yml](../../src/main/resources/application.yml)；官方：[Compose](https://docs.docker.com/compose/)、[MySQL Image](https://hub.docker.com/_/mysql)

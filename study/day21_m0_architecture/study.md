@@ -8,11 +8,11 @@
   auth.CurrentUser -> bank.BankController -> bank.BankService -> bank.*Repository
   auth.CurrentUser -> practice.PracticeController -> practice.PracticeService -> practice.*Repository
   ```
-- 源码索引（会背会写）：[BankController.java](../../../../projects/java-question-bank-m0/src/main/java/com/allen/questionbank/bank/BankController.java) 第 20-51 行和 [PracticeController.java](../../../../projects/java-question-bank-m0/src/main/java/com/allen/questionbank/practice/PracticeController.java) 第 21-44 行的接口入口与 DTO 投影
+- 源码索引（会背会写）：[BankController.java](../../src/main/java/com/allen/questionbank/bank/BankController.java) 第 20-51 行和 [PracticeController.java](../../src/main/java/com/allen/questionbank/practice/PracticeController.java) 第 21-44 行的接口入口与 DTO 投影
 
 # 必须理解
 
 - 模块化单体按领域包隔离，保留本地调用、本地事务和简单调试；只有流量、团队或故障边界证明需要时才拆服务
 - Controller 不承载判分，Repository 不承载授权，Entity 方法维护自身状态不变量；跨模块事实仍通过 Service 组合
-- 源码索引（必须理解）：[BankService.java](../../../../projects/java-question-bank-m0/src/main/java/com/allen/questionbank/bank/BankService.java) 第 25-100 行与 [PracticeService.java](../../../../projects/java-question-bank-m0/src/main/java/com/allen/questionbank/practice/PracticeService.java) 第 33-152 行的模块职责边界
-- 关键索引：[README.md](../../../../projects/java-question-bank-m0/README.md)、[bank package](../../../../projects/java-question-bank-m0/src/main/java/com/allen/questionbank/bank)、[practice package](../../../../projects/java-question-bank-m0/src/main/java/com/allen/questionbank/practice)；官方：[Spring Modulith](https://docs.spring.io/spring-modulith/reference/)
+- 源码索引（必须理解）：[BankService.java](../../src/main/java/com/allen/questionbank/bank/BankService.java) 第 25-100 行与 [PracticeService.java](../../src/main/java/com/allen/questionbank/practice/PracticeService.java) 第 33-152 行的模块职责边界
+- 关键索引：[README.md](../../README.md)、[bank package](../../src/main/java/com/allen/questionbank/bank)、[practice package](../../src/main/java/com/allen/questionbank/practice)；官方：[Spring Modulith](https://docs.spring.io/spring-modulith/reference/)

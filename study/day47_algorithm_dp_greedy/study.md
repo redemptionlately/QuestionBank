@@ -10,10 +10,10 @@
       for (int c = capacity; c >= weight[i]; c--)
           dp[c] = Math.max(dp[c], dp[c - weight[i]] + value[i]);
   ```
-- 外部源码索引（会背会写）：[DP INDEX](../../../../AI_Infra/Phases_book/algorithm/6_动态规划_回溯_贪心与位运算/INDEX.md) 的状态/转移题面；[Java Arrays](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Arrays.html) 的初始化与填充
+- 外部源码索引（会背会写）：[DP INDEX](../../../AI_Infra/Phases_book/algorithm/6_动态规划_回溯_贪心与位运算/INDEX.md) 的状态/转移题面；[Java Arrays](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Arrays.html) 的初始化与填充
 
 # 必须理解
 
 - 遍历方向决定元素是否重复使用；“样例通过”不能证明贪心正确，反例或交换论证才是正确性依据
 - 外部源码索引（必须理解）：[CP-Algorithms DP intro](https://cp-algorithms.com/dynamic_programming/intro-to-dp.html) 的状态压缩与复杂度；[Greedy algorithms](https://cp-algorithms.com/greedy/intro-to-greedy.html) 的证明方法
-- 题面索引：[动态规划/回溯/贪心 INDEX](../../../../AI_Infra/Phases_book/algorithm/6_动态规划_回溯_贪心与位运算/INDEX.md)；官方：[DP](https://cp-algorithms.com/dynamic_programming/intro-to-dp.html)
+- 题面索引：[动态规划/回溯/贪心 INDEX](../../../AI_Infra/Phases_book/algorithm/6_动态规划_回溯_贪心与位运算/INDEX.md)；官方：[DP](https://cp-algorithms.com/dynamic_programming/intro-to-dp.html)

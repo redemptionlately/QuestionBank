@@ -5,7 +5,7 @@
 - 任务查询返回公开状态和错误；轮询简单可靠，SSE 是服务器到客户端单向流，WebSocket 支持双向通信
 - worker 领取和业务写入要定义事务边界：领取提交后再处理，结果写入与状态推进保持可恢复
 - 异步接口响应通常是 `202 Accepted` 加 `Location: /api/import-jobs/{id}`；查询资源返回状态、进度和公开错误，而不是阻塞直到 PDF 完成
-- 项目基线索引：[ImportJobController.java](../../../../projects/java-question-bank-m0/src/main/java/com/allen/questionbank/importjob/ImportJobController.java) 第 20-33 行的 202/Location/轮询契约；[ImportJobService.java](../../../../projects/java-question-bank-m0/src/main/java/com/allen/questionbank/importjob/ImportJobService.java) 第 17-29 行的持久化与 after-commit 调度；[ImportJobWorker.java](../../../../projects/java-question-bank-m0/src/main/java/com/allen/questionbank/importjob/ImportJobWorker.java) 第 12-27 行的异步独立事务
+- 项目基线索引：[ImportJobController.java](../../src/main/java/com/allen/questionbank/importjob/ImportJobController.java) 第 20-33 行的 202/Location/轮询契约；[ImportJobService.java](../../src/main/java/com/allen/questionbank/importjob/ImportJobService.java) 第 17-29 行的持久化与 after-commit 调度；[ImportJobWorker.java](../../src/main/java/com/allen/questionbank/importjob/ImportJobWorker.java) 第 12-27 行的异步独立事务
 - 外部源码索引（会背会写）：[Spring `@Async`](https://docs.spring.io/spring-framework/reference/integration/scheduling.html) 的 executor/exception handler；[SseEmitter](https://docs.spring.io/spring-framework/docs/current/javadoc-api/org/springframework/web/servlet/mvc/method/annotation/SseEmitter.html) 的事件接口
 
 # 必须理解

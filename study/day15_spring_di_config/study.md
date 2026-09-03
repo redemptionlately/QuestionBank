@@ -13,11 +13,11 @@
       BankService(PaperVersionRepository papers) { this.papers = papers; }
   }
   ```
-- 源码索引（会背会写）：[SecurityConfig.java](../../../../projects/java-question-bank-m0/src/main/java/com/allen/questionbank/auth/SecurityConfig.java) 第 23-45 行的 `@Bean`、构造器参数和 SecurityFilterChain 创建
+- 源码索引（会背会写）：[SecurityConfig.java](../../src/main/java/com/allen/questionbank/auth/SecurityConfig.java) 第 23-45 行的 `@Bean`、构造器参数和 SecurityFilterChain 创建
 
 # 必须理解
 
 - 自动配置通过 `@ConditionalOnClass`、`@ConditionalOnMissingBean`、`@ConditionalOnProperty` 等条件决定；用户 Bean 通常覆盖缺省 Bean
 - singleton Bean 被多个请求线程共享，不能在字段中保存用户、请求或临时结果；请求状态应放在局部变量或显式上下文
-- 源码索引（必须理解）：[application.yml](../../../../projects/java-question-bank-m0/src/main/resources/application.yml) 的环境变量占位符和 profile 覆盖；[QuestionBankApplication.java](../../../../projects/java-question-bank-m0/src/main/java/com/allen/questionbank/QuestionBankApplication.java) 第 6-9 行的组件扫描入口
+- 源码索引（必须理解）：[application.yml](../../src/main/resources/application.yml) 的环境变量占位符和 profile 覆盖；[QuestionBankApplication.java](../../src/main/java/com/allen/questionbank/QuestionBankApplication.java) 第 6-9 行的组件扫描入口
 - 外部源码索引（必须理解）：[Spring AOP Proxying](https://docs.spring.io/spring-framework/reference/core/aop/proxying.html) 的代理类型与 self-invocation；[Spring Transaction Management](https://docs.spring.io/spring-framework/reference/data-access/transaction.html) 的代理边界

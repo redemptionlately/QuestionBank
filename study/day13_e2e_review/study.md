@@ -14,10 +14,10 @@
       }
   }
   ```
-- 源码索引（会背会写）：[M0FlowIntegrationTest.java](../../../../projects/java-question-bank-m0/src/test/java/com/allen/questionbank/M0FlowIntegrationTest.java) 第 27-88 行的完整发布/提交链路和第 90-149 行的角色、题型、错误断言
+- 源码索引（会背会写）：[M0FlowIntegrationTest.java](../../src/test/java/com/allen/questionbank/M0FlowIntegrationTest.java) 第 27-88 行的完整发布/提交链路和第 90-149 行的角色、题型、错误断言
 
 # 必须理解
 
 - Controller 负责协议绑定，Service 负责授权与状态不变量，Repository 负责查询；事务提交后才形成数据库事实
 - 单元测试隔离一类规则，集成测试验证 Bean、事务和数据库映射，端到端测试验证真实协议与部署依赖；三者覆盖的故障层不同
-- 源码索引（必须理解）：[M0FlowIntegrationTest.java](../../../../projects/java-question-bank-m0/src/test/java/com/allen/questionbank/M0FlowIntegrationTest.java) 第 151-210 行的回滚、同 key 并发和索引测试；[README.md](../../../../projects/java-question-bank-m0/README.md) 的 Verification/Evidence 边界
+- 源码索引（必须理解）：[M0FlowIntegrationTest.java](../../src/test/java/com/allen/questionbank/M0FlowIntegrationTest.java) 第 151-210 行的回滚、同 key 并发和索引测试；[README.md](../../README.md) 的 Verification/Evidence 边界

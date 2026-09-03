@@ -1,7 +1,7 @@
 # 必须会背会写
 
-- [RateLimitFilter.java](../../../../projects/java-question-bank-m0/src/main/java/com/allen/questionbank/common/RateLimitFilter.java) 第 17-56 行实现按远端地址和 URI 的固定窗口计数，超过容量返回 429 与 `Retry-After`；计数器使用 `ConcurrentHashMap` 和 `AtomicInteger`
-- [application.yml](../../../../projects/java-question-bank-m0/src/main/resources/application.yml) 第 31-35 行提供 `app.rate-limit.capacity/window` 配置；构造函数会把小于 1 的容量和非正窗口归一化为安全默认值
+- [RateLimitFilter.java](../../src/main/java/com/allen/questionbank/common/RateLimitFilter.java) 第 17-56 行实现按远端地址和 URI 的固定窗口计数，超过容量返回 429 与 `Retry-After`；计数器使用 `ConcurrentHashMap` 和 `AtomicInteger`
+- [application.yml](../../src/main/resources/application.yml) 第 31-35 行提供 `app.rate-limit.capacity/window` 配置；构造函数会把小于 1 的容量和非正窗口归一化为安全默认值
 
 - 令牌桶以 `tokens=min(capacity, tokens+rate*elapsed)` 补充并允许容量内突发；漏桶按稳定速率出队；固定窗口按窗口计数但边界可能突发
 - 限流 key 可按 `userId`、IP、role、resource、route 和租户组合；key 维度决定公平性和攻击面

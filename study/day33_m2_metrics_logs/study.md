@@ -1,7 +1,7 @@
 # 必须会背会写
 
-- [RequestMetrics.java](../../../../projects/java-question-bank-m0/src/main/java/com/allen/questionbank/common/RequestMetrics.java) 第 6-23 行用三个 `AtomicLong` 记录请求总数、失败数和累计纳秒；`record` 封装同步调用，`request/failure/latency` 供过滤器组合使用
-- [MetricsController.java](../../../../projects/java-question-bank-m0/src/main/java/com/allen/questionbank/common/MetricsController.java) 第 8-17 行通过 `GET /api/metrics` 导出 JSON；[RateLimitFilter.java](../../../../projects/java-question-bank-m0/src/main/java/com/allen/questionbank/common/RateLimitFilter.java) 第 33-55 行说明请求计数、429/异常失败计数和 finally 计时的接入点；[InfrastructureConfig.java](../../../../projects/java-question-bank-m0/src/main/java/com/allen/questionbank/common/InfrastructureConfig.java) 第 27-28 行注册单例指标 Bean
+- [RequestMetrics.java](../../src/main/java/com/allen/questionbank/common/RequestMetrics.java) 第 6-23 行用三个 `AtomicLong` 记录请求总数、失败数和累计纳秒；`record` 封装同步调用，`request/failure/latency` 供过滤器组合使用
+- [MetricsController.java](../../src/main/java/com/allen/questionbank/common/MetricsController.java) 第 8-17 行通过 `GET /api/metrics` 导出 JSON；[RateLimitFilter.java](../../src/main/java/com/allen/questionbank/common/RateLimitFilter.java) 第 33-55 行说明请求计数、429/异常失败计数和 finally 计时的接入点；[InfrastructureConfig.java](../../src/main/java/com/allen/questionbank/common/InfrastructureConfig.java) 第 27-28 行注册单例指标 Bean
 
 - Counter 只增不减，Gauge 表示瞬时值，Timer 记录耗时和分布，Histogram 记录可聚合桶，trace/span 表示跨组件调用关系
 - HTTP 指标至少包含 route、method、status、请求数、错误率和 P95；数据库指标包含查询耗时、连接池、锁等待；异步指标包含队列深度和 oldest age
