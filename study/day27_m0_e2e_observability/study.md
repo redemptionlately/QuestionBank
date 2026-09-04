@@ -1,4 +1,4 @@
-# 必须会背会写
+# MustRemember
 
 - 真实 E2E 的顺序是 MySQL healthy -> Flyway -> health -> login -> bank -> draft -> publish -> practice -> answer -> submit -> retry -> wrong questions
 - 原始日志字段包括命令、时间、commit/版本、机器/容器、请求状态、响应摘要和错误输出；敏感 token/密码不入日志
@@ -10,13 +10,13 @@
   set -o pipefail
   ./mvnw -B test 2>&1 | tee output/mvn_test_YYYYMMDD.log
   ```
-- 源码索引（会背会写）：[M0FlowIntegrationTest.java](../../src/test/java/com/allen/questionbank/M0FlowIntegrationTest.java) 第 37-88 行的主链路测试；[README.md](../../README.md) Verification 命令
+- 源码索引（MustRemember）：[M0FlowIntegrationTest.java](../../src/test/java/com/allen/questionbank/M0FlowIntegrationTest.java) 第39-90行的主链路测试；[README.md](../../README.md) Verification 命令
 
-# 必须理解
+# MustUnderstand
 
 - `requestId`、资源 ID、状态和耗时适合日志；密码、token、答案正文、数据库凭据和完整 Authorization 不应记录
 - 平均延迟描述均值，P95 描述尾部请求，成功率描述结果，锁等待描述数据库竞争；它们属于不同测量层
-- 源码索引（必须理解）：[real_mysql_m0_verification_20260818.log](../../output/real_mysql_m0_verification_20260818.log) 的真实 HTTP 证据；[application.yml](../../src/main/resources/application.yml) 的日志/Actuator 配置
+- 源码索引（MustUnderstand）：[real_mysql_m0_verification_20260818.log](../../output/real_mysql_m0_verification_20260818.log) 的真实 HTTP 证据；[application.yml](../../src/main/resources/application.yml) 的日志/Actuator 配置
 - 关键配置/证据：[application.yml](../../src/main/resources/application.yml)、[real_mysql_m0_verification_20260818.log](../../output/real_mysql_m0_verification_20260818.log)；官方：[Actuator](https://docs.spring.io/spring-boot/reference/actuator.html)
-- 外部源码索引（会背会写）：[Mockito verification](https://javadoc.io/doc/org.mockito/mockito-core/latest/org/mockito/Mockito.html) 的 `when/verify/ArgumentCaptor`；[Testcontainers JDBC](https://java.testcontainers.org/modules/databases/jdbc/)
-- 外部源码索引（必须理解）：[Testing Pyramid](https://martinfowler.com/articles/practical-test-pyramid.html) 的速度、隔离和真实性取舍
+- 外部源码索引（MustRemember）：[Mockito verification](https://javadoc.io/doc/org.mockito/mockito-core/latest/org/mockito/Mockito.html) 的 `when/verify/ArgumentCaptor`；[Testcontainers JDBC](https://java.testcontainers.org/modules/databases/jdbc/)
+- 外部源码索引（MustUnderstand）：[Testing Pyramid](https://martinfowler.com/articles/practical-test-pyramid.html) 的速度、隔离和真实性取舍

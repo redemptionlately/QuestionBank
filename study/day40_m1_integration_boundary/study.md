@@ -1,4 +1,4 @@
-# 必须会背会写
+# MustRemember
 
 - M1 数据流是 `file metadata -> persistent job -> text extraction -> candidate -> review -> new paper_version`
 - 领域事件至少包含 `eventType`、`eventVersion`、`aggregateId`、`occurredAt`、producer 和 idempotency key
@@ -11,11 +11,11 @@
    "aggregateId":"paper-123","occurredAt":"2026-08-19T00:00:00Z",
    "idempotencyKey":"evt-123","payload":{}}
   ```
-- 外部源码索引（会背会写）：[Spring Modulith application events](https://docs.spring.io/spring-modulith/reference/events.html) 的 `@ApplicationModuleListener` 与事件 envelope
+- 外部源码索引（MustRemember）：[Spring Modulith application events](https://docs.spring.io/spring-modulith/reference/events.html) 的 `@ApplicationModuleListener` 与事件 envelope
 
-# 必须理解
+# MustUnderstand
 
 - 跨模块不能用一个长事务强绑定；数据库状态、补偿任务和追加审计事件共同表达最终一致性
 - 事件重复、乱序和消费者崩溃是默认情况；消费者需要幂等、重试、死信和可重放能力
-- 外部源码索引（必须理解）：[Transactional event listeners](https://docs.spring.io/spring-framework/reference/data-access/transaction/event.html) 的 BEFORE_COMMIT/AFTER_COMMIT 语义
+- 外部源码索引（MustUnderstand）：[Transactional event listeners](https://docs.spring.io/spring-framework/reference/data-access/transaction/event.html) 的 BEFORE_COMMIT/AFTER_COMMIT 语义
 - 官方：[Spring Modulith Events](https://docs.spring.io/spring-modulith/reference/events.html)

@@ -1,4 +1,4 @@
-# 必须会背会写
+# MustRemember
 
 - `CompletableFuture` 用 `thenApply/thenCompose/handle/exceptionally` 组合阶段；`allOf` 等待全部，`anyOf` 等待任一；异常沿 future 图传播
 - `Semaphore` 限制并发许可，`BlockingQueue` 提供生产者消费者等待，`ReadWriteLock` 区分共享读和互斥写
@@ -14,13 +14,13 @@
       .orTimeout(500, MILLISECONDS)
       .exceptionally(this::fallback);
   ```
-- 外部源码索引（会背会写）：[CompletableFuture API](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/concurrent/CompletableFuture.html) 的 `thenCompose/orTimeout/exceptionally`；[Executors](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/concurrent/Executors.html)
+- 外部源码索引（MustRemember）：[CompletableFuture API](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/concurrent/CompletableFuture.html) 的 `thenCompose/orTimeout/exceptionally`；[Executors](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/concurrent/Executors.html)
 
-# 必须理解
+# MustUnderstand
 
 - JDBC 阻塞线程和 CPU 计算线程混用会互相拖垮；线程池隔离是资源边界，拒绝策略是过载行为的一部分
 - 虚拟线程降低阻塞等待的线程成本，但不增加数据库连接、锁、CPU 和外部服务容量；pinning 和 ThreadLocal 仍需关注
-- 外部源码索引（必须理解）：[Java 21 virtual threads](https://docs.oracle.com/en/java/javase/21/core/virtual-threads.html) 的调度、阻塞和 pinning 说明
-- 外部源码索引（会背会写）：[ReentrantLock API](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/concurrent/locks/ReentrantLock.html)、[AtomicInteger API](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/concurrent/atomic/AtomicInteger.html)、[CountDownLatch API](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/concurrent/CountDownLatch.html)
-- 外部源码索引（必须理解）：[Java Concurrency package summary](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/concurrent/package-summary.html) 的同步器、CAS 和内存可见性边界
+- 外部源码索引（MustUnderstand）：[Java 21 virtual threads](https://docs.oracle.com/en/java/javase/21/core/virtual-threads.html) 的调度、阻塞和 pinning 说明
+- 外部源码索引（MustRemember）：[ReentrantLock API](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/concurrent/locks/ReentrantLock.html)、[AtomicInteger API](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/concurrent/atomic/AtomicInteger.html)、[CountDownLatch API](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/concurrent/CountDownLatch.html)
+- 外部源码索引（MustUnderstand）：[Java Concurrency package summary](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/concurrent/package-summary.html) 的同步器、CAS 和内存可见性边界
 - 官方：[CompletableFuture](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/concurrent/CompletableFuture.html)、[Virtual Threads](https://docs.oracle.com/en/java/javase/21/core/virtual-threads.html)

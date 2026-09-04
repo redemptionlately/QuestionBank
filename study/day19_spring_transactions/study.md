@@ -1,4 +1,4 @@
-# 必须会背会写
+# MustRemember
 
 - `@Transactional` 由 Spring AOP 代理在目标方法外开启事务，正常返回提交，异常按规则回滚；同类 `self-invocation` 不经过代理
 - 默认运行时异常和 Error 回滚；checked exception 默认不回滚，可用 `rollbackFor` 指定；传播级别决定加入现有事务或创建新事务
@@ -13,10 +13,10 @@
       return paper;
   }
   ```
-- 源码索引（会背会写）：[BankService.java](../../src/main/java/com/allen/questionbank/bank/BankService.java) 第 35-52 行的草稿事务；[PracticeService.java](../../src/main/java/com/allen/questionbank/practice/PracticeService.java) 第 52-85 行的提交事务
+- 源码索引（MustRemember）：[BankService.java](../../src/main/java/com/allen/questionbank/bank/BankService.java) 第35-52行的草稿事务；[PracticeService.java](../../src/main/java/com/allen/questionbank/practice/PracticeService.java) 第52-85行的提交事务
 
-# 必须理解
+# MustUnderstand
 
 - 事务边界必须覆盖一个业务不变量：草稿的 PaperVersion 与全部 QuestionVersion 同成败，提交的 Session 与 Item/错题同成败
 - 网络、PDF 解析和长任务不应占用长数据库事务；异步任务用持久状态和租约衔接两个事务
-- 源码索引（必须理解）：[BankService.java](../../src/main/java/com/allen/questionbank/bank/BankService.java) 第 35-52 行的事务覆盖范围；[PracticeService.java](../../src/main/java/com/allen/questionbank/practice/PracticeService.java) 第 52-85 行的多表写入与回滚边界
+- 源码索引（MustUnderstand）：[BankService.java](../../src/main/java/com/allen/questionbank/bank/BankService.java) 第35-52行的事务覆盖范围；[PracticeService.java](../../src/main/java/com/allen/questionbank/practice/PracticeService.java) 第52-85行的多表写入与回滚边界

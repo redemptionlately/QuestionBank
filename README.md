@@ -2,7 +2,7 @@
 
 Java 21 + Spring Boot 3.4 + Spring Data JPA + Flyway + MySQL 8 的模块化单体最小业务闭环。
 
-学习路线与长期求职文档的唯一来源是 `/home/allen/study/java/m0/` 和
+学习路线与长期求职文档的唯一来源是 `/home/allen/QuestionBank/study/` 和
 `/home/allen/AI_Infra/Phases_book/`；项目目录中的旧规划副本不作为当前状态依据。
 
 ## Scope

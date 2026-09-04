@@ -1,10 +1,10 @@
-# 必须会背会写的验收
+# Current
 
 - 设计一个 64 位 Snowflake ID 的位段，并说明时钟回拨和节点冲突处理。
 - 写出带 token 校验的 Redis 锁获取/释放伪代码，并说明 TTL、续租和 fencing 风险。
 - 为“创建导入任务→生成候选→发布”选择 Outbox、Saga 或 TCC，并列出每个失败状态和补偿动作。
 
-# 额外测试与追问
+# External
 
 - 设计分片键并分析热点、跨分片分页和扩容迁移。
 - 比较数据库唯一键、Redis 锁和 fencing token 在重复提交中的作用。

@@ -1,5 +1,5 @@
-# 必须会背会写的验收
-- 打开并按当天 study.md 的“源码索引（会背会写）”或“外部源码索引（会背会写）”逐项定位文件、类/方法、SQL 对象和行号，独立写出对应代码或 SQL，并口述输入、输出与边界。
+# Current
+- 打开并按当天 study.md 的“源码索引（MustRemember）”或“外部源码索引（MustRemember）”逐项定位文件、类/方法、SQL 对象和行号，独立写出对应代码或 SQL，并口述输入、输出与边界。
 
 - 写 allOf/anyOf 异常测试
 - 有界生产者消费者
@@ -10,7 +10,7 @@
 - 写出 `ReentrantLock` 的 `try/finally unlock` 和可中断获取示例。
 - 写出 `ThreadLocal` 在线程池任务结束后的 `remove` 清理示例。
 
-# 额外测试与追问
+# External
 
 - 比较虚拟/平台线程
 - 测队列等待

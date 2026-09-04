@@ -1,4 +1,4 @@
-# 必须会背会写
+# MustRemember
 
 - managed Entity 由 Persistence Context 跟踪字段；事务内 setter 修改后不必显式 `save`，flush 时脏检查生成 SQL
 - Repository 派生查询 `findByStudentIdOrderByCreatedAtDesc` 由方法名生成条件；JPQL 面向实体属性，原生 SQL 面向表和数据库方言
@@ -11,12 +11,12 @@
       List<PracticeSession> findByStudentIdOrderByCreatedAtDesc(Long studentId);
   }
   ```
-- 源码索引（会背会写）：[PracticeSession.java](../../src/main/java/com/allen/questionbank/practice/PracticeSession.java) 第 6-19 行的 Entity 字段/注解；[PracticeSessionRepository.java](../../src/main/java/com/allen/questionbank/practice/PracticeSessionRepository.java) 第 11-16 行的派生查询和锁定查询
+- 源码索引（MustRemember）：[PracticeSession.java](../../src/main/java/com/allen/questionbank/practice/PracticeSession.java) 第 6-19 行的 Entity 字段/注解；[PracticeSessionRepository.java](../../src/main/java/com/allen/questionbank/practice/PracticeSessionRepository.java) 第 11-16 行的派生查询和锁定查询
 
-# 必须理解
+# MustUnderstand
 
 - N+1 是一次父查询加每个父对象的一次子查询；投影、`join fetch` 和批量查询分别减少列、合并关联或批量加载，适用条件不同
 - M0 使用标量外键 ID，让 Service 显式检查归属，避免 Entity 关系序列化和级联边界失控
-- 源码索引（必须理解）：[PracticeService.java](../../src/main/java/com/allen/questionbank/practice/PracticeService.java) 第 102-112 行的 session/question 归属检查；[PracticeSession.java](../../src/main/java/com/allen/questionbank/practice/PracticeSession.java) 第 19 行的 `@Version`
-- 外部源码索引（会背会写）：[JDBC `PreparedStatement`](https://docs.oracle.com/en/java/javase/21/docs/api/java.sql/java/sql/PreparedStatement.html) 的参数绑定与资源关闭；[MyBatis Mapper XML](https://mybatis.org/mybatis-3/sqlmap-xml.html) 的 `select`、参数和结果映射
-- 外部源码索引（必须理解）：[HikariCP configuration](https://github.com/brettwooldridge/HikariCP) 的连接池上限、超时和泄漏检测；[Spring Data JPA projections](https://docs.spring.io/spring-data/jpa/reference/repositories/projections.html)
+- 源码索引（MustUnderstand）：[PracticeService.java](../../src/main/java/com/allen/questionbank/practice/PracticeService.java) 第 102-112 行的 session/question 归属检查；[PracticeSession.java](../../src/main/java/com/allen/questionbank/practice/PracticeSession.java) 第 19 行的 `@Version`
+- 外部源码索引（MustRemember）：[JDBC `PreparedStatement`](https://docs.oracle.com/en/java/javase/21/docs/api/java.sql/java/sql/PreparedStatement.html) 的参数绑定与资源关闭；[MyBatis Mapper XML](https://mybatis.org/mybatis-3/sqlmap-xml.html) 的 `select`、参数和结果映射
+- 外部源码索引（MustUnderstand）：[HikariCP configuration](https://github.com/brettwooldridge/HikariCP) 的连接池上限、超时和泄漏检测；[Spring Data JPA projections](https://docs.spring.io/spring-data/jpa/reference/repositories/projections.html)

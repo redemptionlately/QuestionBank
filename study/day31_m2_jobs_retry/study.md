@@ -1,4 +1,4 @@
-# 必须会背会写
+# MustRemember
 
 - 持久化异步任务的最小状态是 `RECEIVED -> PROCESSING -> SUCCEEDED/FAILED`；任务表必须保存 owner、输入标识、进度、attempt、错误和 created/updated 时间
 - HTTP 创建任务返回 `202 Accepted` 和 `Location`，数据库提交成功后再调度 worker；worker 在独立事务中读取、推进并保存状态，避免未提交行被异步线程读不到
@@ -16,19 +16,19 @@
       attempt=attempt+1
   WHERE id=? AND status IN ('RECEIVED','RETRYING') AND next_run_at <= NOW();
   ```
-- 外部源码索引（会背会写）：[Spring TaskExecutor](https://docs.spring.io/spring-framework/reference/integration/scheduling.html) 的 Executor 配置；[Resilience4j Retry](https://resilience4j.readme.io/docs/retry) 的重试参数
+- 外部源码索引（MustRemember）：[Spring TaskExecutor](https://docs.spring.io/spring-framework/reference/integration/scheduling.html) 的 Executor 配置；[Resilience4j Retry](https://resilience4j.readme.io/docs/retry) 的重试参数
 
-# 必须理解
+# MustUnderstand
 
-- [ImportJobStatus.java](../../src/main/java/com/allen/questionbank/importjob/ImportJobStatus.java) 第 1-3 行定义四个当前状态；[ImportJob.java](../../src/main/java/com/allen/questionbank/importjob/ImportJob.java) 第 6-40 行保存 owner、输入、状态、进度、attempt、错误、时间戳和 `@Version`，并实现 `start/succeed/fail`
-- [ImportJobController.java](../../src/main/java/com/allen/questionbank/importjob/ImportJobController.java) 第 13-33 行定义 `POST/GET /api/import-jobs`、`202 + Location` 和查询 DTO；[ImportJobService.java](../../src/main/java/com/allen/questionbank/importjob/ImportJobService.java) 第 17-29 行在事务中保存任务并用 `afterCommit` 调度
+- [ImportJobStatus.java](../../src/main/java/com/allen/questionbank/importjob/ImportJobStatus.java) 第 1-3 行定义四个当前状态；[ImportJob.java](../../src/main/java/com/allen/questionbank/importjob/ImportJob.java) 第 8-39 行保存 owner、输入、状态、进度、attempt、错误、时间戳和 `@Version`，并实现 `start/succeed/fail`
+- [ImportJobController.java](../../src/main/java/com/allen/questionbank/importjob/ImportJobController.java) 第 13-33 行定义 `POST/GET /api/import-jobs`、`202 + Location` 和查询 DTO；[ImportJobService.java](../../src/main/java/com/allen/questionbank/importjob/ImportJobService.java) 第 17-30 行在事务中保存任务并用 `afterCommit` 调度
 - [ImportJobWorker.java](../../src/main/java/com/allen/questionbank/importjob/ImportJobWorker.java) 第 12-27 行使用 `@Async("importTaskExecutor")` 和独立 `@Transactional`，只处理 `RECEIVED`，成功置 100%，异常写入 `FAILED`
-- [ImportJobRepository.java](../../src/main/java/com/allen/questionbank/importjob/ImportJobRepository.java) 第 6-8 行按 `id + ownerId` 查询，形成资源隔离；[V3__async_import_jobs.sql](../../src/main/resources/db/migration/V3__async_import_jobs.sql) 第 1-14 行是任务表、外键和查询索引；[InfrastructureConfig.java](../../src/main/java/com/allen/questionbank/common/InfrastructureConfig.java) 第 11-28 行配置 2/4 线程、100 队列和线程名
+- [ImportJobRepository.java](../../src/main/java/com/allen/questionbank/importjob/ImportJobRepository.java) 第 6-8 行按 `id + ownerId` 查询，形成资源隔离；[V3__async_import_jobs.sql](../../src/main/resources/db/migration/V3__async_import_jobs.sql) 第 1-15 行是任务表、外键和查询索引；[InfrastructureConfig.java](../../src/main/java/com/allen/questionbank/common/InfrastructureConfig.java) 第 13-28 行配置 2/4 线程、100 队列和线程名
 - worker 崩溃恢复需要 lease、心跳、超时重置和有限重试；当前实现是可验证的异步状态基线，还没有 lease、重试调度、死信和真实 PDF 解析
 
 - 至少一次投递意味着处理器可能重复运行；“恰好一次”通常只能在局部事务/幂等效果层面近似
 - 任务表是事实来源，线程池只是执行资源；进程崩溃由 lease、心跳、有限重试和死信恢复
-- 外部源码索引（必须理解）：[Spring Batch retry](https://docs.spring.io/spring-batch/reference/step/chunk-oriented-processing/retry-logic.html) 的 retry/skip 状态边界
-- 外部源码索引（会背会写）：[RabbitMQ Publisher Confirms](https://www.rabbitmq.com/docs/confirms)、[Kafka Consumer Commit](https://kafka.apache.org/documentation/#consumerconfigs_enable.auto.commit)
-- 外部源码索引（必须理解）：[Transactional Outbox](https://microservices.io/patterns/data/transactional-outbox.html) 的提交、发布、重复和顺序边界
+- 外部源码索引（MustUnderstand）：[Spring Batch retry](https://docs.spring.io/spring-batch/reference/step/chunk-oriented-processing/retry-logic.html) 的 retry/skip 状态边界
+- 外部源码索引（MustRemember）：[RabbitMQ Publisher Confirms](https://www.rabbitmq.com/docs/confirms)、[Kafka Consumer Commit](https://kafka.apache.org/documentation/#consumerconfigs_enable.auto.commit)
+- 外部源码索引（MustUnderstand）：[Transactional Outbox](https://microservices.io/patterns/data/transactional-outbox.html) 的提交、发布、重复和顺序边界
 - 官方：[Spring Batch](https://docs.spring.io/spring-batch/reference/)、[Retry](https://resilience4j.readme.io/docs/retry)
