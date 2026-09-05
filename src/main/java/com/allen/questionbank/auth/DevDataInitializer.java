@@ -1,5 +1,7 @@
 package com.allen.questionbank.auth;
 
+import com.allen.questionbank.entity.UserAccount;
+import com.allen.questionbank.repository.UserAccountRepository;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

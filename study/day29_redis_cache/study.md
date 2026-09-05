@@ -21,8 +21,8 @@
 
 # MustUnderstand
 
-- [ExpiringCache.java](../../src/main/java/com/allen/questionbank/common/ExpiringCache.java) 第14-29行：`Entry` 保存值和过期时间，`get` 懒惰删除过期项，`getOrLoad` 回源后写入 TTL，`evict/clear` 主动失效；[CacheConfig.java](../../src/main/java/com/allen/questionbank/common/CacheConfig.java) 第12-12行把 TTL 配为 2 分钟
-- [BankService.java](../../src/main/java/com/allen/questionbank/bank/BankService.java) 第56-72行：发布保存后淘汰 `published`，查询通过 `getOrLoad` 回源。当前淘汰发生在方法事务提交前；事务回滚时淘汰是保守的，但并发回源可能再次填入旧值，生产实现应把失效动作注册到 after-commit 或使用版本化 key
+- [ExpiringCache.java](../../src/main/java/com/allen/questionbank/common/ExpiringCache.java) 第 9-30 行：`Entry` 保存值和过期时间，`get` 懒惰删除过期项，`getOrLoad` 回源后写入 TTL，`evict/clear` 主动失效；[CacheConfig.java](../../src/main/java/com/allen/questionbank/common/CacheConfig.java) 第 9-13 行把 TTL 配为 2 分钟
+- [BankService.java](../../src/main/java/com/allen/questionbank/service/BankService.java) 第 58-75 行：发布保存后淘汰 `published`，查询通过 `getOrLoad` 回源。当前淘汰发生在方法事务提交前；事务回滚时淘汰是保守的，但并发回源可能再次填入旧值，生产实现应把失效动作注册到 after-commit 或使用版本化 key
 - 本地缓存只在单实例有效；多实例需要 Redis 等共享缓存，并补充 key 版本、序列化、网络超时、缓存击穿保护和失效一致性。不能把本地缓存包装成分布式缓存
 
 - 缓存不是事实来源，题目发布、答案和正式分数仍以 MySQL 为准；缓存写失败不能覆盖已提交事实

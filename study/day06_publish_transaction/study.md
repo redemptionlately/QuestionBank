@@ -10,10 +10,10 @@
   ```
 - 发布服务先检查 `paper -> bank -> owner` 关系、当前状态和题目非空，再在同一事务写入 `status=PUBLISHED` 与 `publishedAt`
 - `@Transactional` 把校验、实体修改和持久化绑定到同一事务；未捕获运行时异常使事务回滚
-- 源码索引（MustRemember）：[BankService.java](../../src/main/java/com/allen/questionbank/bank/BankService.java) 第 55-67 行的发布方法；[PaperVersion.java](../../src/main/java/com/allen/questionbank/bank/PaperVersion.java) 第 31 行的状态方法
+- 源码索引（MustRemember）：[BankService.java](../../src/main/java/com/allen/questionbank/service/BankService.java) 第 58-69 行的发布方法；[PaperVersion.java](../../src/main/java/com/allen/questionbank/entity/PaperVersion.java) 第 31 行的状态方法
 
 # MustUnderstand
 
 - 不可变版本使历史练习保持题面、答案和分值快照；重复发布返回已发布版本，其他状态返回冲突
 - 事务提交前的写入对其他事务不可见；网络、文件和长耗时外部调用不应占用发布事务
-- 源码索引（MustUnderstand）：[BankService.java](../../src/main/java/com/allen/questionbank/bank/BankService.java) 第 55-67 行的 owner/status/非空校验顺序；[PaperVersion.java](../../src/main/java/com/allen/questionbank/bank/PaperVersion.java) 第 14-17 行的状态与时间字段；[PaperVersion.java](../../src/main/java/com/allen/questionbank/bank/PaperVersion.java) 第 31 行的状态转换方法
+- 源码索引（MustUnderstand）：[BankService.java](../../src/main/java/com/allen/questionbank/service/BankService.java) 第 59-67 行的 owner/status/非空校验顺序；[PaperVersion.java](../../src/main/java/com/allen/questionbank/entity/PaperVersion.java) 第 14-17 行的状态与时间字段；[PaperVersion.java](../../src/main/java/com/allen/questionbank/entity/PaperVersion.java) 第 31 行的状态转换方法

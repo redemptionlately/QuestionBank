@@ -2,8 +2,8 @@ package com.allen.questionbank;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.allen.questionbank.bank.PaperVersionRepository;
-import com.allen.questionbank.bank.QuestionVersionRepository;
+import com.allen.questionbank.repository.PaperVersionRepository;
+import com.allen.questionbank.repository.QuestionVersionRepository;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

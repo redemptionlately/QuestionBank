@@ -20,10 +20,10 @@
 
 # MustUnderstand
 
-- [ImportJobStatus.java](../../src/main/java/com/allen/questionbank/importjob/ImportJobStatus.java) 第 1-3 行定义四个当前状态；[ImportJob.java](../../src/main/java/com/allen/questionbank/importjob/ImportJob.java) 第 8-39 行保存 owner、输入、状态、进度、attempt、错误、时间戳和 `@Version`，并实现 `start/succeed/fail`
-- [ImportJobController.java](../../src/main/java/com/allen/questionbank/importjob/ImportJobController.java) 第 13-33 行定义 `POST/GET /api/import-jobs`、`202 + Location` 和查询 DTO；[ImportJobService.java](../../src/main/java/com/allen/questionbank/importjob/ImportJobService.java) 第 17-30 行在事务中保存任务并用 `afterCommit` 调度
-- [ImportJobWorker.java](../../src/main/java/com/allen/questionbank/importjob/ImportJobWorker.java) 第 12-27 行使用 `@Async("importTaskExecutor")` 和独立 `@Transactional`，只处理 `RECEIVED`，成功置 100%，异常写入 `FAILED`
-- [ImportJobRepository.java](../../src/main/java/com/allen/questionbank/importjob/ImportJobRepository.java) 第 6-8 行按 `id + ownerId` 查询，形成资源隔离；[V3__async_import_jobs.sql](../../src/main/resources/db/migration/V3__async_import_jobs.sql) 第 1-15 行是任务表、外键和查询索引；[InfrastructureConfig.java](../../src/main/java/com/allen/questionbank/common/InfrastructureConfig.java) 第 13-28 行配置 2/4 线程、100 队列和线程名
+- [ImportJobStatus.java](../../src/main/java/com/allen/questionbank/entity/ImportJobStatus.java) 第 1-3 行定义四个当前状态；[ImportJob.java](../../src/main/java/com/allen/questionbank/entity/ImportJob.java) 第 8-39 行保存 owner、输入、状态、进度、attempt、错误、时间戳和 `@Version`，并实现 `start/succeed/fail`
+- [ImportJobController.java](../../src/main/java/com/allen/questionbank/controller/ImportJobController.java) 第 16-36 行定义 `POST/GET /api/import-jobs`、`202 + Location` 和查询 DTO；[ImportJobService.java](../../src/main/java/com/allen/questionbank/service/ImportJobService.java) 第 19-31 行在事务中保存任务并用 `afterCommit` 调度
+- [ImportJobWorker.java](../../src/main/java/com/allen/questionbank/service/ImportJobWorker.java) 第 10-30 行使用 `@Async("importTaskExecutor")` 和独立 `@Transactional`，只处理 `RECEIVED`，成功置 100%，异常写入 `FAILED`
+- [ImportJobRepository.java](../../src/main/java/com/allen/questionbank/repository/ImportJobRepository.java) 第 1-9 行按 `id + ownerId` 查询，形成资源隔离；[V3__async_import_jobs.sql](../../src/main/resources/db/migration/V3__async_import_jobs.sql) 第 1-15 行是任务表、外键和查询索引；[InfrastructureConfig.java](../../src/main/java/com/allen/questionbank/common/InfrastructureConfig.java) 第 11-30 行配置 2/4 线程、100 队列和线程名
 - worker 崩溃恢复需要 lease、心跳、超时重置和有限重试；当前实现是可验证的异步状态基线，还没有 lease、重试调度、死信和真实 PDF 解析
 
 - 至少一次投递意味着处理器可能重复运行；“恰好一次”通常只能在局部事务/幂等效果层面近似

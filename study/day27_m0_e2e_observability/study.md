@@ -10,7 +10,7 @@
   set -o pipefail
   ./mvnw -B test 2>&1 | tee output/mvn_test_YYYYMMDD.log
   ```
-- 源码索引（MustRemember）：[M0FlowIntegrationTest.java](../../src/test/java/com/allen/questionbank/M0FlowIntegrationTest.java) 第39-90行的主链路测试；[README.md](../../README.md) Verification 命令
+- 源码索引（MustRemember）：[M0FlowIntegrationTest.java](../../src/test/java/com/allen/questionbank/M0FlowIntegrationTest.java) 第 39-90 行的主链路测试；[README.md](../../README.md) Verification 命令
 
 # MustUnderstand
 

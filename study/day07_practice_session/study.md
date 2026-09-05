@@ -10,11 +10,11 @@
       .orElseGet(() -> new SubmissionItem(sessionId, questionId, normalized));
   return submissions.save(item);
   ```
-- 源码索引（MustRemember）：[PracticeController.java](../../src/main/java/com/allen/questionbank/practice/PracticeController.java) 第 21-36 行的 create/save/submit 入口；[PracticeService.java](../../src/main/java/com/allen/questionbank/practice/PracticeService.java) 第 39-49 行的答案覆盖保存
+- 源码索引（MustRemember）：[PracticeController.java](../../src/main/java/com/allen/questionbank/controller/PracticeController.java) 第 25-39 行的 create/save/submit 入口；[PracticeService.java](../../src/main/java/com/allen/questionbank/service/PracticeService.java) 第 40-50 行的答案覆盖保存
 
 # MustUnderstand
 
 - 会话绑定具体版本而非题库，保证题目集合、标准答案和分值稳定
 - 资源授权和状态机是两个独立条件：用户拥有会话仍不能修改 `SUBMITTED` 会话
 - 会话状态转换必须在实体/Service 内统一维护；Controller 不能根据客户端传来的 `status` 或 `studentId` 决定结果
-- 源码索引（MustUnderstand）：[PracticeSession.java](../../src/main/java/com/allen/questionbank/practice/PracticeSession.java) 第 6-19 行的状态/版本字段；[PracticeSession.java](../../src/main/java/com/allen/questionbank/practice/PracticeSession.java) 第 35-38 行的提交状态方法；[V1__m0_schema.sql](../../src/main/resources/db/migration/V1__m0_schema.sql) 第 49-74 行的外键和答案唯一键
+- 源码索引（MustUnderstand）：[PracticeSession.java](../../src/main/java/com/allen/questionbank/entity/PracticeSession.java) 第 9-19 行的状态/版本字段；[PracticeSession.java](../../src/main/java/com/allen/questionbank/entity/PracticeSession.java) 第 35-38 行的提交状态方法；[V1__m0_schema.sql](../../src/main/resources/db/migration/V1__m0_schema.sql) 第 49-74 行的外键和答案唯一键

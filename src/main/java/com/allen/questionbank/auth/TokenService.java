@@ -1,5 +1,6 @@
 package com.allen.questionbank.auth;
 
+import com.allen.questionbank.entity.UserAccount;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 

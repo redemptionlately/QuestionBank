@@ -16,7 +16,7 @@
 - HTTP 方法语义必须区分：GET/HEAD 读取，POST 通常创建或触发命令，PUT 替换且可设计为幂等，PATCH 局部更新，DELETE 删除；状态码必须表达成功、客户端错误和服务端错误
 - 列表接口至少定义 `page/size` 或 cursor、稳定排序、最大 page size、总数是否精确和空结果格式；不能把无界查询直接交给数据库
 - API 版本、字段兼容和错误 code 属于协议；新增字段通常向后兼容，删除/改类型需要版本或迁移期
-- 源码索引（MustRemember）：[BankController.java](../../src/main/java/com/allen/questionbank/bank/BankController.java) 第 20-32 行的管理员接口、第 58-65 行的 DTO/record；重点是注解、参数绑定和 DTO 构造
+- 源码索引（MustRemember）：[BankController.java](../../src/main/java/com/allen/questionbank/controller/BankController.java) 第 22-32 行的管理员接口、第 60-68 行的 DTO/record；重点是注解、参数绑定和 DTO 构造
 
 # MustUnderstand
 

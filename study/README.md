@@ -13,7 +13,22 @@
 题库平台 M0 是真实业务载体，覆盖登录、角色、题库、版本发布、练习、判分、错题、事务、幂等、行锁、索引、Docker 和测试。
 M1/M2 文件是后续 Java 后端可靠性和业务扩展知识，不代表项目已经实现。
 
-## 五个阶段
+## 项目分层
+
+```text
+com.allen.questionbank
+├── entity       # JPA 实体和持久化枚举
+├── repository   # Spring Data JPA 数据访问接口
+├── service      # 业务规则、事务和异步任务
+├── controller   # REST 接口、请求 DTO 和响应 DTO
+├── auth         # 认证、授权、Token 和安全配置
+├── common       # 异常、当前用户、缓存、限流、指标和基础设施
+└── QuestionBankApplication.java
+```
+
+完整文件清单和当前实现边界见项目根目录的 `README.md`；源码索引必须使用该目录树下的真实路径。
+
+## 学习阶段
 
 | 天数 | 阶段 | 主要能力 |
 |---|---|---|
@@ -42,9 +57,9 @@ M1/M2 文件是后续 Java 后端可靠性和业务扩展知识，不代表项�
 
 例如：
 
-- `PracticeService.java:52-85`：背写提交、锁定读取、判分和结果持久化主链路。
-- `PracticeSessionRepository.java:11-16`：背写 `@Lock(PESSIMISTIC_WRITE)` 查询。
-- `M0FlowIntegrationTest.java:178-210`：理解同 key 并发测试如何证明稳定结果，而不是只看测试通过。
+- `../src/main/java/com/allen/questionbank/service/PracticeService.java:53-85`：背写提交、锁定读取、判分和结果持久化主链路。
+- `../src/main/java/com/allen/questionbank/repository/PracticeSessionRepository.java:12-17`：背写 `@Lock(PESSIMISTIC_WRITE)` 查询。
+- `../src/test/java/com/allen/questionbank/M0FlowIntegrationTest.java:178-210`：理解同 key 并发测试如何证明稳定结果，而不是只看测试通过。
 
 项目源码链接使用相对于当天 `study.md` 的路径，确保 VS Code 预览可以直接打开。M1/M2 尚无对应项目源码时，索引指向具体官方类、API 或章节，并明确这是外部学习材料。
 

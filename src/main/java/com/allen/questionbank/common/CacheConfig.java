@@ -1,10 +1,10 @@
 package com.allen.questionbank.common;
 
+import com.allen.questionbank.entity.PaperVersion;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import java.time.Duration;
 import java.util.List;
-import com.allen.questionbank.bank.PaperVersion;
 
 @Configuration
 public class CacheConfig {

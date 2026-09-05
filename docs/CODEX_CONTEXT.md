@@ -64,7 +64,7 @@ AI_Infra 工作树当前不是干净状态，而且审计期间仍可能有外�
 
 | 学习块 | 当前工程状态 | 当前学习状态 | 当前停点/下一步 |
 |---|---|---|---|
-| Java 题库平台 M0 | `/home/allen/projects/java-question-bank-m0` 已有 Java 21/Spring Boot 3.4.5、Maven Wrapper、Flyway V1/V2、登录/角色、版本发布、练习保存/判分、数据库行锁幂等、错题聚合、统一错误响应和 Compose；H2 7/7、MySQL 8.4、真实 HTTP E2E 和 EXPLAIN 通过 | 用户尚未完成源码复述、亲手修改和追问验收，不能记为 learned | 工程冻结；按 `/home/allen/study/java/m0/` 的 49 天路线完成所有权验收；Git 历史需用户执行 |
+| Java 题库平台 M0 | `/home/allen/QuestionBank` 已有 Java 21/Spring Boot 3.4.5、Maven Wrapper、Flyway V1/V2/V3、登录/角色、版本发布、练习保存/判分、数据库行锁幂等、错题聚合、统一错误响应、异步导入、限流、指标和 Compose；H2 9/9、真实 HTTP E2E 和 EXPLAIN 通过 | 用户尚未完成源码复述、亲手修改和追问验收，不能记为 learned | 工程冻结；按 `/home/allen/QuestionBank/study/` 的 61 天路线完成所有权验收；Git 历史需用户执行 |
 | TinyWebServer | `/infer`、有界队列、超时、429、Mock runner、可选 TinyInfer 集成已接线；当前 CTest 155/155 通过 | 用户尚未按模块复述、修改、测试，不能认领完整实现 | C++ 备选线：从 HTTP、Queue 或 EventLoop 选择一个模块完成所有权 Gate；不与 Java M0 同时做大改动 |
 | TinyInfer | `InferenceSession + GraphBuilder` 已进 CMake 和 `main`，手工图 `Compile -> Run` 可执行；当前 CTest 2/2 通过 | 用户尚未学习 Session/Tensor/Graph 数据流，不能认领 Runtime | C++ 备选线：从 Tensor、Graph、MemoryPlanner 或 Engine 选择一个模块完成所有权 Gate |
 | AI_Infra | Day 11--Day 15 有各自工程证据；Day 16 只有计划和局部理论学习，没有实现/测试 | CUDA 实验不等于可用于求职的独立能力 | 暂停后续 Day；仅在未来明确需要时复习既有实验，不继续扩展课程 |
@@ -215,7 +215,7 @@ dtype 或端到端延迟。NCU Duration 不能替代 CUDA Event sequence 中位�
 - 固定顺序：M0～M2 普通后端与可靠性 -> DirectModelAdapter Baseline -> 受限 Harness PoC ->
   Java JSON-RPC 子进程适配 -> 同条件 A/B -> 决定保留或回退。
 - Agent 不拥有题库、提交和正式分数；Java/MySQL 是业务事实来源，人工复核是正式结果入口。
-- Java M0 是当前深度主块；先按 `/home/allen/study/java/m0/` 的 49 天路线完成 Java 基础、Spring、SQL、JUC/JVM、M0 和面试表达，不能跳到 Harness 接线。
+- Java M0 是当前深度主块；先按 `/home/allen/QuestionBank/study/` 的 61 天路线完成 Java 基础、Spring、SQL、JUC/JVM、M0 和面试表达，不能跳到 Harness 接线。
 
 ## 11. 新 AI 恢复步骤
 
@@ -244,19 +244,19 @@ dtype 或端到端延迟。NCU Duration 不能替代 CUDA Event sequence 中位�
 
 ### 2026-08-19 / Java M0 学习卡与源码索引重写
 
-- `/home/allen/study/java/m0/` 的 49 个 `study.md` 已改为具体知识正文：M0 前 28 天包含真实项目 Controller、Service、Repository、SQL、事务、锁和测试代码骨架；后 21 天包含 Redis、任务、限流、指标、JVM/JUC、SQL、系统设计和算法代码/公式。
-- 所有项目源码链接改为相对于 study 文件的路径，已检查可解析到 `/home/allen/projects/java-question-bank-m0`；算法索引改为实际存在的 `Phases_book/algorithm/` 路径。
-- 49 个 `tests.md` 的上半部分补齐为对应知识的代码、原理和边界验收题；study 只放知识，任务只放 tests。
+- `/home/allen/QuestionBank/study/` 的 61 个 `study.md` 已改为具体知识正文：M0 前 28 天包含真实项目 Controller、Service、Repository、SQL、事务、锁和测试代码骨架；后 33 天包含 Redis、任务、限流、指标、JVM/JUC、SQL、系统设计、算法和综合面试代码/公式。
+- 所有项目源码链接改为相对于 study 文件的路径，已检查可解析到 `/home/allen/QuestionBank`；算法索引改为实际存在的 `Phases_book/algorithm/` 路径。
+- 61 个 `tests.md` 的上半部分补齐为对应知识的代码、原理和边界验收题；study 只放知识，任务只放 tests。
 - 每个 `tests.md` 上半部分另有源码索引验收：按当天“会背会写”索引逐项定位文件、类/方法或 SQL 对象和行号，独立写出并解释输入、输出和边界。
-- 新增 `/home/allen/study/java/m0/README.md` 作为教师总说明，固定五阶段能力目标、源码索引格式、所有权阶梯和求职出口；不替代每天的两个学习文件。
+- `/home/allen/QuestionBank/study/README.md` 作为教师总说明，固定阶段能力目标、源码索引格式、所有权阶梯和求职出口；不替代每天的两个学习文件。
 
 ### 2026-08-18 / Java M0 工程、证据与求职学习目录完成
 
-- Java M0：工程位于 `/home/allen/projects/java-question-bank-m0`；新增 V2 查询索引、数据库悲观行锁幂等、事务回滚测试、同 key 并发测试和索引存在性测试；README 已写验证命令与边界。
-- 证据：`./mvnw -B test`，7 tests / 0 failures / 0 errors；`./mvnw -B -DskipTests package` 成功，产物为 `target/question-bank-m0-0.1.0-SNAPSHOT.jar`。
+- Java M0：工程位于 `/home/allen/QuestionBank`；新增 V2/V3 查询与异步任务结构、数据库悲观行锁幂等、事务回滚测试、同 key 并发测试和索引存在性测试；README 已写验证命令与边界。
+- 证据：`./mvnw -B test`，9 tests / 0 failures / 0 errors；`./mvnw -B -DskipTests package` 成功，产物为 `target/question-bank-m0-0.1.0-SNAPSHOT.jar`。
 - 运行修复：Docker daemon 已使用 `127.0.0.1:7897` 代理成功拉取 `mysql:8.4`；损坏的自动卷保留未删除，Compose 固定使用新健康卷 `question-bank-m0_question_bank_mysql`，宿主机绑定 `127.0.0.1:3307 -> 3306`。
-- 真实证据：MySQL 容器 `healthy`；Flyway V1/V2 成功；`output/mysql_explain_20260818.log` 显示查询使用 `idx_paper_version_status_published_at`；`output/real_mysql_m0_verification_20260818.log` 保存健康、登录、发布、提交和同 key 重试结果。
-- 学习目录：`/home/allen/study/java/m0/` 已建立 49 天、98 个 Markdown 文件；每个 `study.md` 和 `tests.md` 都严格为两部分。目录内容是学习路线，不是掌握证明。
+- 真实证据：MySQL 容器 `healthy`；Flyway V1/V2/V3 成功；`output/mysql_explain_20260818.log` 显示查询使用 `idx_paper_version_status_published_at`；`output/real_mysql_m0_verification_20260818.log` 保存健康、登录、发布、提交和同 key 重试结果。
+- 学习目录：`/home/allen/QuestionBank/study/` 已建立 61 天、122 个 Markdown 文件；每个 `study.md` 和 `tests.md` 都严格为两部分。目录内容是学习路线，不是掌握证明。
 - 限制：项目当前不是 Git 仓库，未执行初始化或提交；Git 历史需用户按仓库规则执行。M0 工程 verified，用户 learned 待验收。
 
 ### 2026-08-17 / Java M0 主线切换

@@ -2,7 +2,7 @@
 
 - REST 命令对应明确状态转换：创建草稿产生 `DRAFT`，发布产生 `PUBLISHED`，创建练习产生 `IN_PROGRESS`，提交产生 `SUBMITTED`
 - 发布版本采用追加式模型；历史练习通过 `paper_version_id` 引用具体快照，已发布题面没有更新路径
-- 模块化单体按 `auth/bank/practice/common` 分包；Controller 不直接访问 Repository，跨模块调用通过 Service，事务仍在同一进程和数据库内
+- 模块化单体按 `entity/repository/service/controller/common/auth` 分包；Controller 不直接访问 Repository，跨模块调用通过 Service，事务仍在同一进程和数据库内
 - 包边界代码形态是：
   ```text
   auth: Authentication、token、当前用户
@@ -10,7 +10,7 @@
   practice: PracticeSession、SubmissionItem、判分、幂等、错题
   common: ApiException、ErrorResponse、CurrentUser
   ```
-- 源码索引（MustRemember）：[BankController.java](../../src/main/java/com/allen/questionbank/bank/BankController.java) 第 13-52 行的题库/发布/查询接口；[PracticeController.java](../../src/main/java/com/allen/questionbank/practice/PracticeController.java) 第 21-45 行的练习接口
+- 源码索引（MustRemember）：[BankController.java](../../src/main/java/com/allen/questionbank/controller/BankController.java) 第 22-53 行的题库/发布/查询接口；[PracticeController.java](../../src/main/java/com/allen/questionbank/controller/PracticeController.java) 第 25-48 行的练习接口
 
 # MustUnderstand
 

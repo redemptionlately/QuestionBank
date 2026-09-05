@@ -2,7 +2,7 @@
 
 - Compose 中 `image` 是模板，`container` 是实例，`volume` 保存容器外持久数据，`ports` 做宿主/容器端口映射，`healthcheck` 定义可观测探针
 - M0 的端口是宿主 `127.0.0.1:3307 -> container:3306`；应用连接串由 `DB_URL`、`DB_USERNAME`、`DB_PASSWORD` 环境变量覆盖
-- 启动依赖顺序是数据库可连接 -> Flyway 应用 V1/V2 -> Hibernate `ddl-auto=validate` 校验实体映射 -> Spring Boot 提供请求
+- 启动依赖顺序是数据库可连接 -> Flyway 按 V1/V2/V3 应用迁移 -> Hibernate `ddl-auto=validate` 校验实体映射 -> Spring Boot 提供请求
 - Compose 服务骨架是：
   ```yaml
   services:

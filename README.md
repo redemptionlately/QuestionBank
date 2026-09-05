@@ -20,10 +20,69 @@ distributed tracing and Agent/Harness remain later increments; their study docum
 The local cache is a single-process baseline, the rate limiter is a fixed-window single-process filter,
 and `/api/metrics` exposes in-memory counters that reset when the process restarts.
 
+## Project layout
+
+```text
+com.allen.questionbank
+├── entity
+│   ├── ImportJob.java
+│   ├── ImportJobStatus.java
+│   ├── PaperVersion.java
+│   ├── PracticeSession.java
+│   ├── PracticeStatus.java
+│   ├── QuestionBank.java
+│   ├── QuestionType.java
+│   ├── QuestionVersion.java
+│   ├── SubmissionItem.java
+│   ├── UserAccount.java
+│   └── WrongQuestion.java
+├── repository
+│   ├── ImportJobRepository.java
+│   ├── PaperVersionRepository.java
+│   ├── PracticeSessionRepository.java
+│   ├── QuestionBankRepository.java
+│   ├── QuestionVersionRepository.java
+│   ├── SubmissionItemRepository.java
+│   ├── UserAccountRepository.java
+│   └── WrongQuestionRepository.java
+├── service
+│   ├── BankService.java
+│   ├── ImportJobService.java
+│   ├── ImportJobWorker.java
+│   └── PracticeService.java
+├── controller
+│   ├── AuthController.java
+│   ├── BankController.java
+│   ├── ImportJobController.java
+│   ├── MetricsController.java
+│   └── PracticeController.java
+├── auth
+│   ├── ApiTokenFilter.java
+│   ├── AuthService.java
+│   ├── DevDataInitializer.java
+│   ├── Role.java
+│   ├── SecurityConfig.java
+│   └── TokenService.java
+├── common
+│   ├── ApiException.java
+│   ├── CacheConfig.java
+│   ├── CurrentUser.java
+│   ├── ErrorResponse.java
+│   ├── ExpiringCache.java
+│   ├── GlobalExceptionHandler.java
+│   ├── InfrastructureConfig.java
+│   ├── RateLimitFilter.java
+│   └── RequestMetrics.java
+└── QuestionBankApplication.java
+```
+
+The source files live under `src/main/java/com/allen/questionbank/`; the package declaration and directory
+name are kept identical so component, entity and repository scanning remain predictable.
+
 ## Run
 
 ```bash
-cd /home/allen/projects/java-question-bank-m0
+cd /home/allen/QuestionBank
 docker compose up -d mysql
 mvn test
 mvn spring-boot:run

@@ -1,0 +1,14 @@
+# Current
+- 打开并按当天 study.md 的“源码索引（MustRemember）”或“外部源码索引（MustRemember）”逐项定位文件、类/方法、SQL 对象和行号，独立写出对应代码或 SQL，并口述输入、输出与边界。
+
+- 画上传到发布时序
+- 设计 worker 崩溃恢复
+- 对照项目当前 `POST /api/import-jobs` 的 JSON 入口，列出与真实 multipart/PDF/对象存储导入之间缺少的模块；不得把设计状态写成已实现功能。
+- 写出持久任务状态、进度、错误、attempt、lease 和轮询/SSE/WebSocket 的协议差异。
+- 写出 202 + Location 的异步接口响应和任务查询 JSON。
+- 画出 worker 领取、崩溃、租约接管和最终失败时序。
+
+# External
+
+- 设计 hash 幂等
+- 比较轮询/SSE

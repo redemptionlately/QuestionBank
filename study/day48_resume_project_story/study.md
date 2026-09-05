@@ -9,5 +9,5 @@
 - 项目主链路由 HTTP 请求、Controller、Service、Repository、SQL、事务提交和响应序列化依次组成；每一步都对应输入、输出和失败边界
 - 难点的技术模型由不变量、并发冲突、失败回滚、替代方案、观测证据和残余限制组成
 - Java 核心、Spring、SQL、并发、测试和项目深度构成普通 Java 后端基础能力；Agent 是建立在这些能力之上的扩展
-- 源码索引（MustRemember）：[BankController.java](../../src/main/java/com/allen/questionbank/bank/BankController.java) 第 13-52 行、[PracticeController.java](../../src/main/java/com/allen/questionbank/practice/PracticeController.java) 第 21-45 行的 HTTP 主链路
-- 源码索引（MustUnderstand）：[BankService.java](../../src/main/java/com/allen/questionbank/bank/BankService.java) 第 29-67 行、[PracticeService.java](../../src/main/java/com/allen/questionbank/practice/PracticeService.java) 第52-85行的事务/锁/事实边界
+- 源码索引（MustRemember）：[BankController.java](../../src/main/java/com/allen/questionbank/controller/BankController.java) 第 22-53 行、[PracticeController.java](../../src/main/java/com/allen/questionbank/controller/PracticeController.java) 第 25-48 行的 HTTP 主链路
+- 源码索引（MustUnderstand）：[BankService.java](../../src/main/java/com/allen/questionbank/service/BankService.java) 第 38-69 行、[PracticeService.java](../../src/main/java/com/allen/questionbank/service/PracticeService.java) 第 53-85 行的事务/锁/事实边界

@@ -19,4 +19,4 @@
 # MustUnderstand
 
 - 错误处理器必须避免返回密码、token、SQL、堆栈和内部路径；健康探针只能证明进程/依赖探针状态，不能证明登录、发布和提交链路成功
-- 源码索引（MustUnderstand）：[SecurityConfig.java](../../src/main/java/com/allen/questionbank/auth/SecurityConfig.java) 第 39-55 行的过滤器错误入口；[ErrorResponse.java](../../src/main/java/com/allen/questionbank/common/ErrorResponse.java) 第 5-5 行的响应字段
+- 源码索引（MustUnderstand）：[SecurityConfig.java](../../src/main/java/com/allen/questionbank/auth/SecurityConfig.java) 第 39-55 行的过滤器错误入口；[ErrorResponse.java](../../src/main/java/com/allen/questionbank/common/ErrorResponse.java) 第 1-5 行的响应字段

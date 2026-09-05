@@ -1,6 +1,8 @@
 package com.allen.questionbank.auth;
 
 import com.allen.questionbank.common.ApiException;
+import com.allen.questionbank.entity.UserAccount;
+import com.allen.questionbank.repository.UserAccountRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
