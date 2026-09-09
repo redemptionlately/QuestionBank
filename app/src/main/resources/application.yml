@@ -35,6 +35,10 @@ server:
     include-message: never
 app:
   token-ttl: PT8H
+  # token 存储位置：local=JVM 内存（单机开发），redis=多实例共享。
+  # 多实例部署必须用 redis：本地 token 在其它实例上不存在，登录态直接 401
+  # （实测复现与修复见 scripts/multi-instance-evidence.sh，2026-09-09）
+  token-store: local
   security:
     # BCrypt strength（4-31 合法）：调之前先跑 scripts/bcrypt-strength-benchmark.sh 拿数据
     bcrypt-strength: 10
