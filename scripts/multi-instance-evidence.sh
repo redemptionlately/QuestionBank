@@ -183,6 +183,19 @@ probe_limit "backend=$BACKEND" 8
 
 if [ "$BACKEND" = "redis" ]; then
   echo
+  echo "--- 回归探针：配额耗尽后 1.5s 不应白送令牌 ---"
+  echo "（续杯下限缺陷 Math.max(1, refillPerMilli) 会在此 1.5s 攒出 1 个令牌放行 200；修复后必须仍 429）"
+  sleep 1.5
+  CODE=$(curl -s -o /dev/null -w "%{http_code}" "http://127.0.0.1:$PORT_A/api/papers/published" -H "Authorization: Bearer $TOKEN")
+  if [ "$CODE" = "429" ]; then
+    echo "长窗口续杯下限回归：1.5s 后仍 429 = 通过"
+  else
+    echo "长窗口续杯下限回归：1.5s 后 HTTP $CODE（应为 429）= 失败，续杯下限缺陷复现"
+  fi
+fi
+
+if [ "$BACKEND" = "redis" ]; then
+  echo
   echo "--- 对照组：切回 local（JVM 内存）后端重跑（token 存储仍为 redis，只换限流后端）---"
   stop_all
   start_instance "$PORT_A" local >/dev/null
@@ -195,8 +208,8 @@ if [ "$BACKEND" = "redis" ]; then
   echo
   echo "--- 对照结论（capacity=$CAPACITY，8 个请求 A/B 各 4 个）---"
   echo "共享后端（redis）放行 $REDIS_OK 次 / 本地后端（JVM 内存）放行 $LOCAL_OK 次"
-  echo "背景：RedisTokenBucketRateLimiter 的 Math.max(1, refillPerMilli) 下限使实际续杯 ≥1 令牌/秒，"
-  echo "      长窗口配置会被架空——共享桶放行数 = capacity + 探针耗时内的续杯，属已记录缺陷（见 docs）。"
+  echo "背景：历史上 Math.max(1, refillPerMilli) 下限曾把续杯抬到 >=1 令牌/秒、长窗口被架空（已修复，见上方回归探针）；"
+  echo "      现共享桶放行数 = capacity + 探针耗时内的微量续杯。"
   if [ -n "$REDIS_OK" ] && [ "$LOCAL_OK" -gt "$REDIS_OK" ] && [ "$LOCAL_OK" -ge $((CAPACITY * 2 - 1)) ]; then
     echo "判定：本地后端放行 $LOCAL_OK ≈ 2×capacity（每实例各一个桶），显著多于共享后端的 $REDIS_OK"
     echo "      → 多实例下内存限流的配额按实例翻倍、全局配额失效；水平扩容必须 app.rate-limit.backend=redis"

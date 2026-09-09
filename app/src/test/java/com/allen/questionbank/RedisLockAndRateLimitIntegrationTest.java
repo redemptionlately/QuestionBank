@@ -114,6 +114,22 @@ class RedisLockAndRateLimitIntegrationTest {
     }
 
     @Test
+    void longWindowDoesNotRefillAtOneTokenPerSecond() throws Exception {
+        // 回归：旧实现 Math.max(1, capacityMilli/windowMillis) 的下限把续杯抬到 >=1 令牌/秒，
+        // "capacity=2, window=PT10M" 实际变成"2 突发 + 1/秒"——多实例对照实验实测抓出（2026-09-09）。
+        // 修复后续杯 = 2/600000 ≈ 0.0000033 令牌/ms，1.5s 内远不足 1 个令牌，必须仍然拒绝。
+        // 旧代码跑本用例必红（1.5s 就能攒出 1.5 个令牌），新代码必须绿。
+        String key = "refill-floor-" + UUID.randomUUID();
+        assertTrue(rateLimiter.tryAcquire(key, 2, Duration.ofMinutes(10)), "第 1 个请求应放行");
+        assertTrue(rateLimiter.tryAcquire(key, 2, Duration.ofMinutes(10)), "第 2 个请求应放行");
+        assertFalse(rateLimiter.tryAcquire(key, 2, Duration.ofMinutes(10)), "配额耗尽后应拒绝");
+        Thread.sleep(1500);
+        assertFalse(rateLimiter.tryAcquire(key, 2, Duration.ofMinutes(10)),
+                "长窗口 1.5s 内不应补充出 1 个令牌（续杯下限缺陷会在此放行）");
+        System.out.println("[evidence] 长窗口续杯下限回归：1.5s 内不恢复令牌=通过");
+    }
+
+    @Test
     void sharedRateLimitReturns429OnceCapacityIsExhausted() throws Exception {
         String student = login("student", "student123");
         int ok = 0;
