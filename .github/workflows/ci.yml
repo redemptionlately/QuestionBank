@@ -52,7 +52,10 @@ jobs:
           KAFKA_LOG_DIRS: /tmp/kraft-combined-logs
 
     steps:
+      # fetch-depth: 0 —— 增量覆盖率门禁要拿到基线提交才算得出 diff，默认浅克隆只有 1 个提交
       - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - uses: actions/setup-java@v4
         with:
@@ -94,6 +97,33 @@ jobs:
             } | while IFS= read -r line; do echo "::error::$line"; done
             exit 1
           fi
+
+      # 增量覆盖率（diff-coverage）：只问"本次改动新增/修改的可执行行有没有被跑到"。
+      # 与全量门禁互补而非替代——全量会被存量稀释，实测插 5 行零覆盖代码全量仅从 91.3% 掉到 90.8%，
+      # 离 80% 门禁还很远照样绿，而 diff-coverage 立刻 0.0% 判红（证伪证据见
+      # output/diffcov_probe_red_20260909.log）。
+      # 必须放在"真实 MySQL 证据测试"之前：那一步 -Dtest= 单跑会重写 jacoco 报告为窄覆盖，
+      # 之后算出来的增量覆盖率是假的。
+      - name: 增量覆盖率门禁（本次改动可执行行 ≥ 80%）
+        run: |
+          BASE_SHA="${{ github.event.pull_request.base.sha || github.event.before }}"
+          if [ -z "$BASE_SHA" ] || [ "$BASE_SHA" = "0000000000000000000000000000000000000000" ] \
+             || ! git cat-file -e "${BASE_SHA}^{commit}" 2>/dev/null; then
+            BASE_SHA="$(git rev-parse HEAD~1)"
+          fi
+          echo "diff base = ${BASE_SHA}"
+          # 刻意不用管道 tee：管道退出码取最后一个命令，会把脚本的失败码吞掉
+          STATUS=0
+          python3 scripts/diff-coverage.py --base "$BASE_SHA" --head HEAD --min 80 --show 40 > diffcov.log 2>&1 || STATUS=$?
+          cat diffcov.log
+          exit $STATUS
+
+      - name: 上传增量覆盖率结果
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: diff-coverage
+          path: diffcov.log
 
       - name: 真实 MySQL 证据测试（EXPLAIN / 隔离级别 / 行锁）
         env:

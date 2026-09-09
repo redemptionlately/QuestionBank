@@ -1,0 +1,20 @@
+========================================================================
+增量覆盖率（diff-coverage）
+  基线/目标        : WORKTREE .. HEAD
+  jacoco 报告      : app\target\site\jacoco\jacoco.xml
+  报告整体行覆盖率 : 90.8%（仅供参考，非门禁口径）
+  变更文件数       : 1
+  变更行数         : 10
+  其中可执行行     : 5（覆盖 0 / 未覆盖 5）
+========================================================================
+  增量覆盖率       : 0.0%（门禁 ≥ 80.0%）
+
+未覆盖的变更行（最多 10 条）：
+  app/src/main/java/com/allen/questionbank/common/ExpiringCache.java:60
+  app/src/main/java/com/allen/questionbank/common/ExpiringCache.java:61
+  app/src/main/java/com/allen/questionbank/common/ExpiringCache.java:62
+  app/src/main/java/com/allen/questionbank/common/ExpiringCache.java:63
+  app/src/main/java/com/allen/questionbank/common/ExpiringCache.java:65
+
+门禁失败：增量覆盖率 0.0% 低于 80.0%
+red_gate_exit=1
