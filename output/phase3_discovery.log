@@ -1,0 +1,95 @@
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+
+ :: Spring Boot ::                (v3.4.5)
+
+2026-09-08T23:51:59.983-05:00  INFO 84112 --- [discovery-service] [           main] c.a.c.discovery.DiscoveryApplication     : Starting DiscoveryApplication v0.1.0-SNAPSHOT using Java 21.0.12 with PID 84112 (C:\Project\QuestionBank\cloud\discovery-service\target\discovery-service-0.1.0-SNAPSHOT.jar started by Allen in C:\Project\QuestionBank)
+2026-09-08T23:51:59.985-05:00  INFO 84112 --- [discovery-service] [           main] c.a.c.discovery.DiscoveryApplication     : No active profile set, falling back to 1 default profile: "default"
+2026-09-08T23:52:02.157-05:00  INFO 84112 --- [discovery-service] [           main] o.s.cloud.context.scope.GenericScope     : BeanFactory id=4e13370f-3679-3e26-8db6-ffe10e1547a3
+2026-09-08T23:52:03.021-05:00  INFO 84112 --- [discovery-service] [           main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 8761 (http)
+2026-09-08T23:52:03.044-05:00  INFO 84112 --- [discovery-service] [           main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2026-09-08T23:52:03.044-05:00  INFO 84112 --- [discovery-service] [           main] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.40]
+2026-09-08T23:52:03.115-05:00  INFO 84112 --- [discovery-service] [           main] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2026-09-08T23:52:03.115-05:00  INFO 84112 --- [discovery-service] [           main] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 3037 ms
+2026-09-08T23:52:05.199-05:00  INFO 84112 --- [discovery-service] [           main] c.n.d.provider.DiscoveryJerseyProvider   : Using JSON encoding codec LegacyJacksonJson
+2026-09-08T23:52:05.202-05:00  INFO 84112 --- [discovery-service] [           main] c.n.d.provider.DiscoveryJerseyProvider   : Using JSON decoding codec LegacyJacksonJson
+2026-09-08T23:52:05.572-05:00  INFO 84112 --- [discovery-service] [           main] c.n.d.provider.DiscoveryJerseyProvider   : Using XML encoding codec XStreamXml
+2026-09-08T23:52:05.573-05:00  INFO 84112 --- [discovery-service] [           main] c.n.d.provider.DiscoveryJerseyProvider   : Using XML decoding codec XStreamXml
+2026-09-08T23:52:05.862-05:00  INFO 84112 --- [discovery-service] [           main] o.s.v.b.OptionalValidatorFactoryBean     : Failed to set up a Bean Validation provider: jakarta.validation.NoProviderFoundException: Unable to create a Configuration, because no Jakarta Bean Validation provider could be found. Add a provider like Hibernate Validator (RI) to your classpath.
+2026-09-08T23:52:07.848-05:00  INFO 84112 --- [discovery-service] [           main] o.s.cloud.commons.util.InetUtils         : Cannot determine local hostname
+2026-09-08T23:52:09.592-05:00  INFO 84112 --- [discovery-service] [           main] o.s.cloud.commons.util.InetUtils         : Cannot determine local hostname
+2026-09-08T23:52:09.733-05:00  WARN 84112 --- [discovery-service] [           main] iguration$LoadBalancerCaffeineWarnLogger : Spring Cloud LoadBalancer is currently working with the default cache. While this cache implementation is useful for development and tests, it's recommended to use Caffeine cache in production.You can switch to using Caffeine cache, by adding it and org.springframework.cache.caffeine.CaffeineCacheManager to the classpath.
+2026-09-08T23:52:09.778-05:00  INFO 84112 --- [discovery-service] [           main] o.s.c.n.eureka.InstanceInfoFactory       : Setting initial instance status as: STARTING
+2026-09-08T23:52:09.825-05:00  INFO 84112 --- [discovery-service] [           main] com.netflix.discovery.DiscoveryClient    : Initializing Eureka in region us-east-1
+2026-09-08T23:52:09.827-05:00  INFO 84112 --- [discovery-service] [           main] com.netflix.discovery.DiscoveryClient    : Client configured to neither register nor query for data.
+2026-09-08T23:52:09.831-05:00  INFO 84112 --- [discovery-service] [           main] com.netflix.discovery.DiscoveryClient    : Discovery Client initialized at timestamp 1788929529828 with initial instances count: 0
+2026-09-08T23:52:09.917-05:00  INFO 84112 --- [discovery-service] [           main] c.n.eureka.DefaultEurekaServerContext    : Initializing ...
+2026-09-08T23:52:09.919-05:00  INFO 84112 --- [discovery-service] [           main] c.n.eureka.cluster.PeerEurekaNodes       : Adding new peer nodes [http://127.0.0.1:8761/eureka/]
+2026-09-08T23:52:10.153-05:00  INFO 84112 --- [discovery-service] [           main] c.n.d.provider.DiscoveryJerseyProvider   : Using JSON encoding codec LegacyJacksonJson
+2026-09-08T23:52:10.153-05:00  INFO 84112 --- [discovery-service] [           main] c.n.d.provider.DiscoveryJerseyProvider   : Using JSON decoding codec LegacyJacksonJson
+2026-09-08T23:52:10.153-05:00  INFO 84112 --- [discovery-service] [           main] c.n.d.provider.DiscoveryJerseyProvider   : Using XML encoding codec XStreamXml
+2026-09-08T23:52:10.153-05:00  INFO 84112 --- [discovery-service] [           main] c.n.d.provider.DiscoveryJerseyProvider   : Using XML decoding codec XStreamXml
+2026-09-08T23:52:10.230-05:00  INFO 84112 --- [discovery-service] [           main] c.n.eureka.cluster.PeerEurekaNodes       : Replica node URL:  http://127.0.0.1:8761/eureka/
+2026-09-08T23:52:10.259-05:00  INFO 84112 --- [discovery-service] [           main] c.n.e.registry.AbstractInstanceRegistry  : Finished initializing remote region registries. All known remote regions: []
+2026-09-08T23:52:10.260-05:00  INFO 84112 --- [discovery-service] [           main] c.n.eureka.DefaultEurekaServerContext    : Initialized
+2026-09-08T23:52:10.295-05:00  INFO 84112 --- [discovery-service] [           main] o.s.b.a.e.web.EndpointLinksResolver      : Exposing 2 endpoints beneath base path '/actuator'
+2026-09-08T23:52:10.443-05:00  INFO 84112 --- [discovery-service] [           main] o.s.c.n.e.s.EurekaServiceRegistry        : Registering application DISCOVERY-SERVICE with eureka with status UP
+2026-09-08T23:52:10.463-05:00  INFO 84112 --- [discovery-service] [      Thread-10] o.s.c.n.e.server.EurekaServerBootstrap   : isAws returned false
+2026-09-08T23:52:10.464-05:00  INFO 84112 --- [discovery-service] [      Thread-10] o.s.c.n.e.server.EurekaServerBootstrap   : Initialized server context
+2026-09-08T23:52:10.464-05:00  INFO 84112 --- [discovery-service] [      Thread-10] c.n.e.r.PeerAwareInstanceRegistryImpl    : Got 1 instances from neighboring DS node
+2026-09-08T23:52:10.465-05:00  INFO 84112 --- [discovery-service] [      Thread-10] c.n.e.r.PeerAwareInstanceRegistryImpl    : Renew threshold is: 1
+2026-09-08T23:52:10.465-05:00  INFO 84112 --- [discovery-service] [      Thread-10] c.n.e.r.PeerAwareInstanceRegistryImpl    : Changing status to UP
+2026-09-08T23:52:10.472-05:00  INFO 84112 --- [discovery-service] [      Thread-10] e.s.EurekaServerInitializerConfiguration : Started Eureka Server
+2026-09-08T23:52:10.505-05:00  INFO 84112 --- [discovery-service] [           main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port 8761 (http) with context path '/'
+2026-09-08T23:52:10.506-05:00  INFO 84112 --- [discovery-service] [           main] .s.c.n.e.s.EurekaAutoServiceRegistration : Updating port to 8761
+2026-09-08T23:52:11.400-05:00  INFO 84112 --- [discovery-service] [nio-8761-exec-3] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-09-08T23:52:11.400-05:00  INFO 84112 --- [discovery-service] [nio-8761-exec-3] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2026-09-08T23:52:11.400-05:00  INFO 84112 --- [discovery-service] [nio-8761-exec-3] o.s.web.servlet.DispatcherServlet        : Completed initialization in 0 ms
+2026-09-08T23:52:11.525-05:00  INFO 84112 --- [discovery-service] [           main] o.s.cloud.commons.util.InetUtils         : Cannot determine local hostname
+2026-09-08T23:52:11.545-05:00  INFO 84112 --- [discovery-service] [           main] c.a.c.discovery.DiscoveryApplication     : Started DiscoveryApplication in 13.12 seconds (process running for 13.844)
+2026-09-08T23:52:14.478-05:00  INFO 84112 --- [discovery-service] [a-EvictionTimer] c.n.e.registry.AbstractInstanceRegistry  : Running the evict task with compensationTime 0ms
+2026-09-08T23:52:18.485-05:00  INFO 84112 --- [discovery-service] [a-EvictionTimer] c.n.e.registry.AbstractInstanceRegistry  : Running the evict task with compensationTime 6ms
+2026-09-08T23:52:22.504-05:00  INFO 84112 --- [discovery-service] [a-EvictionTimer] c.n.e.registry.AbstractInstanceRegistry  : Running the evict task with compensationTime 19ms
+2026-09-08T23:52:26.518-05:00  INFO 84112 --- [discovery-service] [a-EvictionTimer] c.n.e.registry.AbstractInstanceRegistry  : Running the evict task with compensationTime 13ms
+2026-09-08T23:52:30.531-05:00  INFO 84112 --- [discovery-service] [a-EvictionTimer] c.n.e.registry.AbstractInstanceRegistry  : Running the evict task with compensationTime 12ms
+2026-09-08T23:52:33.551-05:00  INFO 84112 --- [discovery-service] [nio-8761-exec-4] c.n.e.registry.AbstractInstanceRegistry  : Registered instance AUTH-SERVICE/localhost:auth-service:8081 with status UP (replication=false)
+2026-09-08T23:52:34.262-05:00  INFO 84112 --- [discovery-service] [nio-8761-exec-8] c.n.e.registry.AbstractInstanceRegistry  : Registered instance AUTH-SERVICE/localhost:auth-service:8081 with status UP (replication=true)
+2026-09-08T23:52:34.535-05:00  INFO 84112 --- [discovery-service] [a-EvictionTimer] c.n.e.registry.AbstractInstanceRegistry  : Running the evict task with compensationTime 3ms
+2026-09-08T23:52:38.547-05:00  INFO 84112 --- [discovery-service] [a-EvictionTimer] c.n.e.registry.AbstractInstanceRegistry  : Running the evict task with compensationTime 11ms
+2026-09-08T23:52:42.554-05:00  INFO 84112 --- [discovery-service] [a-EvictionTimer] c.n.e.registry.AbstractInstanceRegistry  : Running the evict task with compensationTime 6ms
+2026-09-08T23:52:46.564-05:00  INFO 84112 --- [discovery-service] [a-EvictionTimer] c.n.e.registry.AbstractInstanceRegistry  : Running the evict task with compensationTime 9ms
+2026-09-08T23:52:50.569-05:00  INFO 84112 --- [discovery-service] [a-EvictionTimer] c.n.e.registry.AbstractInstanceRegistry  : Running the evict task with compensationTime 5ms
+2026-09-08T23:52:54.573-05:00  INFO 84112 --- [discovery-service] [a-EvictionTimer] c.n.e.registry.AbstractInstanceRegistry  : Running the evict task with compensationTime 3ms
+2026-09-08T23:52:58.575-05:00  INFO 84112 --- [discovery-service] [a-EvictionTimer] c.n.e.registry.AbstractInstanceRegistry  : Running the evict task with compensationTime 2ms
+2026-09-08T23:53:02.591-05:00  INFO 84112 --- [discovery-service] [a-EvictionTimer] c.n.e.registry.AbstractInstanceRegistry  : Running the evict task with compensationTime 16ms
+2026-09-08T23:53:06.608-05:00  INFO 84112 --- [discovery-service] [a-EvictionTimer] c.n.e.registry.AbstractInstanceRegistry  : Running the evict task with compensationTime 15ms
+2026-09-08T23:53:10.611-05:00  INFO 84112 --- [discovery-service] [a-EvictionTimer] c.n.e.registry.AbstractInstanceRegistry  : Running the evict task with compensationTime 3ms
+2026-09-08T23:53:14.613-05:00  INFO 84112 --- [discovery-service] [a-EvictionTimer] c.n.e.registry.AbstractInstanceRegistry  : Running the evict task with compensationTime 1ms
+2026-09-08T23:53:18.621-05:00  INFO 84112 --- [discovery-service] [a-EvictionTimer] c.n.e.registry.AbstractInstanceRegistry  : Running the evict task with compensationTime 8ms
+2026-09-08T23:53:22.629-05:00  INFO 84112 --- [discovery-service] [a-EvictionTimer] c.n.e.registry.AbstractInstanceRegistry  : Running the evict task with compensationTime 7ms
+2026-09-08T23:53:26.637-05:00  INFO 84112 --- [discovery-service] [a-EvictionTimer] c.n.e.registry.AbstractInstanceRegistry  : Running the evict task with compensationTime 7ms
+2026-09-08T23:53:30.640-05:00  INFO 84112 --- [discovery-service] [a-EvictionTimer] c.n.e.registry.AbstractInstanceRegistry  : Running the evict task with compensationTime 2ms
+2026-09-08T23:53:34.645-05:00  INFO 84112 --- [discovery-service] [a-EvictionTimer] c.n.e.registry.AbstractInstanceRegistry  : Running the evict task with compensationTime 5ms
+2026-09-08T23:53:38.653-05:00  INFO 84112 --- [discovery-service] [a-EvictionTimer] c.n.e.registry.AbstractInstanceRegistry  : Running the evict task with compensationTime 7ms
+2026-09-08T23:53:42.654-05:00  INFO 84112 --- [discovery-service] [a-EvictionTimer] c.n.e.registry.AbstractInstanceRegistry  : Running the evict task with compensationTime 1ms
+2026-09-08T23:53:46.662-05:00  INFO 84112 --- [discovery-service] [a-EvictionTimer] c.n.e.registry.AbstractInstanceRegistry  : Running the evict task with compensationTime 7ms
+2026-09-08T23:53:50.666-05:00  INFO 84112 --- [discovery-service] [a-EvictionTimer] c.n.e.registry.AbstractInstanceRegistry  : Running the evict task with compensationTime 3ms
+2026-09-08T23:53:54.669-05:00  INFO 84112 --- [discovery-service] [a-EvictionTimer] c.n.e.registry.AbstractInstanceRegistry  : Running the evict task with compensationTime 2ms
+2026-09-08T23:53:58.682-05:00  INFO 84112 --- [discovery-service] [a-EvictionTimer] c.n.e.registry.AbstractInstanceRegistry  : Running the evict task with compensationTime 12ms
+2026-09-08T23:54:02.686-05:00  INFO 84112 --- [discovery-service] [a-EvictionTimer] c.n.e.registry.AbstractInstanceRegistry  : Running the evict task with compensationTime 4ms
+2026-09-08T23:54:02.687-05:00  INFO 84112 --- [discovery-service] [a-EvictionTimer] c.n.e.registry.AbstractInstanceRegistry  : Evicting 1 items (expired=1, evictionLimit=1)
+2026-09-08T23:54:02.688-05:00  WARN 84112 --- [discovery-service] [a-EvictionTimer] c.n.e.registry.AbstractInstanceRegistry  : DS: Registry: expired lease for AUTH-SERVICE/localhost:auth-service:8081
+2026-09-08T23:54:02.689-05:00  INFO 84112 --- [discovery-service] [a-EvictionTimer] c.n.e.registry.AbstractInstanceRegistry  : Cancelled instance AUTH-SERVICE/localhost:auth-service:8081 (replication=false)
+2026-09-08T23:54:06.691-05:00  INFO 84112 --- [discovery-service] [a-EvictionTimer] c.n.e.registry.AbstractInstanceRegistry  : Running the evict task with compensationTime 4ms
+2026-09-08T23:54:10.692-05:00  INFO 84112 --- [discovery-service] [a-EvictionTimer] c.n.e.registry.AbstractInstanceRegistry  : Running the evict task with compensationTime 1ms
+2026-09-08T23:54:14.695-05:00  INFO 84112 --- [discovery-service] [a-EvictionTimer] c.n.e.registry.AbstractInstanceRegistry  : Running the evict task with compensationTime 2ms
+2026-09-08T23:54:18.705-05:00  INFO 84112 --- [discovery-service] [a-EvictionTimer] c.n.e.registry.AbstractInstanceRegistry  : Running the evict task with compensationTime 9ms
+2026-09-08T23:54:22.712-05:00  INFO 84112 --- [discovery-service] [a-EvictionTimer] c.n.e.registry.AbstractInstanceRegistry  : Running the evict task with compensationTime 6ms
+2026-09-08T23:54:26.714-05:00  INFO 84112 --- [discovery-service] [a-EvictionTimer] c.n.e.registry.AbstractInstanceRegistry  : Running the evict task with compensationTime 1ms
+2026-09-08T23:54:30.721-05:00  INFO 84112 --- [discovery-service] [a-EvictionTimer] c.n.e.registry.AbstractInstanceRegistry  : Running the evict task with compensationTime 7ms
+2026-09-08T23:54:34.727-05:00  INFO 84112 --- [discovery-service] [a-EvictionTimer] c.n.e.registry.AbstractInstanceRegistry  : Running the evict task with compensationTime 5ms

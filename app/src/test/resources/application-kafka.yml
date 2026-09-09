@@ -1,0 +1,31 @@
+spring:
+  kafka:
+    bootstrap-servers: ${KAFKA_BOOTSTRAP:127.0.0.1:9092}
+    consumer:
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      auto-offset-reset: earliest
+      properties:
+        max.poll.interval.ms: 60000
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer
+    listener:
+      missing-topics-fatal: false
+app:
+  kafka:
+    enabled: true
+    group-id: question-bank
+  outbox:
+    topic: qb-events
+    poll-interval-ms: 500
+    max-attempts: 3
+  lock:
+    backend: redis
+  cache:
+    backend: redis
+    ttl: PT30S
+  token-ttl: PT1H
+  rate-limit:
+    capacity: 100000
+    window: PT1M

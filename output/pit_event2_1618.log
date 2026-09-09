@@ -1,0 +1,238 @@
+[INFO] Scanning for projects...
+[INFO] 
+[INFO] ---------------------< com.allen:question-bank-m0 >---------------------
+[INFO] Building question-bank-m0 0.1.0-SNAPSHOT
+[INFO]   from pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- jacoco:0.8.12:prepare-agent (prepare-agent) @ question-bank-m0 ---
+[INFO] argLine set to -javaagent:C:\\Users\\Allen\\.m2\\repository\\org\\jacoco\\org.jacoco.agent\\0.8.12\\org.jacoco.agent-0.8.12-runtime.jar=destfile=C:\\Project\\QuestionBank\\target\\jacoco.exec
+[INFO] 
+[INFO] --- resources:3.3.1:resources (default-resources) @ question-bank-m0 ---
+[INFO] Copying 1 resource from src\main\resources to target\classes
+[INFO] Copying 5 resources from src\main\resources to target\classes
+[INFO] 
+[INFO] --- compiler:3.13.0:compile (default-compile) @ question-bank-m0 ---
+[INFO] Nothing to compile - all classes are up to date.
+[INFO] 
+[INFO] --- resources:3.3.1:testResources (default-testResources) @ question-bank-m0 ---
+[INFO] Copying 4 resources from src\test\resources to target\test-classes
+[INFO] 
+[INFO] --- compiler:3.13.0:testCompile (default-testCompile) @ question-bank-m0 ---
+[INFO] Recompiling the module because of changed source code.
+[INFO] Compiling 14 source files with javac [debug parameters release 21] to target\test-classes
+[INFO] 
+[INFO] --- surefire:3.5.3:test (default-test) @ question-bank-m0 ---
+[INFO] Using auto detected provider org.apache.maven.surefire.junitplatform.JUnitPlatformProvider
+[INFO] 
+[INFO] -------------------------------------------------------
+[INFO]  T E S T S
+[INFO] -------------------------------------------------------
+[INFO] Running com.allen.questionbank.common.RateLimitFilterTest
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.257 s -- in com.allen.questionbank.common.RateLimitFilterTest
+[INFO] Running com.allen.questionbank.InfrastructureUnitTest
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.005 s -- in com.allen.questionbank.InfrastructureUnitTest
+[INFO] Running com.allen.questionbank.jvm.JvmConcurrencyEvidenceTest
+[evidence] 有界队列 + AbortPolicy：第 3 个任务被拒绝，符合预期
+[evidence] volatile 版本：已停止=true，循环次数=69105003
+[evidence] 无 volatile 版本：3 秒内停止=true，循环次数=74558353
+[evidence] 结论：普通字段不保证可见性，JIT 可能把读提升到循环外；跨线程停止标志必须用 volatile / 锁 / 原子类，不能用普通 boolean
+[evidence] 平台线程池(200 线程) 完成 5000 个阻塞任务: 1277 ms
+[evidence] 虚拟线程    完成 5000 个阻塞任务: 85 ms
+[INFO] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 2.390 s -- in com.allen.questionbank.jvm.JvmConcurrencyEvidenceTest
+[INFO] Running com.allen.questionbank.KafkaOutboxIntegrationTest
+[WARNING] Tests run: 1, Failures: 0, Errors: 0, Skipped: 1, Time elapsed: 0 s -- in com.allen.questionbank.KafkaOutboxIntegrationTest
+[INFO] Running com.allen.questionbank.M0FlowIntegrationTest
+16:18:31.978 [main] INFO org.springframework.test.context.support.AnnotationConfigContextLoaderUtils -- Could not detect default configuration classes for test class [com.allen.questionbank.M0FlowIntegrationTest]: M0FlowIntegrationTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+16:18:32.307 [main] INFO org.springframework.boot.test.context.SpringBootTestContextBootstrapper -- Found @SpringBootConfiguration com.allen.questionbank.QuestionBankApplication for test class com.allen.questionbank.M0FlowIntegrationTest
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+
+ :: Spring Boot ::                (v3.4.5)
+
+2026-09-07 16:18:33.593 INFO  [background-preinit] [] o.h.validator.internal.util.Version - HV000001: Hibernate Validator 8.0.2.Final
+2026-09-07 16:18:33.747 INFO  [main] [] c.a.questionbank.M0FlowIntegrationTest - Starting M0FlowIntegrationTest using Java 21.0.12 with PID 93884 (started by Allen in C:\Project\QuestionBank)
+2026-09-07 16:18:33.748 INFO  [main] [] c.a.questionbank.M0FlowIntegrationTest - The following 1 profile is active: "test"
+2026-09-07 16:18:36.423 INFO  [main] [] o.s.d.r.c.RepositoryConfigurationDelegate - Multiple Spring Data modules found, entering strict repository configuration mode
+2026-09-07 16:18:36.426 INFO  [main] [] o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-09-07 16:18:36.825 INFO  [main] [] o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 381 ms. Found 10 JPA repository interfaces.
+2026-09-07 16:18:36.853 INFO  [main] [] o.s.d.r.c.RepositoryConfigurationDelegate - Multiple Spring Data modules found, entering strict repository configuration mode
+2026-09-07 16:18:36.856 INFO  [main] [] o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+2026-09-07 16:18:36.894 INFO  [main] [] o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.allen.questionbank.auth.UserAccountRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2026-09-07 16:18:36.902 INFO  [main] [] o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.allen.questionbank.bank.PaperVersionRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2026-09-07 16:18:36.903 INFO  [main] [] o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.allen.questionbank.bank.QuestionBankRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2026-09-07 16:18:36.903 INFO  [main] [] o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.allen.questionbank.bank.QuestionVersionRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2026-09-07 16:18:36.904 INFO  [main] [] o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.allen.questionbank.event.ConsumedEventRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2026-09-07 16:18:36.904 INFO  [main] [] o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.allen.questionbank.event.OutboxEventRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2026-09-07 16:18:36.904 INFO  [main] [] o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.allen.questionbank.importjob.ImportJobRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2026-09-07 16:18:36.904 INFO  [main] [] o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.allen.questionbank.practice.PracticeSessionRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2026-09-07 16:18:36.904 INFO  [main] [] o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.allen.questionbank.practice.SubmissionItemRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2026-09-07 16:18:36.904 INFO  [main] [] o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.allen.questionbank.practice.WrongQuestionRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2026-09-07 16:18:36.904 INFO  [main] [] o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 28 ms. Found 0 Redis repository interfaces.
+2026-09-07 16:18:38.988 INFO  [main] [] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2026-09-07 16:18:39.593 INFO  [main] [] com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection conn0: url=jdbc:h2:mem:question_bank user=SA
+2026-09-07 16:18:39.598 INFO  [main] [] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2026-09-07 16:18:39.717 INFO  [main] [] org.flywaydb.core.FlywayExecutor - Database: jdbc:h2:mem:question_bank (H2 2.3)
+2026-09-07 16:18:39.732 WARN  [main] [] o.f.core.internal.database.base.Database - Flyway upgrade recommended: H2 2.3.232 is newer than this version of Flyway and support has not been tested. The latest supported version of H2 is 2.2.224.
+2026-09-07 16:18:39.800 INFO  [main] [] o.f.c.i.s.JdbcTableSchemaHistory - Schema history table "public"."flyway_schema_history" does not exist yet
+2026-09-07 16:18:39.805 INFO  [main] [] o.f.core.internal.command.DbValidate - Successfully validated 4 migrations (execution time 00:00.047s)
+2026-09-07 16:18:39.821 INFO  [main] [] o.f.c.i.s.JdbcTableSchemaHistory - Creating Schema History table "public"."flyway_schema_history" ...
+2026-09-07 16:18:39.880 INFO  [main] [] o.f.core.internal.command.DbMigrate - Current version of schema "public": << Empty Schema >>
+2026-09-07 16:18:39.896 INFO  [main] [] o.f.core.internal.command.DbMigrate - Migrating schema "public" to version "1 - m0 schema"
+2026-09-07 16:18:39.963 INFO  [main] [] o.f.core.internal.command.DbMigrate - Migrating schema "public" to version "2 - m0 query indexes"
+2026-09-07 16:18:39.973 INFO  [main] [] o.f.core.internal.command.DbMigrate - Migrating schema "public" to version "3 - async import jobs"
+2026-09-07 16:18:39.986 INFO  [main] [] o.f.core.internal.command.DbMigrate - Migrating schema "public" to version "4 - outbox events"
+2026-09-07 16:18:40.002 INFO  [main] [] o.f.core.internal.command.DbMigrate - Successfully applied 4 migrations to schema "public", now at version v4 (execution time 00:00.063s)
+2026-09-07 16:18:40.411 INFO  [main] [] o.hibernate.jpa.internal.util.LogHelper - HHH000204: Processing PersistenceUnitInfo [name: default]
+2026-09-07 16:18:40.552 INFO  [main] [] org.hibernate.Version - HHH000412: Hibernate ORM core version 6.6.13.Final
+2026-09-07 16:18:40.640 INFO  [main] [] o.h.c.internal.RegionFactoryInitiator - HHH000026: Second-level cache disabled
+2026-09-07 16:18:41.338 INFO  [main] [] o.s.o.j.p.SpringPersistenceUnitInfo - No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-09-07 16:18:41.506 INFO  [main] [] org.hibernate.orm.connections.pooling - HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-1)']
+	Database driver: undefined/unknown
+	Database version: 2.3.232
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2026-09-07 16:18:43.752 INFO  [main] [] o.h.e.t.j.p.i.JtaPlatformInitiator - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2026-09-07 16:18:43.812 INFO  [main] [] o.s.o.j.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-09-07 16:18:46.706 INFO  [main] [] o.s.d.j.r.query.QueryEnhancerFactory - Hibernate is in classpath; If applicable, HQL parser will be used.
+2026-09-07 16:18:48.762 INFO  [main] [] o.s.s.c.a.a.c.InitializeUserDetailsBeanManagerConfigurer$InitializeUserDetailsManagerConfigurer - Global AuthenticationManager configured with UserDetailsService bean with name unusedFormLoginUserDetailsService
+2026-09-07 16:18:50.766 INFO  [main] [] o.s.b.a.e.web.EndpointLinksResolver - Exposing 3 endpoints beneath base path '/actuator'
+2026-09-07 16:18:52.587 INFO  [main] [] o.s.b.t.m.w.SpringBootMockServletContext - Initializing Spring TestDispatcherServlet ''
+2026-09-07 16:18:52.587 INFO  [main] [] o.s.t.web.servlet.TestDispatcherServlet - Initializing Servlet ''
+2026-09-07 16:18:52.589 INFO  [main] [] o.s.t.web.servlet.TestDispatcherServlet - Completed initialization in 2 ms
+2026-09-07 16:18:52.692 INFO  [main] [] c.a.questionbank.M0FlowIntegrationTest - Started M0FlowIntegrationTest in 20.042 seconds (process running for 25.155)
+Mockito is currently self-attaching to enable the inline-mock-maker. This will no longer work in future releases of the JDK. Please add Mockito as an agent to your build what is described in Mockito's documentation: https://javadoc.io/doc/org.mockito/mockito-core/latest/org/mockito/Mockito.html#0.3
+Java HotSpot(TM) 64-Bit Server VM warning: Sharing is only supported for boot loader classes because bootstrap classpath has been appended
+WARNING: A Java agent has been loaded dynamically (C:\Users\Allen\.m2\repository\net\bytebuddy\byte-buddy-agent\1.15.11\byte-buddy-agent-1.15.11.jar)
+WARNING: If a serviceability tool is in use, please run with -XX:+EnableDynamicAgentLoading to hide this warning
+WARNING: If a serviceability tool is not in use, please run with -Djdk.instrument.traceUsage for more information
+WARNING: Dynamic loading of agents will be disallowed by default in a future release
+[INFO] Tests run: 8, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 24.34 s -- in com.allen.questionbank.M0FlowIntegrationTest
+[INFO] Running com.allen.questionbank.M0OpsIntegrationTest
+2026-09-07 16:18:56.043 INFO  [main] [] o.s.t.c.s.AnnotationConfigContextLoaderUtils - Could not detect default configuration classes for test class [com.allen.questionbank.M0OpsIntegrationTest]: M0OpsIntegrationTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-09-07 16:18:56.047 INFO  [main] [] o.s.b.t.c.SpringBootTestContextBootstrapper - Found @SpringBootConfiguration com.allen.questionbank.QuestionBankApplication for test class com.allen.questionbank.M0OpsIntegrationTest
+2026-09-07 16:18:56.827 INFO  [main] [237d2149-7859-455d-9d6c-ea2d669c200b] o.springdoc.api.AbstractOpenApiResource - Init duration for springdoc-openapi is: 704 ms
+[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.942 s -- in com.allen.questionbank.M0OpsIntegrationTest
+[INFO] Running com.allen.questionbank.MysqlRealDbIntegrationTest
+[WARNING] Tests run: 6, Failures: 0, Errors: 0, Skipped: 6, Time elapsed: 0.001 s -- in com.allen.questionbank.MysqlRealDbIntegrationTest
+[INFO] Running com.allen.questionbank.OpsComponentsTest
+[INFO] Tests run: 5, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.688 s -- in com.allen.questionbank.OpsComponentsTest
+[INFO] Running com.allen.questionbank.OutboxRelayAndConsumerTest
+2026-09-07 16:18:58.210 INFO  [main] [] c.a.q.event.PaperPublishedEventConsumer - 事件已消费: paper:7:PAPER_PUBLISHED payload={"paperId":7}
+2026-09-07 16:18:58.272 INFO  [main] [] c.a.q.event.PaperPublishedEventConsumer - 重复消息，按幂等跳过: paper:7:PAPER_PUBLISHED
+2026-09-07 16:18:58.284 WARN  [main] [] c.a.q.event.PaperPublishedEventConsumer - 无法解析的消息，跳过: not-json-at-all
+2026-09-07 16:18:58.288 WARN  [main] [] c.a.q.event.PaperPublishedEventConsumer - 消息缺少 eventKey，无法做幂等判断，跳过: {"payload":{}}
+2026-09-07 16:18:58.288 WARN  [main] [] c.a.q.event.PaperPublishedEventConsumer - 消息缺少 eventKey，无法做幂等判断，跳过: {"eventKey":""}
+2026-09-07 16:18:58.769 ERROR [main] [] c.allen.questionbank.event.OutboxRelay - outbox 事件超过最大重试次数，需要人工介入: key=paper:7:PAPER_PUBLISHED, error=java.lang.RuntimeException: broker unreachable
+[INFO] Tests run: 4, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.091 s -- in com.allen.questionbank.OutboxRelayAndConsumerTest
+[INFO] Running com.allen.questionbank.OutboxTest
+[ERROR] Tests run: 7, Failures: 1, Errors: 0, Skipped: 0, Time elapsed: 0.685 s <<< FAILURE! -- in com.allen.questionbank.OutboxTest
+[ERROR] com.allen.questionbank.OutboxTest.publisherFailsTheWholeTransactionWhenPayloadCannotBeSerialized -- Time elapsed: 0.653 s <<< FAILURE!
+org.opentest4j.AssertionFailedError: 必须区分'结果为空'与'序列化失败'两种失败路径，实际: outbox 事件序列化失败: PAPER_PUBLISHED ==> expected: <true> but was: <false>
+	at org.junit.jupiter.api.AssertionFailureBuilder.build(AssertionFailureBuilder.java:151)
+	at org.junit.jupiter.api.AssertionFailureBuilder.buildAndThrow(AssertionFailureBuilder.java:132)
+	at org.junit.jupiter.api.AssertTrue.failNotTrue(AssertTrue.java:63)
+	at org.junit.jupiter.api.AssertTrue.assertTrue(AssertTrue.java:36)
+	at org.junit.jupiter.api.Assertions.assertTrue(Assertions.java:214)
+	at com.allen.questionbank.OutboxTest.publisherFailsTheWholeTransactionWhenPayloadCannotBeSerialized(OutboxTest.java:85)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+
+[INFO] Running com.allen.questionbank.RedisCacheIntegrationTest
+[WARNING] Tests run: 3, Failures: 0, Errors: 0, Skipped: 3, Time elapsed: 0.001 s -- in com.allen.questionbank.RedisCacheIntegrationTest
+[INFO] Running com.allen.questionbank.RedisGuardedSubmitIntegrationTest
+[WARNING] Tests run: 2, Failures: 0, Errors: 0, Skipped: 2, Time elapsed: 0.002 s -- in com.allen.questionbank.RedisGuardedSubmitIntegrationTest
+[INFO] Running com.allen.questionbank.RedisLockAndRateLimitIntegrationTest
+[WARNING] Tests run: 6, Failures: 0, Errors: 0, Skipped: 6, Time elapsed: 0 s -- in com.allen.questionbank.RedisLockAndRateLimitIntegrationTest
+[INFO] Running com.allen.questionbank.TransactionPropagationIntegrationTest
+2026-09-07 16:18:59.496 INFO  [main] [] o.s.t.c.s.AnnotationConfigContextLoaderUtils - Could not detect default configuration classes for test class [com.allen.questionbank.TransactionPropagationIntegrationTest]: TransactionPropagationIntegrationTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-09-07 16:18:59.505 INFO  [main] [] o.s.b.t.c.SpringBootTestContextBootstrapper - Found @SpringBootConfiguration com.allen.questionbank.QuestionBankApplication for test class com.allen.questionbank.TransactionPropagationIntegrationTest
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+
+ :: Spring Boot ::                (v3.4.5)
+
+2026-09-07 16:18:59.640 INFO  [main] [] c.a.q.TransactionPropagationIntegrationTest - Starting TransactionPropagationIntegrationTest using Java 21.0.12 with PID 93884 (started by Allen in C:\Project\QuestionBank)
+2026-09-07 16:18:59.640 INFO  [main] [] c.a.q.TransactionPropagationIntegrationTest - The following 1 profile is active: "test"
+2026-09-07 16:19:00.840 INFO  [main] [] o.s.d.r.c.RepositoryConfigurationDelegate - Multiple Spring Data modules found, entering strict repository configuration mode
+2026-09-07 16:19:00.840 INFO  [main] [] o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-09-07 16:19:00.922 INFO  [main] [] o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 80 ms. Found 10 JPA repository interfaces.
+2026-09-07 16:19:00.928 INFO  [main] [] o.s.d.r.c.RepositoryConfigurationDelegate - Multiple Spring Data modules found, entering strict repository configuration mode
+2026-09-07 16:19:00.928 INFO  [main] [] o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+2026-09-07 16:19:00.947 INFO  [main] [] o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.allen.questionbank.auth.UserAccountRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2026-09-07 16:19:00.947 INFO  [main] [] o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.allen.questionbank.bank.PaperVersionRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2026-09-07 16:19:00.948 INFO  [main] [] o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.allen.questionbank.bank.QuestionBankRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2026-09-07 16:19:00.948 INFO  [main] [] o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.allen.questionbank.bank.QuestionVersionRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2026-09-07 16:19:00.949 INFO  [main] [] o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.allen.questionbank.event.ConsumedEventRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2026-09-07 16:19:00.949 INFO  [main] [] o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.allen.questionbank.event.OutboxEventRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2026-09-07 16:19:00.949 INFO  [main] [] o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.allen.questionbank.importjob.ImportJobRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2026-09-07 16:19:00.949 INFO  [main] [] o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.allen.questionbank.practice.PracticeSessionRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2026-09-07 16:19:00.949 INFO  [main] [] o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.allen.questionbank.practice.SubmissionItemRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2026-09-07 16:19:00.950 INFO  [main] [] o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.allen.questionbank.practice.WrongQuestionRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2026-09-07 16:19:00.950 INFO  [main] [] o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 18 ms. Found 0 Redis repository interfaces.
+2026-09-07 16:19:01.579 INFO  [main] [] com.zaxxer.hikari.HikariDataSource - HikariPool-2 - Starting...
+2026-09-07 16:19:01.582 INFO  [main] [] com.zaxxer.hikari.pool.HikariPool - HikariPool-2 - Added connection conn10: url=jdbc:h2:mem:question_bank user=SA
+2026-09-07 16:19:01.583 INFO  [main] [] com.zaxxer.hikari.HikariDataSource - HikariPool-2 - Start completed.
+2026-09-07 16:19:01.592 INFO  [main] [] org.flywaydb.core.FlywayExecutor - Database: jdbc:h2:mem:question_bank (H2 2.3)
+2026-09-07 16:19:01.599 WARN  [main] [] o.f.core.internal.database.base.Database - Flyway upgrade recommended: H2 2.3.232 is newer than this version of Flyway and support has not been tested. The latest supported version of H2 is 2.2.224.
+2026-09-07 16:19:01.630 INFO  [main] [] o.f.core.internal.command.DbValidate - Successfully validated 4 migrations (execution time 00:00.024s)
+2026-09-07 16:19:01.635 INFO  [main] [] o.f.core.internal.command.DbMigrate - Current version of schema "public": 4
+2026-09-07 16:19:01.636 INFO  [main] [] o.f.core.internal.command.DbMigrate - Schema "public" is up to date. No migration necessary.
+2026-09-07 16:19:01.761 INFO  [main] [] o.hibernate.jpa.internal.util.LogHelper - HHH000204: Processing PersistenceUnitInfo [name: default]
+2026-09-07 16:19:01.806 INFO  [main] [] o.h.c.internal.RegionFactoryInitiator - HHH000026: Second-level cache disabled
+2026-09-07 16:19:01.869 INFO  [main] [] o.s.o.j.p.SpringPersistenceUnitInfo - No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-09-07 16:19:01.875 INFO  [main] [] org.hibernate.orm.connections.pooling - HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-2)']
+	Database driver: undefined/unknown
+	Database version: 2.3.232
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2026-09-07 16:19:02.105 INFO  [main] [] o.h.e.t.j.p.i.JtaPlatformInitiator - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2026-09-07 16:19:02.109 INFO  [main] [] o.s.o.j.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-09-07 16:19:04.033 INFO  [main] [] o.s.s.c.a.a.c.InitializeUserDetailsBeanManagerConfigurer$InitializeUserDetailsManagerConfigurer - Global AuthenticationManager configured with UserDetailsService bean with name unusedFormLoginUserDetailsService
+2026-09-07 16:19:05.014 INFO  [main] [] o.s.b.a.e.web.EndpointLinksResolver - Exposing 3 endpoints beneath base path '/actuator'
+2026-09-07 16:19:07.380 INFO  [main] [] c.a.q.TransactionPropagationIntegrationTest - Started TransactionPropagationIntegrationTest in 7.865 seconds (process running for 39.846)
+[evidence] REQUIRES_NEW：外层回滚=已撤销，内层=保留
+[evidence] BankService 代理类型: com.allen.questionbank.bank.BankService$$SpringCGLIB$$0
+[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 8.015 s -- in com.allen.questionbank.TransactionPropagationIntegrationTest
+[INFO] 
+[INFO] Results:
+[INFO] 
+[ERROR] Failures: 
+[ERROR]   OutboxTest.publisherFailsTheWholeTransactionWhenPayloadCannotBeSerialized:85 必须区分'结果为空'与'序列化失败'两种失败路径，实际: outbox 事件序列化失败: PAPER_PUBLISHED ==> expected: <true> but was: <false>
+[INFO] 
+[ERROR] Tests run: 52, Failures: 1, Errors: 0, Skipped: 18
+[INFO] 
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD FAILURE
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  52.175 s
+[INFO] Finished at: 2026-09-07T16:19:09+08:00
+[INFO] ------------------------------------------------------------------------
+[ERROR] Failed to execute goal org.apache.maven.plugins:maven-surefire-plugin:3.5.3:test (default-test) on project question-bank-m0: There are test failures.
+[ERROR] 
+[ERROR] See C:\Project\QuestionBank\target\surefire-reports for the individual test results.
+[ERROR] See dump files (if any exist) [date].dump, [date]-jvmRun[N].dump and [date].dumpstream.
+[ERROR] -> [Help 1]
+[ERROR] 
+[ERROR] To see the full stack trace of the errors, re-run Maven with the -e switch.
+[ERROR] Re-run Maven using the -X switch to enable full debug logging.
+[ERROR] 
+[ERROR] For more information about the errors and possible solutions, please read the following articles:
+[ERROR] [Help 1] http://cwiki.apache.org/confluence/display/MAVEN/MojoFailureException

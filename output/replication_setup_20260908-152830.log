@@ -1,0 +1,20 @@
+=== 1/5 初始化双 datadir（幂等：已存在则跳过）===
+master datadir 已存在，跳过
+slave datadir 已存在，跳过
+=== 2/5 启动检查 ===
+双实例在位
+=== 3/5 密码/复制账号/业务库 ===
+mysql: [Warning] Using a password on the command line interface can be insecure.
+=== 4/5 配置从库复制（幂等：已配置则跳过）===
+复制已配置
+=== 5/5 验证 ===
+mysql: [Warning] Using a password on the command line interface can be insecure.
+           Replica_IO_Running: Yes
+          Replica_SQL_Running: Yes
+mysql: [Warning] Using a password on the command line interface can be insecure.
+复制收敛判定: 从库可见 repl_probe_db.repl_probe (polls=1)
+mysql: [Warning] Using a password on the command line interface can be insecure.
+slave_port	ro	sro
+3308	1	1
+证据日志: output/replication_setup_20260908-152830.log
+跑证据测试: READ_REPLICA_EVIDENCE=true MYSQL_EVIDENCE=true ./scripts/mvn.sh test -Dtest=ReadReplicaRoutingIntegrationTest

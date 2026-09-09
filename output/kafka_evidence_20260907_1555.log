@@ -1,0 +1,711 @@
+[INFO] Scanning for projects...
+[INFO] 
+[INFO] ---------------------< com.allen:question-bank-m0 >---------------------
+[INFO] Building question-bank-m0 0.1.0-SNAPSHOT
+[INFO]   from pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- jacoco:0.8.12:prepare-agent (prepare-agent) @ question-bank-m0 ---
+[INFO] argLine set to -javaagent:C:\\Users\\Allen\\.m2\\repository\\org\\jacoco\\org.jacoco.agent\\0.8.12\\org.jacoco.agent-0.8.12-runtime.jar=destfile=C:\\Project\\QuestionBank\\target\\jacoco.exec
+[INFO] 
+[INFO] --- resources:3.3.1:resources (default-resources) @ question-bank-m0 ---
+[INFO] Copying 1 resource from src\main\resources to target\classes
+[INFO] Copying 5 resources from src\main\resources to target\classes
+[INFO] 
+[INFO] --- compiler:3.13.0:compile (default-compile) @ question-bank-m0 ---
+[INFO] Recompiling the module because of changed source code.
+[INFO] Compiling 63 source files with javac [debug parameters release 21] to target\classes
+[INFO] 
+[INFO] --- resources:3.3.1:testResources (default-testResources) @ question-bank-m0 ---
+[INFO] Copying 4 resources from src\test\resources to target\test-classes
+[INFO] 
+[INFO] --- compiler:3.13.0:testCompile (default-testCompile) @ question-bank-m0 ---
+[INFO] Recompiling the module because of changed dependency.
+[INFO] Compiling 14 source files with javac [debug parameters release 21] to target\test-classes
+[INFO] 
+[INFO] --- surefire:3.5.3:test (default-test) @ question-bank-m0 ---
+[INFO] Using auto detected provider org.apache.maven.surefire.junitplatform.JUnitPlatformProvider
+[INFO] 
+[INFO] -------------------------------------------------------
+[INFO]  T E S T S
+[INFO] -------------------------------------------------------
+[INFO] Running com.allen.questionbank.KafkaOutboxIntegrationTest
+15:56:02.246 [main] INFO org.springframework.test.context.support.AnnotationConfigContextLoaderUtils -- Could not detect default configuration classes for test class [com.allen.questionbank.KafkaOutboxIntegrationTest]: KafkaOutboxIntegrationTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+15:56:02.615 [main] INFO org.springframework.boot.test.context.SpringBootTestContextBootstrapper -- Found @SpringBootConfiguration com.allen.questionbank.QuestionBankApplication for test class com.allen.questionbank.KafkaOutboxIntegrationTest
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+
+ :: Spring Boot ::                (v3.4.5)
+
+2026-09-07 15:56:03.698 INFO  [background-preinit] [] o.h.validator.internal.util.Version - HV000001: Hibernate Validator 8.0.2.Final
+2026-09-07 15:56:03.852 INFO  [main] [] c.a.q.KafkaOutboxIntegrationTest - Starting KafkaOutboxIntegrationTest using Java 21.0.12 with PID 89464 (started by Allen in C:\Project\QuestionBank)
+2026-09-07 15:56:03.854 INFO  [main] [] c.a.q.KafkaOutboxIntegrationTest - The following 2 profiles are active: "test", "kafka"
+2026-09-07 15:56:07.604 INFO  [main] [] o.s.d.r.c.RepositoryConfigurationDelegate - Multiple Spring Data modules found, entering strict repository configuration mode
+2026-09-07 15:56:07.608 INFO  [main] [] o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-09-07 15:56:08.265 INFO  [main] [] o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 626 ms. Found 10 JPA repository interfaces.
+2026-09-07 15:56:08.311 INFO  [main] [] o.s.d.r.c.RepositoryConfigurationDelegate - Multiple Spring Data modules found, entering strict repository configuration mode
+2026-09-07 15:56:08.313 INFO  [main] [] o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+2026-09-07 15:56:08.362 INFO  [main] [] o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.allen.questionbank.auth.UserAccountRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2026-09-07 15:56:08.364 INFO  [main] [] o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.allen.questionbank.bank.PaperVersionRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2026-09-07 15:56:08.364 INFO  [main] [] o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.allen.questionbank.bank.QuestionBankRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2026-09-07 15:56:08.365 INFO  [main] [] o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.allen.questionbank.bank.QuestionVersionRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2026-09-07 15:56:08.365 INFO  [main] [] o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.allen.questionbank.event.ConsumedEventRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2026-09-07 15:56:08.365 INFO  [main] [] o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.allen.questionbank.event.OutboxEventRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2026-09-07 15:56:08.368 INFO  [main] [] o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.allen.questionbank.importjob.ImportJobRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2026-09-07 15:56:08.368 INFO  [main] [] o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.allen.questionbank.practice.PracticeSessionRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2026-09-07 15:56:08.369 INFO  [main] [] o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.allen.questionbank.practice.SubmissionItemRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2026-09-07 15:56:08.369 INFO  [main] [] o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.allen.questionbank.practice.WrongQuestionRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2026-09-07 15:56:08.370 INFO  [main] [] o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 34 ms. Found 0 Redis repository interfaces.
+2026-09-07 15:56:11.140 INFO  [main] [] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2026-09-07 15:56:11.797 INFO  [main] [] com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection conn0: url=jdbc:h2:mem:question_bank user=SA
+2026-09-07 15:56:11.802 INFO  [main] [] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2026-09-07 15:56:11.958 INFO  [main] [] org.flywaydb.core.FlywayExecutor - Database: jdbc:h2:mem:question_bank (H2 2.3)
+2026-09-07 15:56:11.973 WARN  [main] [] o.f.core.internal.database.base.Database - Flyway upgrade recommended: H2 2.3.232 is newer than this version of Flyway and support has not been tested. The latest supported version of H2 is 2.2.224.
+2026-09-07 15:56:12.041 INFO  [main] [] o.f.c.i.s.JdbcTableSchemaHistory - Schema history table "public"."flyway_schema_history" does not exist yet
+2026-09-07 15:56:12.045 INFO  [main] [] o.f.core.internal.command.DbValidate - Successfully validated 4 migrations (execution time 00:00.040s)
+2026-09-07 15:56:12.061 INFO  [main] [] o.f.c.i.s.JdbcTableSchemaHistory - Creating Schema History table "public"."flyway_schema_history" ...
+2026-09-07 15:56:12.138 INFO  [main] [] o.f.core.internal.command.DbMigrate - Current version of schema "public": << Empty Schema >>
+2026-09-07 15:56:12.171 INFO  [main] [] o.f.core.internal.command.DbMigrate - Migrating schema "public" to version "1 - m0 schema"
+2026-09-07 15:56:12.263 INFO  [main] [] o.f.core.internal.command.DbMigrate - Migrating schema "public" to version "2 - m0 query indexes"
+2026-09-07 15:56:12.288 INFO  [main] [] o.f.core.internal.command.DbMigrate - Migrating schema "public" to version "3 - async import jobs"
+2026-09-07 15:56:12.321 INFO  [main] [] o.f.core.internal.command.DbMigrate - Migrating schema "public" to version "4 - outbox events"
+2026-09-07 15:56:12.380 INFO  [main] [] o.f.core.internal.command.DbMigrate - Successfully applied 4 migrations to schema "public", now at version v4 (execution time 00:00.122s)
+2026-09-07 15:56:12.838 INFO  [main] [] o.hibernate.jpa.internal.util.LogHelper - HHH000204: Processing PersistenceUnitInfo [name: default]
+2026-09-07 15:56:13.010 INFO  [main] [] org.hibernate.Version - HHH000412: Hibernate ORM core version 6.6.13.Final
+2026-09-07 15:56:13.110 INFO  [main] [] o.h.c.internal.RegionFactoryInitiator - HHH000026: Second-level cache disabled
+2026-09-07 15:56:13.858 INFO  [main] [] o.s.o.j.p.SpringPersistenceUnitInfo - No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-09-07 15:56:14.053 INFO  [main] [] org.hibernate.orm.connections.pooling - HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-1)']
+	Database driver: undefined/unknown
+	Database version: 2.3.232
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2026-09-07 15:56:17.011 INFO  [main] [] o.h.e.t.j.p.i.JtaPlatformInitiator - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2026-09-07 15:56:17.073 INFO  [main] [] o.s.o.j.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-09-07 15:56:21.708 INFO  [main] [] o.s.d.j.r.query.QueryEnhancerFactory - Hibernate is in classpath; If applicable, HQL parser will be used.
+2026-09-07 15:56:24.161 INFO  [main] [] o.s.s.c.a.a.c.InitializeUserDetailsBeanManagerConfigurer$InitializeUserDetailsManagerConfigurer - Global AuthenticationManager configured with UserDetailsService bean with name unusedFormLoginUserDetailsService
+2026-09-07 15:56:25.313 INFO  [main] [] o.s.b.a.e.web.EndpointLinksResolver - Exposing 3 endpoints beneath base path '/actuator'
+2026-09-07 15:56:27.025 INFO  [main] [] o.s.b.t.m.w.SpringBootMockServletContext - Initializing Spring TestDispatcherServlet ''
+2026-09-07 15:56:27.025 INFO  [main] [] o.s.t.web.servlet.TestDispatcherServlet - Initializing Servlet ''
+2026-09-07 15:56:27.026 INFO  [main] [] o.s.t.web.servlet.TestDispatcherServlet - Completed initialization in 1 ms
+2026-09-07 15:56:27.312 INFO  [main] [] o.a.k.clients.consumer.ConsumerConfig - ConsumerConfig values: 
+	allow.auto.create.topics = true
+	auto.commit.interval.ms = 5000
+	auto.include.jmx.reporter = true
+	auto.offset.reset = earliest
+	bootstrap.servers = [127.0.0.1:9092]
+	check.crcs = true
+	client.dns.lookup = use_all_dns_ips
+	client.id = consumer-question-bank-1
+	client.rack = 
+	connections.max.idle.ms = 540000
+	default.api.timeout.ms = 60000
+	enable.auto.commit = false
+	enable.metrics.push = true
+	exclude.internal.topics = true
+	fetch.max.bytes = 52428800
+	fetch.max.wait.ms = 500
+	fetch.min.bytes = 1
+	group.id = question-bank
+	group.instance.id = null
+	group.protocol = classic
+	group.remote.assignor = null
+	heartbeat.interval.ms = 3000
+	interceptor.classes = []
+	internal.leave.group.on.close = true
+	internal.throw.on.fetch.stable.offset.unsupported = false
+	isolation.level = read_uncommitted
+	key.deserializer = class org.apache.kafka.common.serialization.StringDeserializer
+	max.partition.fetch.bytes = 1048576
+	max.poll.interval.ms = 60000
+	max.poll.records = 500
+	metadata.max.age.ms = 300000
+	metadata.recovery.strategy = none
+	metric.reporters = []
+	metrics.num.samples = 2
+	metrics.recording.level = INFO
+	metrics.sample.window.ms = 30000
+	partition.assignment.strategy = [class org.apache.kafka.clients.consumer.RangeAssignor, class org.apache.kafka.clients.consumer.CooperativeStickyAssignor]
+	receive.buffer.bytes = 65536
+	reconnect.backoff.max.ms = 1000
+	reconnect.backoff.ms = 50
+	request.timeout.ms = 30000
+	retry.backoff.max.ms = 1000
+	retry.backoff.ms = 100
+	sasl.client.callback.handler.class = null
+	sasl.jaas.config = null
+	sasl.kerberos.kinit.cmd = /usr/bin/kinit
+	sasl.kerberos.min.time.before.relogin = 60000
+	sasl.kerberos.service.name = null
+	sasl.kerberos.ticket.renew.jitter = 0.05
+	sasl.kerberos.ticket.renew.window.factor = 0.8
+	sasl.login.callback.handler.class = null
+	sasl.login.class = null
+	sasl.login.connect.timeout.ms = null
+	sasl.login.read.timeout.ms = null
+	sasl.login.refresh.buffer.seconds = 300
+	sasl.login.refresh.min.period.seconds = 60
+	sasl.login.refresh.window.factor = 0.8
+	sasl.login.refresh.window.jitter = 0.05
+	sasl.login.retry.backoff.max.ms = 10000
+	sasl.login.retry.backoff.ms = 100
+	sasl.mechanism = GSSAPI
+	sasl.oauthbearer.clock.skew.seconds = 30
+	sasl.oauthbearer.expected.audience = null
+	sasl.oauthbearer.expected.issuer = null
+	sasl.oauthbearer.jwks.endpoint.refresh.ms = 3600000
+	sasl.oauthbearer.jwks.endpoint.retry.backoff.max.ms = 10000
+	sasl.oauthbearer.jwks.endpoint.retry.backoff.ms = 100
+	sasl.oauthbearer.jwks.endpoint.url = null
+	sasl.oauthbearer.scope.claim.name = scope
+	sasl.oauthbearer.sub.claim.name = sub
+	sasl.oauthbearer.token.endpoint.url = null
+	security.protocol = PLAINTEXT
+	security.providers = null
+	send.buffer.bytes = 131072
+	session.timeout.ms = 45000
+	socket.connection.setup.timeout.max.ms = 30000
+	socket.connection.setup.timeout.ms = 10000
+	ssl.cipher.suites = null
+	ssl.enabled.protocols = [TLSv1.2, TLSv1.3]
+	ssl.endpoint.identification.algorithm = https
+	ssl.engine.factory.class = null
+	ssl.key.password = null
+	ssl.keymanager.algorithm = SunX509
+	ssl.keystore.certificate.chain = null
+	ssl.keystore.key = null
+	ssl.keystore.location = null
+	ssl.keystore.password = null
+	ssl.keystore.type = JKS
+	ssl.protocol = TLSv1.3
+	ssl.provider = null
+	ssl.secure.random.implementation = null
+	ssl.trustmanager.algorithm = PKIX
+	ssl.truststore.certificates = null
+	ssl.truststore.location = null
+	ssl.truststore.password = null
+	ssl.truststore.type = JKS
+	value.deserializer = class org.apache.kafka.common.serialization.StringDeserializer
+
+2026-09-07 15:56:27.426 INFO  [main] [] o.a.k.c.t.i.KafkaMetricsCollector - initializing Kafka metrics collector
+2026-09-07 15:56:27.806 INFO  [main] [] o.a.kafka.common.utils.AppInfoParser - Kafka version: 3.8.1
+2026-09-07 15:56:27.806 INFO  [main] [] o.a.kafka.common.utils.AppInfoParser - Kafka commitId: 70d6ff42debf7e17
+2026-09-07 15:56:27.806 INFO  [main] [] o.a.kafka.common.utils.AppInfoParser - Kafka startTimeMs: 1788767787802
+2026-09-07 15:56:27.832 INFO  [main] [] o.a.k.c.c.internals.LegacyKafkaConsumer - [Consumer clientId=consumer-question-bank-1, groupId=question-bank] Subscribed to topic(s): qb-events
+2026-09-07 15:56:27.868 INFO  [main] [] c.a.q.KafkaOutboxIntegrationTest - Started KafkaOutboxIntegrationTest in 24.975 seconds (process running for 27.208)
+Mockito is currently self-attaching to enable the inline-mock-maker. This will no longer work in future releases of the JDK. Please add Mockito as an agent to your build what is described in Mockito's documentation: https://javadoc.io/doc/org.mockito/mockito-core/latest/org/mockito/Mockito.html#0.3
+2026-09-07 15:56:28.897 WARN  [org.springframework.kafka.KafkaListenerEndpointContainer#0-0-C-1] [] org.apache.kafka.clients.NetworkClient - [Consumer clientId=consumer-question-bank-1, groupId=question-bank] Error while fetching metadata with correlation id 2 : {qb-events=UNKNOWN_TOPIC_OR_PARTITION}
+2026-09-07 15:56:28.899 INFO  [org.springframework.kafka.KafkaListenerEndpointContainer#0-0-C-1] [] org.apache.kafka.clients.Metadata - [Consumer clientId=consumer-question-bank-1, groupId=question-bank] Cluster ID: QGE8oKypR3eU_FL8dh7DHg
+WARNING: A Java agent has been loaded dynamically (C:\Users\Allen\.m2\repository\net\bytebuddy\byte-buddy-agent\1.15.11\byte-buddy-agent-1.15.11.jar)
+WARNING: If a serviceability tool is in use, please run with -XX:+EnableDynamicAgentLoading to hide this warning
+WARNING: If a serviceability tool is not in use, please run with -Djdk.instrument.traceUsage for more information
+WARNING: Dynamic loading of agents will be disallowed by default in a future release
+Java HotSpot(TM) 64-Bit Server VM warning: Sharing is only supported for boot loader classes because bootstrap classpath has been appended
+2026-09-07 15:56:29.281 INFO  [org.springframework.kafka.KafkaListenerEndpointContainer#0-0-C-1] [] o.a.k.c.c.internals.ConsumerCoordinator - [Consumer clientId=consumer-question-bank-1, groupId=question-bank] Discovered group coordinator localhost:9092 (id: 2147483646 rack: null)
+2026-09-07 15:56:29.308 INFO  [org.springframework.kafka.KafkaListenerEndpointContainer#0-0-C-1] [] o.a.k.c.c.internals.ConsumerCoordinator - [Consumer clientId=consumer-question-bank-1, groupId=question-bank] (Re-)joining group
+2026-09-07 15:56:29.344 INFO  [org.springframework.kafka.KafkaListenerEndpointContainer#0-0-C-1] [] o.a.k.c.c.internals.ConsumerCoordinator - [Consumer clientId=consumer-question-bank-1, groupId=question-bank] Group coordinator localhost:9092 (id: 2147483646 rack: null) is unavailable or invalid due to cause: error response NOT_COORDINATOR. isDisconnected: false. Rediscovery will be attempted.
+2026-09-07 15:56:29.344 INFO  [org.springframework.kafka.KafkaListenerEndpointContainer#0-0-C-1] [] o.a.k.c.c.internals.ConsumerCoordinator - [Consumer clientId=consumer-question-bank-1, groupId=question-bank] Requesting disconnect from last known coordinator localhost:9092 (id: 2147483646 rack: null)
+2026-09-07 15:56:29.345 INFO  [org.springframework.kafka.KafkaListenerEndpointContainer#0-0-C-1] [] o.a.k.c.c.internals.ConsumerCoordinator - [Consumer clientId=consumer-question-bank-1, groupId=question-bank] JoinGroup failed: This is not the correct coordinator. Marking coordinator unknown. Sent generation was Generation{generationId=-1, memberId='', protocol='null'}
+2026-09-07 15:56:29.345 INFO  [org.springframework.kafka.KafkaListenerEndpointContainer#0-0-C-1] [] org.apache.kafka.clients.NetworkClient - [Consumer clientId=consumer-question-bank-1, groupId=question-bank] Client requested disconnect from node 2147483646
+2026-09-07 15:56:29.349 INFO  [org.springframework.kafka.KafkaListenerEndpointContainer#0-0-C-1] [] o.a.k.c.c.internals.ConsumerCoordinator - [Consumer clientId=consumer-question-bank-1, groupId=question-bank] Discovered group coordinator localhost:9092 (id: 2147483646 rack: null)
+2026-09-07 15:56:29.350 INFO  [org.springframework.kafka.KafkaListenerEndpointContainer#0-0-C-1] [] o.a.k.c.c.internals.ConsumerCoordinator - [Consumer clientId=consumer-question-bank-1, groupId=question-bank] Group coordinator localhost:9092 (id: 2147483646 rack: null) is unavailable or invalid due to cause: coordinator unavailable. isDisconnected: false. Rediscovery will be attempted.
+2026-09-07 15:56:29.350 INFO  [org.springframework.kafka.KafkaListenerEndpointContainer#0-0-C-1] [] o.a.k.c.c.internals.ConsumerCoordinator - [Consumer clientId=consumer-question-bank-1, groupId=question-bank] Requesting disconnect from last known coordinator localhost:9092 (id: 2147483646 rack: null)
+2026-09-07 15:56:29.468 INFO  [org.springframework.kafka.KafkaListenerEndpointContainer#0-0-C-1] [] o.a.k.c.c.internals.ConsumerCoordinator - [Consumer clientId=consumer-question-bank-1, groupId=question-bank] Discovered group coordinator localhost:9092 (id: 2147483646 rack: null)
+2026-09-07 15:56:29.486 INFO  [org.springframework.kafka.KafkaListenerEndpointContainer#0-0-C-1] [] o.a.k.c.c.internals.ConsumerCoordinator - [Consumer clientId=consumer-question-bank-1, groupId=question-bank] Request joining group due to: rebalance failed due to 'This is not the correct coordinator.' (NotCoordinatorException)
+2026-09-07 15:56:29.487 INFO  [org.springframework.kafka.KafkaListenerEndpointContainer#0-0-C-1] [] o.a.k.c.c.internals.ConsumerCoordinator - [Consumer clientId=consumer-question-bank-1, groupId=question-bank] (Re-)joining group
+2026-09-07 15:56:29.490 INFO  [org.springframework.kafka.KafkaListenerEndpointContainer#0-0-C-1] [] o.a.k.c.c.internals.ConsumerCoordinator - [Consumer clientId=consumer-question-bank-1, groupId=question-bank] Group coordinator localhost:9092 (id: 2147483646 rack: null) is unavailable or invalid due to cause: error response NOT_COORDINATOR. isDisconnected: false. Rediscovery will be attempted.
+2026-09-07 15:56:29.490 INFO  [org.springframework.kafka.KafkaListenerEndpointContainer#0-0-C-1] [] o.a.k.c.c.internals.ConsumerCoordinator - [Consumer clientId=consumer-question-bank-1, groupId=question-bank] Requesting disconnect from last known coordinator localhost:9092 (id: 2147483646 rack: null)
+2026-09-07 15:56:29.490 INFO  [org.springframework.kafka.KafkaListenerEndpointContainer#0-0-C-1] [] o.a.k.c.c.internals.ConsumerCoordinator - [Consumer clientId=consumer-question-bank-1, groupId=question-bank] JoinGroup failed: This is not the correct coordinator. Marking coordinator unknown. Sent generation was Generation{generationId=-1, memberId='', protocol='null'}
+2026-09-07 15:56:29.492 INFO  [org.springframework.kafka.KafkaListenerEndpointContainer#0-0-C-1] [] org.apache.kafka.clients.NetworkClient - [Consumer clientId=consumer-question-bank-1, groupId=question-bank] Client requested disconnect from node 2147483646
+2026-09-07 15:56:29.494 INFO  [org.springframework.kafka.KafkaListenerEndpointContainer#0-0-C-1] [] o.a.k.c.c.internals.ConsumerCoordinator - [Consumer clientId=consumer-question-bank-1, groupId=question-bank] Discovered group coordinator localhost:9092 (id: 2147483646 rack: null)
+2026-09-07 15:56:29.494 INFO  [org.springframework.kafka.KafkaListenerEndpointContainer#0-0-C-1] [] o.a.k.c.c.internals.ConsumerCoordinator - [Consumer clientId=consumer-question-bank-1, groupId=question-bank] Group coordinator localhost:9092 (id: 2147483646 rack: null) is unavailable or invalid due to cause: coordinator unavailable. isDisconnected: false. Rediscovery will be attempted.
+2026-09-07 15:56:29.494 INFO  [org.springframework.kafka.KafkaListenerEndpointContainer#0-0-C-1] [] o.a.k.c.c.internals.ConsumerCoordinator - [Consumer clientId=consumer-question-bank-1, groupId=question-bank] Requesting disconnect from last known coordinator localhost:9092 (id: 2147483646 rack: null)
+2026-09-07 15:56:29.605 INFO  [org.springframework.kafka.KafkaListenerEndpointContainer#0-0-C-1] [] o.a.k.c.c.internals.ConsumerCoordinator - [Consumer clientId=consumer-question-bank-1, groupId=question-bank] Discovered group coordinator localhost:9092 (id: 2147483646 rack: null)
+2026-09-07 15:56:29.638 INFO  [org.springframework.kafka.KafkaListenerEndpointContainer#0-0-C-1] [] o.a.k.c.c.internals.ConsumerCoordinator - [Consumer clientId=consumer-question-bank-1, groupId=question-bank] Request joining group due to: rebalance failed due to 'This is not the correct coordinator.' (NotCoordinatorException)
+2026-09-07 15:56:29.639 INFO  [org.springframework.kafka.KafkaListenerEndpointContainer#0-0-C-1] [] o.a.k.c.c.internals.ConsumerCoordinator - [Consumer clientId=consumer-question-bank-1, groupId=question-bank] (Re-)joining group
+2026-09-07 15:56:29.643 INFO  [org.springframework.kafka.KafkaListenerEndpointContainer#0-0-C-1] [] o.a.k.c.c.internals.ConsumerCoordinator - [Consumer clientId=consumer-question-bank-1, groupId=question-bank] Group coordinator localhost:9092 (id: 2147483646 rack: null) is unavailable or invalid due to cause: error response NOT_COORDINATOR. isDisconnected: false. Rediscovery will be attempted.
+2026-09-07 15:56:29.643 INFO  [org.springframework.kafka.KafkaListenerEndpointContainer#0-0-C-1] [] o.a.k.c.c.internals.ConsumerCoordinator - [Consumer clientId=consumer-question-bank-1, groupId=question-bank] Requesting disconnect from last known coordinator localhost:9092 (id: 2147483646 rack: null)
+2026-09-07 15:56:29.643 INFO  [org.springframework.kafka.KafkaListenerEndpointContainer#0-0-C-1] [] o.a.k.c.c.internals.ConsumerCoordinator - [Consumer clientId=consumer-question-bank-1, groupId=question-bank] JoinGroup failed: This is not the correct coordinator. Marking coordinator unknown. Sent generation was Generation{generationId=-1, memberId='', protocol='null'}
+2026-09-07 15:56:29.643 INFO  [org.springframework.kafka.KafkaListenerEndpointContainer#0-0-C-1] [] org.apache.kafka.clients.NetworkClient - [Consumer clientId=consumer-question-bank-1, groupId=question-bank] Client requested disconnect from node 2147483646
+2026-09-07 15:56:29.664 INFO  [org.springframework.kafka.KafkaListenerEndpointContainer#0-0-C-1] [] o.a.k.c.c.internals.ConsumerCoordinator - [Consumer clientId=consumer-question-bank-1, groupId=question-bank] Discovered group coordinator localhost:9092 (id: 2147483646 rack: null)
+2026-09-07 15:56:29.664 INFO  [org.springframework.kafka.KafkaListenerEndpointContainer#0-0-C-1] [] o.a.k.c.c.internals.ConsumerCoordinator - [Consumer clientId=consumer-question-bank-1, groupId=question-bank] Group coordinator localhost:9092 (id: 2147483646 rack: null) is unavailable or invalid due to cause: coordinator unavailable. isDisconnected: false. Rediscovery will be attempted.
+2026-09-07 15:56:29.665 INFO  [org.springframework.kafka.KafkaListenerEndpointContainer#0-0-C-1] [] o.a.k.c.c.internals.ConsumerCoordinator - [Consumer clientId=consumer-question-bank-1, groupId=question-bank] Requesting disconnect from last known coordinator localhost:9092 (id: 2147483646 rack: null)
+2026-09-07 15:56:29.754 INFO  [org.springframework.kafka.KafkaListenerEndpointContainer#0-0-C-1] [] o.a.k.c.c.internals.ConsumerCoordinator - [Consumer clientId=consumer-question-bank-1, groupId=question-bank] Discovered group coordinator localhost:9092 (id: 2147483646 rack: null)
+2026-09-07 15:56:29.764 INFO  [org.springframework.kafka.KafkaListenerEndpointContainer#0-0-C-1] [] o.a.k.c.c.internals.ConsumerCoordinator - [Consumer clientId=consumer-question-bank-1, groupId=question-bank] Request joining group due to: rebalance failed due to 'This is not the correct coordinator.' (NotCoordinatorException)
+2026-09-07 15:56:29.764 INFO  [org.springframework.kafka.KafkaListenerEndpointContainer#0-0-C-1] [] o.a.k.c.c.internals.ConsumerCoordinator - [Consumer clientId=consumer-question-bank-1, groupId=question-bank] (Re-)joining group
+2026-09-07 15:56:29.767 INFO  [org.springframework.kafka.KafkaListenerEndpointContainer#0-0-C-1] [] o.a.k.c.c.internals.ConsumerCoordinator - [Consumer clientId=consumer-question-bank-1, groupId=question-bank] Group coordinator localhost:9092 (id: 2147483646 rack: null) is unavailable or invalid due to cause: error response NOT_COORDINATOR. isDisconnected: false. Rediscovery will be attempted.
+2026-09-07 15:56:29.767 INFO  [org.springframework.kafka.KafkaListenerEndpointContainer#0-0-C-1] [] o.a.k.c.c.internals.ConsumerCoordinator - [Consumer clientId=consumer-question-bank-1, groupId=question-bank] Requesting disconnect from last known coordinator localhost:9092 (id: 2147483646 rack: null)
+2026-09-07 15:56:29.767 INFO  [org.springframework.kafka.KafkaListenerEndpointContainer#0-0-C-1] [] o.a.k.c.c.internals.ConsumerCoordinator - [Consumer clientId=consumer-question-bank-1, groupId=question-bank] JoinGroup failed: This is not the correct coordinator. Marking coordinator unknown. Sent generation was Generation{generationId=-1, memberId='', protocol='null'}
+2026-09-07 15:56:29.767 INFO  [org.springframework.kafka.KafkaListenerEndpointContainer#0-0-C-1] [] org.apache.kafka.clients.NetworkClient - [Consumer clientId=consumer-question-bank-1, groupId=question-bank] Client requested disconnect from node 2147483646
+2026-09-07 15:56:29.771 INFO  [org.springframework.kafka.KafkaListenerEndpointContainer#0-0-C-1] [] o.a.k.c.c.internals.ConsumerCoordinator - [Consumer clientId=consumer-question-bank-1, groupId=question-bank] Discovered group coordinator localhost:9092 (id: 2147483646 rack: null)
+2026-09-07 15:56:29.771 INFO  [org.springframework.kafka.KafkaListenerEndpointContainer#0-0-C-1] [] o.a.k.c.c.internals.ConsumerCoordinator - [Consumer clientId=consumer-question-bank-1, groupId=question-bank] Group coordinator localhost:9092 (id: 2147483646 rack: null) is unavailable or invalid due to cause: coordinator unavailable. isDisconnected: false. Rediscovery will be attempted.
+2026-09-07 15:56:29.771 INFO  [org.springframework.kafka.KafkaListenerEndpointContainer#0-0-C-1] [] o.a.k.c.c.internals.ConsumerCoordinator - [Consumer clientId=consumer-question-bank-1, groupId=question-bank] Requesting disconnect from last known coordinator localhost:9092 (id: 2147483646 rack: null)
+2026-09-07 15:56:29.877 INFO  [org.springframework.kafka.KafkaListenerEndpointContainer#0-0-C-1] [] o.a.k.c.c.internals.ConsumerCoordinator - [Consumer clientId=consumer-question-bank-1, groupId=question-bank] Discovered group coordinator localhost:9092 (id: 2147483646 rack: null)
+2026-09-07 15:56:29.897 INFO  [org.springframework.kafka.KafkaListenerEndpointContainer#0-0-C-1] [] o.a.k.c.c.internals.ConsumerCoordinator - [Consumer clientId=consumer-question-bank-1, groupId=question-bank] Request joining group due to: rebalance failed due to 'This is not the correct coordinator.' (NotCoordinatorException)
+2026-09-07 15:56:29.898 INFO  [org.springframework.kafka.KafkaListenerEndpointContainer#0-0-C-1] [] o.a.k.c.c.internals.ConsumerCoordinator - [Consumer clientId=consumer-question-bank-1, groupId=question-bank] (Re-)joining group
+2026-09-07 15:56:29.900 INFO  [org.springframework.kafka.KafkaListenerEndpointContainer#0-0-C-1] [] o.a.k.c.c.internals.ConsumerCoordinator - [Consumer clientId=consumer-question-bank-1, groupId=question-bank] Group coordinator localhost:9092 (id: 2147483646 rack: null) is unavailable or invalid due to cause: error response NOT_COORDINATOR. isDisconnected: false. Rediscovery will be attempted.
+2026-09-07 15:56:29.901 INFO  [org.springframework.kafka.KafkaListenerEndpointContainer#0-0-C-1] [] o.a.k.c.c.internals.ConsumerCoordinator - [Consumer clientId=consumer-question-bank-1, groupId=question-bank] Requesting disconnect from last known coordinator localhost:9092 (id: 2147483646 rack: null)
+2026-09-07 15:56:29.901 INFO  [org.springframework.kafka.KafkaListenerEndpointContainer#0-0-C-1] [] o.a.k.c.c.internals.ConsumerCoordinator - [Consumer clientId=consumer-question-bank-1, groupId=question-bank] JoinGroup failed: This is not the correct coordinator. Marking coordinator unknown. Sent generation was Generation{generationId=-1, memberId='', protocol='null'}
+2026-09-07 15:56:29.901 INFO  [org.springframework.kafka.KafkaListenerEndpointContainer#0-0-C-1] [] org.apache.kafka.clients.NetworkClient - [Consumer clientId=consumer-question-bank-1, groupId=question-bank] Client requested disconnect from node 2147483646
+2026-09-07 15:56:29.905 INFO  [org.springframework.kafka.KafkaListenerEndpointContainer#0-0-C-1] [] o.a.k.c.c.internals.ConsumerCoordinator - [Consumer clientId=consumer-question-bank-1, groupId=question-bank] Discovered group coordinator localhost:9092 (id: 2147483646 rack: null)
+2026-09-07 15:56:29.905 INFO  [org.springframework.kafka.KafkaListenerEndpointContainer#0-0-C-1] [] o.a.k.c.c.internals.ConsumerCoordinator - [Consumer clientId=consumer-question-bank-1, groupId=question-bank] Group coordinator localhost:9092 (id: 2147483646 rack: null) is unavailable or invalid due to cause: coordinator unavailable. isDisconnected: false. Rediscovery will be attempted.
+2026-09-07 15:56:29.905 INFO  [org.springframework.kafka.KafkaListenerEndpointContainer#0-0-C-1] [] o.a.k.c.c.internals.ConsumerCoordinator - [Consumer clientId=consumer-question-bank-1, groupId=question-bank] Requesting disconnect from last known coordinator localhost:9092 (id: 2147483646 rack: null)
+2026-09-07 15:56:30.016 INFO  [org.springframework.kafka.KafkaListenerEndpointContainer#0-0-C-1] [] o.a.k.c.c.internals.ConsumerCoordinator - [Consumer clientId=consumer-question-bank-1, groupId=question-bank] Discovered group coordinator localhost:9092 (id: 2147483646 rack: null)
+2026-09-07 15:56:30.036 INFO  [org.springframework.kafka.KafkaListenerEndpointContainer#0-0-C-1] [] o.a.k.c.c.internals.ConsumerCoordinator - [Consumer clientId=consumer-question-bank-1, groupId=question-bank] Request joining group due to: rebalance failed due to 'This is not the correct coordinator.' (NotCoordinatorException)
+2026-09-07 15:56:30.037 INFO  [org.springframework.kafka.KafkaListenerEndpointContainer#0-0-C-1] [] o.a.k.c.c.internals.ConsumerCoordinator - [Consumer clientId=consumer-question-bank-1, groupId=question-bank] (Re-)joining group
+2026-09-07 15:56:30.041 INFO  [org.springframework.kafka.KafkaListenerEndpointContainer#0-0-C-1] [] o.a.k.c.c.internals.ConsumerCoordinator - [Consumer clientId=consumer-question-bank-1, groupId=question-bank] Group coordinator localhost:9092 (id: 2147483646 rack: null) is unavailable or invalid due to cause: error response NOT_COORDINATOR. isDisconnected: false. Rediscovery will be attempted.
+2026-09-07 15:56:30.042 INFO  [org.springframework.kafka.KafkaListenerEndpointContainer#0-0-C-1] [] o.a.k.c.c.internals.ConsumerCoordinator - [Consumer clientId=consumer-question-bank-1, groupId=question-bank] Requesting disconnect from last known coordinator localhost:9092 (id: 2147483646 rack: null)
+2026-09-07 15:56:30.042 INFO  [org.springframework.kafka.KafkaListenerEndpointContainer#0-0-C-1] [] o.a.k.c.c.internals.ConsumerCoordinator - [Consumer clientId=consumer-question-bank-1, groupId=question-bank] JoinGroup failed: This is not the correct coordinator. Marking coordinator unknown. Sent generation was Generation{generationId=-1, memberId='', protocol='null'}
+2026-09-07 15:56:30.042 INFO  [org.springframework.kafka.KafkaListenerEndpointContainer#0-0-C-1] [] org.apache.kafka.clients.NetworkClient - [Consumer clientId=consumer-question-bank-1, groupId=question-bank] Client requested disconnect from node 2147483646
+2026-09-07 15:56:30.045 INFO  [org.springframework.kafka.KafkaListenerEndpointContainer#0-0-C-1] [] o.a.k.c.c.internals.ConsumerCoordinator - [Consumer clientId=consumer-question-bank-1, groupId=question-bank] Discovered group coordinator localhost:9092 (id: 2147483646 rack: null)
+2026-09-07 15:56:30.045 INFO  [org.springframework.kafka.KafkaListenerEndpointContainer#0-0-C-1] [] o.a.k.c.c.internals.ConsumerCoordinator - [Consumer clientId=consumer-question-bank-1, groupId=question-bank] Group coordinator localhost:9092 (id: 2147483646 rack: null) is unavailable or invalid due to cause: coordinator unavailable. isDisconnected: false. Rediscovery will be attempted.
+2026-09-07 15:56:30.045 INFO  [org.springframework.kafka.KafkaListenerEndpointContainer#0-0-C-1] [] o.a.k.c.c.internals.ConsumerCoordinator - [Consumer clientId=consumer-question-bank-1, groupId=question-bank] Requesting disconnect from last known coordinator localhost:9092 (id: 2147483646 rack: null)
+2026-09-07 15:56:30.131 INFO  [org.springframework.kafka.KafkaListenerEndpointContainer#0-0-C-1] [] o.a.k.c.c.internals.ConsumerCoordinator - [Consumer clientId=consumer-question-bank-1, groupId=question-bank] Discovered group coordinator localhost:9092 (id: 2147483646 rack: null)
+2026-09-07 15:56:30.157 INFO  [org.springframework.kafka.KafkaListenerEndpointContainer#0-0-C-1] [] o.a.k.c.c.internals.ConsumerCoordinator - [Consumer clientId=consumer-question-bank-1, groupId=question-bank] Request joining group due to: rebalance failed due to 'This is not the correct coordinator.' (NotCoordinatorException)
+2026-09-07 15:56:30.158 INFO  [org.springframework.kafka.KafkaListenerEndpointContainer#0-0-C-1] [] o.a.k.c.c.internals.ConsumerCoordinator - [Consumer clientId=consumer-question-bank-1, groupId=question-bank] (Re-)joining group
+2026-09-07 15:56:30.160 INFO  [org.springframework.kafka.KafkaListenerEndpointContainer#0-0-C-1] [] o.a.k.c.c.internals.ConsumerCoordinator - [Consumer clientId=consumer-question-bank-1, groupId=question-bank] Group coordinator localhost:9092 (id: 2147483646 rack: null) is unavailable or invalid due to cause: error response NOT_COORDINATOR. isDisconnected: false. Rediscovery will be attempted.
+2026-09-07 15:56:30.161 INFO  [org.springframework.kafka.KafkaListenerEndpointContainer#0-0-C-1] [] o.a.k.c.c.internals.ConsumerCoordinator - [Consumer clientId=consumer-question-bank-1, groupId=question-bank] Requesting disconnect from last known coordinator localhost:9092 (id: 2147483646 rack: null)
+2026-09-07 15:56:30.161 INFO  [org.springframework.kafka.KafkaListenerEndpointContainer#0-0-C-1] [] o.a.k.c.c.internals.ConsumerCoordinator - [Consumer clientId=consumer-question-bank-1, groupId=question-bank] JoinGroup failed: This is not the correct coordinator. Marking coordinator unknown. Sent generation was Generation{generationId=-1, memberId='', protocol='null'}
+2026-09-07 15:56:30.161 INFO  [org.springframework.kafka.KafkaListenerEndpointContainer#0-0-C-1] [] org.apache.kafka.clients.NetworkClient - [Consumer clientId=consumer-question-bank-1, groupId=question-bank] Client requested disconnect from node 2147483646
+2026-09-07 15:56:30.162 INFO  [org.springframework.kafka.KafkaListenerEndpointContainer#0-0-C-1] [] o.a.k.c.c.internals.ConsumerCoordinator - [Consumer clientId=consumer-question-bank-1, groupId=question-bank] Discovered group coordinator localhost:9092 (id: 2147483646 rack: null)
+2026-09-07 15:56:30.162 INFO  [org.springframework.kafka.KafkaListenerEndpointContainer#0-0-C-1] [] o.a.k.c.c.internals.ConsumerCoordinator - [Consumer clientId=consumer-question-bank-1, groupId=question-bank] Group coordinator localhost:9092 (id: 2147483646 rack: null) is unavailable or invalid due to cause: coordinator unavailable. isDisconnected: false. Rediscovery will be attempted.
+2026-09-07 15:56:30.163 INFO  [org.springframework.kafka.KafkaListenerEndpointContainer#0-0-C-1] [] o.a.k.c.c.internals.ConsumerCoordinator - [Consumer clientId=consumer-question-bank-1, groupId=question-bank] Requesting disconnect from last known coordinator localhost:9092 (id: 2147483646 rack: null)
+2026-09-07 15:56:30.231 INFO  [scheduling-1] [] o.a.k.clients.producer.ProducerConfig - ProducerConfig values: 
+	acks = -1
+	auto.include.jmx.reporter = true
+	batch.size = 16384
+	bootstrap.servers = [127.0.0.1:9092]
+	buffer.memory = 33554432
+	client.dns.lookup = use_all_dns_ips
+	client.id = question-bank-m0-producer-1
+	compression.gzip.level = -1
+	compression.lz4.level = 9
+	compression.type = none
+	compression.zstd.level = 3
+	connections.max.idle.ms = 540000
+	delivery.timeout.ms = 120000
+	enable.idempotence = true
+	enable.metrics.push = true
+	interceptor.classes = []
+	key.serializer = class org.apache.kafka.common.serialization.StringSerializer
+	linger.ms = 0
+	max.block.ms = 60000
+	max.in.flight.requests.per.connection = 5
+	max.request.size = 1048576
+	metadata.max.age.ms = 300000
+	metadata.max.idle.ms = 300000
+	metadata.recovery.strategy = none
+	metric.reporters = []
+	metrics.num.samples = 2
+	metrics.recording.level = INFO
+	metrics.sample.window.ms = 30000
+	partitioner.adaptive.partitioning.enable = true
+	partitioner.availability.timeout.ms = 0
+	partitioner.class = null
+	partitioner.ignore.keys = false
+	receive.buffer.bytes = 32768
+	reconnect.backoff.max.ms = 1000
+	reconnect.backoff.ms = 50
+	request.timeout.ms = 30000
+	retries = 2147483647
+	retry.backoff.max.ms = 1000
+	retry.backoff.ms = 100
+	sasl.client.callback.handler.class = null
+	sasl.jaas.config = null
+	sasl.kerberos.kinit.cmd = /usr/bin/kinit
+	sasl.kerberos.min.time.before.relogin = 60000
+	sasl.kerberos.service.name = null
+	sasl.kerberos.ticket.renew.jitter = 0.05
+	sasl.kerberos.ticket.renew.window.factor = 0.8
+	sasl.login.callback.handler.class = null
+	sasl.login.class = null
+	sasl.login.connect.timeout.ms = null
+	sasl.login.read.timeout.ms = null
+	sasl.login.refresh.buffer.seconds = 300
+	sasl.login.refresh.min.period.seconds = 60
+	sasl.login.refresh.window.factor = 0.8
+	sasl.login.refresh.window.jitter = 0.05
+	sasl.login.retry.backoff.max.ms = 10000
+	sasl.login.retry.backoff.ms = 100
+	sasl.mechanism = GSSAPI
+	sasl.oauthbearer.clock.skew.seconds = 30
+	sasl.oauthbearer.expected.audience = null
+	sasl.oauthbearer.expected.issuer = null
+	sasl.oauthbearer.jwks.endpoint.refresh.ms = 3600000
+	sasl.oauthbearer.jwks.endpoint.retry.backoff.max.ms = 10000
+	sasl.oauthbearer.jwks.endpoint.retry.backoff.ms = 100
+	sasl.oauthbearer.jwks.endpoint.url = null
+	sasl.oauthbearer.scope.claim.name = scope
+	sasl.oauthbearer.sub.claim.name = sub
+	sasl.oauthbearer.token.endpoint.url = null
+	security.protocol = PLAINTEXT
+	security.providers = null
+	send.buffer.bytes = 131072
+	socket.connection.setup.timeout.max.ms = 30000
+	socket.connection.setup.timeout.ms = 10000
+	ssl.cipher.suites = null
+	ssl.enabled.protocols = [TLSv1.2, TLSv1.3]
+	ssl.endpoint.identification.algorithm = https
+	ssl.engine.factory.class = null
+	ssl.key.password = null
+	ssl.keymanager.algorithm = SunX509
+	ssl.keystore.certificate.chain = null
+	ssl.keystore.key = null
+	ssl.keystore.location = null
+	ssl.keystore.password = null
+	ssl.keystore.type = JKS
+	ssl.protocol = TLSv1.3
+	ssl.provider = null
+	ssl.secure.random.implementation = null
+	ssl.trustmanager.algorithm = PKIX
+	ssl.truststore.certificates = null
+	ssl.truststore.location = null
+	ssl.truststore.password = null
+	ssl.truststore.type = JKS
+	transaction.timeout.ms = 60000
+	transactional.id = null
+	value.serializer = class org.apache.kafka.common.serialization.StringSerializer
+
+2026-09-07 15:56:30.232 INFO  [scheduling-1] [] o.a.k.c.t.i.KafkaMetricsCollector - initializing Kafka metrics collector
+2026-09-07 15:56:30.253 INFO  [scheduling-1] [] o.a.kafka.clients.producer.KafkaProducer - [Producer clientId=question-bank-m0-producer-1] Instantiated an idempotent producer.
+2026-09-07 15:56:30.269 INFO  [org.springframework.kafka.KafkaListenerEndpointContainer#0-0-C-1] [] o.a.k.c.c.internals.ConsumerCoordinator - [Consumer clientId=consumer-question-bank-1, groupId=question-bank] Discovered group coordinator localhost:9092 (id: 2147483646 rack: null)
+2026-09-07 15:56:30.271 INFO  [org.springframework.kafka.KafkaListenerEndpointContainer#0-0-C-1] [] o.a.k.c.c.internals.ConsumerCoordinator - [Consumer clientId=consumer-question-bank-1, groupId=question-bank] Request joining group due to: rebalance failed due to 'This is not the correct coordinator.' (NotCoordinatorException)
+2026-09-07 15:56:30.272 INFO  [org.springframework.kafka.KafkaListenerEndpointContainer#0-0-C-1] [] o.a.k.c.c.internals.ConsumerCoordinator - [Consumer clientId=consumer-question-bank-1, groupId=question-bank] (Re-)joining group
+2026-09-07 15:56:30.273 INFO  [org.springframework.kafka.KafkaListenerEndpointContainer#0-0-C-1] [] o.a.k.c.c.internals.ConsumerCoordinator - [Consumer clientId=consumer-question-bank-1, groupId=question-bank] Group coordinator localhost:9092 (id: 2147483646 rack: null) is unavailable or invalid due to cause: error response NOT_COORDINATOR. isDisconnected: false. Rediscovery will be attempted.
+2026-09-07 15:56:30.275 INFO  [org.springframework.kafka.KafkaListenerEndpointContainer#0-0-C-1] [] o.a.k.c.c.internals.ConsumerCoordinator - [Consumer clientId=consumer-question-bank-1, groupId=question-bank] Requesting disconnect from last known coordinator localhost:9092 (id: 2147483646 rack: null)
+2026-09-07 15:56:30.275 INFO  [org.springframework.kafka.KafkaListenerEndpointContainer#0-0-C-1] [] o.a.k.c.c.internals.ConsumerCoordinator - [Consumer clientId=consumer-question-bank-1, groupId=question-bank] JoinGroup failed: This is not the correct coordinator. Marking coordinator unknown. Sent generation was Generation{generationId=-1, memberId='', protocol='null'}
+2026-09-07 15:56:30.275 INFO  [org.springframework.kafka.KafkaListenerEndpointContainer#0-0-C-1] [] org.apache.kafka.clients.NetworkClient - [Consumer clientId=consumer-question-bank-1, groupId=question-bank] Client requested disconnect from node 2147483646
+2026-09-07 15:56:30.277 INFO  [org.springframework.kafka.KafkaListenerEndpointContainer#0-0-C-1] [] o.a.k.c.c.internals.ConsumerCoordinator - [Consumer clientId=consumer-question-bank-1, groupId=question-bank] Discovered group coordinator localhost:9092 (id: 2147483646 rack: null)
+2026-09-07 15:56:30.277 INFO  [org.springframework.kafka.KafkaListenerEndpointContainer#0-0-C-1] [] o.a.k.c.c.internals.ConsumerCoordinator - [Consumer clientId=consumer-question-bank-1, groupId=question-bank] Group coordinator localhost:9092 (id: 2147483646 rack: null) is unavailable or invalid due to cause: coordinator unavailable. isDisconnected: false. Rediscovery will be attempted.
+2026-09-07 15:56:30.277 INFO  [org.springframework.kafka.KafkaListenerEndpointContainer#0-0-C-1] [] o.a.k.c.c.internals.ConsumerCoordinator - [Consumer clientId=consumer-question-bank-1, groupId=question-bank] Requesting disconnect from last known coordinator localhost:9092 (id: 2147483646 rack: null)
+2026-09-07 15:56:30.307 INFO  [scheduling-1] [] o.a.kafka.common.utils.AppInfoParser - Kafka version: 3.8.1
+2026-09-07 15:56:30.307 INFO  [scheduling-1] [] o.a.kafka.common.utils.AppInfoParser - Kafka commitId: 70d6ff42debf7e17
+2026-09-07 15:56:30.307 INFO  [scheduling-1] [] o.a.kafka.common.utils.AppInfoParser - Kafka startTimeMs: 1788767790307
+2026-09-07 15:56:30.321 INFO  [kafka-producer-network-thread | question-bank-m0-producer-1] [] org.apache.kafka.clients.Metadata - [Producer clientId=question-bank-m0-producer-1] Cluster ID: QGE8oKypR3eU_FL8dh7DHg
+2026-09-07 15:56:30.399 INFO  [org.springframework.kafka.KafkaListenerEndpointContainer#0-0-C-1] [] o.a.k.c.c.internals.ConsumerCoordinator - [Consumer clientId=consumer-question-bank-1, groupId=question-bank] Discovered group coordinator localhost:9092 (id: 2147483646 rack: null)
+2026-09-07 15:56:30.403 INFO  [org.springframework.kafka.KafkaListenerEndpointContainer#0-0-C-1] [] o.a.k.c.c.internals.ConsumerCoordinator - [Consumer clientId=consumer-question-bank-1, groupId=question-bank] Request joining group due to: rebalance failed due to 'This is not the correct coordinator.' (NotCoordinatorException)
+2026-09-07 15:56:30.404 INFO  [org.springframework.kafka.KafkaListenerEndpointContainer#0-0-C-1] [] o.a.k.c.c.internals.ConsumerCoordinator - [Consumer clientId=consumer-question-bank-1, groupId=question-bank] (Re-)joining group
+2026-09-07 15:56:30.407 INFO  [org.springframework.kafka.KafkaListenerEndpointContainer#0-0-C-1] [] o.a.k.c.c.internals.ConsumerCoordinator - [Consumer clientId=consumer-question-bank-1, groupId=question-bank] Group coordinator localhost:9092 (id: 2147483646 rack: null) is unavailable or invalid due to cause: error response NOT_COORDINATOR. isDisconnected: false. Rediscovery will be attempted.
+2026-09-07 15:56:30.407 INFO  [org.springframework.kafka.KafkaListenerEndpointContainer#0-0-C-1] [] o.a.k.c.c.internals.ConsumerCoordinator - [Consumer clientId=consumer-question-bank-1, groupId=question-bank] Requesting disconnect from last known coordinator localhost:9092 (id: 2147483646 rack: null)
+2026-09-07 15:56:30.407 INFO  [org.springframework.kafka.KafkaListenerEndpointContainer#0-0-C-1] [] o.a.k.c.c.internals.ConsumerCoordinator - [Consumer clientId=consumer-question-bank-1, groupId=question-bank] JoinGroup failed: This is not the correct coordinator. Marking coordinator unknown. Sent generation was Generation{generationId=-1, memberId='', protocol='null'}
+2026-09-07 15:56:30.408 INFO  [org.springframework.kafka.KafkaListenerEndpointContainer#0-0-C-1] [] org.apache.kafka.clients.NetworkClient - [Consumer clientId=consumer-question-bank-1, groupId=question-bank] Client requested disconnect from node 2147483646
+2026-09-07 15:56:30.412 INFO  [org.springframework.kafka.KafkaListenerEndpointContainer#0-0-C-1] [] o.a.k.c.c.internals.ConsumerCoordinator - [Consumer clientId=consumer-question-bank-1, groupId=question-bank] Discovered group coordinator localhost:9092 (id: 2147483646 rack: null)
+2026-09-07 15:56:30.412 INFO  [org.springframework.kafka.KafkaListenerEndpointContainer#0-0-C-1] [] o.a.k.c.c.internals.ConsumerCoordinator - [Consumer clientId=consumer-question-bank-1, groupId=question-bank] Group coordinator localhost:9092 (id: 2147483646 rack: null) is unavailable or invalid due to cause: coordinator unavailable. isDisconnected: false. Rediscovery will be attempted.
+2026-09-07 15:56:30.412 INFO  [org.springframework.kafka.KafkaListenerEndpointContainer#0-0-C-1] [] o.a.k.c.c.internals.ConsumerCoordinator - [Consumer clientId=consumer-question-bank-1, groupId=question-bank] Requesting disconnect from last known coordinator localhost:9092 (id: 2147483646 rack: null)
+2026-09-07 15:56:30.442 INFO  [kafka-producer-network-thread | question-bank-m0-producer-1] [] o.a.k.c.p.internals.TransactionManager - [Producer clientId=question-bank-m0-producer-1] ProducerId set to 0 with epoch 0
+2026-09-07 15:56:30.505 INFO  [org.springframework.kafka.KafkaListenerEndpointContainer#0-0-C-1] [] o.a.k.c.c.internals.ConsumerCoordinator - [Consumer clientId=consumer-question-bank-1, groupId=question-bank] Discovered group coordinator localhost:9092 (id: 2147483646 rack: null)
+2026-09-07 15:56:30.526 INFO  [org.springframework.kafka.KafkaListenerEndpointContainer#0-0-C-1] [] o.a.k.c.c.internals.ConsumerCoordinator - [Consumer clientId=consumer-question-bank-1, groupId=question-bank] Request joining group due to: rebalance failed due to 'This is not the correct coordinator.' (NotCoordinatorException)
+2026-09-07 15:56:30.527 INFO  [org.springframework.kafka.KafkaListenerEndpointContainer#0-0-C-1] [] o.a.k.c.c.internals.ConsumerCoordinator - [Consumer clientId=consumer-question-bank-1, groupId=question-bank] (Re-)joining group
+2026-09-07 15:56:30.530 INFO  [org.springframework.kafka.KafkaListenerEndpointContainer#0-0-C-1] [] o.a.k.c.c.internals.ConsumerCoordinator - [Consumer clientId=consumer-question-bank-1, groupId=question-bank] Group coordinator localhost:9092 (id: 2147483646 rack: null) is unavailable or invalid due to cause: error response NOT_COORDINATOR. isDisconnected: false. Rediscovery will be attempted.
+2026-09-07 15:56:30.530 INFO  [org.springframework.kafka.KafkaListenerEndpointContainer#0-0-C-1] [] o.a.k.c.c.internals.ConsumerCoordinator - [Consumer clientId=consumer-question-bank-1, groupId=question-bank] Requesting disconnect from last known coordinator localhost:9092 (id: 2147483646 rack: null)
+2026-09-07 15:56:30.532 INFO  [org.springframework.kafka.KafkaListenerEndpointContainer#0-0-C-1] [] o.a.k.c.c.internals.ConsumerCoordinator - [Consumer clientId=consumer-question-bank-1, groupId=question-bank] JoinGroup failed: This is not the correct coordinator. Marking coordinator unknown. Sent generation was Generation{generationId=-1, memberId='', protocol='null'}
+2026-09-07 15:56:30.532 INFO  [org.springframework.kafka.KafkaListenerEndpointContainer#0-0-C-1] [] org.apache.kafka.clients.NetworkClient - [Consumer clientId=consumer-question-bank-1, groupId=question-bank] Client requested disconnect from node 2147483646
+2026-09-07 15:56:30.534 INFO  [org.springframework.kafka.KafkaListenerEndpointContainer#0-0-C-1] [] o.a.k.c.c.internals.ConsumerCoordinator - [Consumer clientId=consumer-question-bank-1, groupId=question-bank] Discovered group coordinator localhost:9092 (id: 2147483646 rack: null)
+2026-09-07 15:56:30.535 INFO  [org.springframework.kafka.KafkaListenerEndpointContainer#0-0-C-1] [] o.a.k.c.c.internals.ConsumerCoordinator - [Consumer clientId=consumer-question-bank-1, groupId=question-bank] Group coordinator localhost:9092 (id: 2147483646 rack: null) is unavailable or invalid due to cause: coordinator unavailable. isDisconnected: false. Rediscovery will be attempted.
+2026-09-07 15:56:30.535 INFO  [org.springframework.kafka.KafkaListenerEndpointContainer#0-0-C-1] [] o.a.k.c.c.internals.ConsumerCoordinator - [Consumer clientId=consumer-question-bank-1, groupId=question-bank] Requesting disconnect from last known coordinator localhost:9092 (id: 2147483646 rack: null)
+2026-09-07 15:56:30.635 INFO  [org.springframework.kafka.KafkaListenerEndpointContainer#0-0-C-1] [] o.a.k.c.c.internals.ConsumerCoordinator - [Consumer clientId=consumer-question-bank-1, groupId=question-bank] Discovered group coordinator localhost:9092 (id: 2147483646 rack: null)
+2026-09-07 15:56:30.677 INFO  [org.springframework.kafka.KafkaListenerEndpointContainer#0-0-C-1] [] o.a.k.c.c.internals.ConsumerCoordinator - [Consumer clientId=consumer-question-bank-1, groupId=question-bank] Request joining group due to: rebalance failed due to 'This is not the correct coordinator.' (NotCoordinatorException)
+2026-09-07 15:56:30.677 INFO  [org.springframework.kafka.KafkaListenerEndpointContainer#0-0-C-1] [] o.a.k.c.c.internals.ConsumerCoordinator - [Consumer clientId=consumer-question-bank-1, groupId=question-bank] (Re-)joining group
+2026-09-07 15:56:30.681 INFO  [org.springframework.kafka.KafkaListenerEndpointContainer#0-0-C-1] [] o.a.k.c.c.internals.ConsumerCoordinator - [Consumer clientId=consumer-question-bank-1, groupId=question-bank] Group coordinator localhost:9092 (id: 2147483646 rack: null) is unavailable or invalid due to cause: error response NOT_COORDINATOR. isDisconnected: false. Rediscovery will be attempted.
+2026-09-07 15:56:30.681 INFO  [org.springframework.kafka.KafkaListenerEndpointContainer#0-0-C-1] [] o.a.k.c.c.internals.ConsumerCoordinator - [Consumer clientId=consumer-question-bank-1, groupId=question-bank] Requesting disconnect from last known coordinator localhost:9092 (id: 2147483646 rack: null)
+2026-09-07 15:56:30.681 INFO  [org.springframework.kafka.KafkaListenerEndpointContainer#0-0-C-1] [] o.a.k.c.c.internals.ConsumerCoordinator - [Consumer clientId=consumer-question-bank-1, groupId=question-bank] JoinGroup failed: This is not the correct coordinator. Marking coordinator unknown. Sent generation was Generation{generationId=-1, memberId='', protocol='null'}
+2026-09-07 15:56:30.681 INFO  [org.springframework.kafka.KafkaListenerEndpointContainer#0-0-C-1] [] org.apache.kafka.clients.NetworkClient - [Consumer clientId=consumer-question-bank-1, groupId=question-bank] Client requested disconnect from node 2147483646
+2026-09-07 15:56:30.685 INFO  [org.springframework.kafka.KafkaListenerEndpointContainer#0-0-C-1] [] o.a.k.c.c.internals.ConsumerCoordinator - [Consumer clientId=consumer-question-bank-1, groupId=question-bank] Discovered group coordinator localhost:9092 (id: 2147483646 rack: null)
+2026-09-07 15:56:30.685 INFO  [org.springframework.kafka.KafkaListenerEndpointContainer#0-0-C-1] [] o.a.k.c.c.internals.ConsumerCoordinator - [Consumer clientId=consumer-question-bank-1, groupId=question-bank] Group coordinator localhost:9092 (id: 2147483646 rack: null) is unavailable or invalid due to cause: coordinator unavailable. isDisconnected: false. Rediscovery will be attempted.
+2026-09-07 15:56:30.685 INFO  [org.springframework.kafka.KafkaListenerEndpointContainer#0-0-C-1] [] o.a.k.c.c.internals.ConsumerCoordinator - [Consumer clientId=consumer-question-bank-1, groupId=question-bank] Requesting disconnect from last known coordinator localhost:9092 (id: 2147483646 rack: null)
+2026-09-07 15:56:30.796 INFO  [org.springframework.kafka.KafkaListenerEndpointContainer#0-0-C-1] [] o.a.k.c.c.internals.ConsumerCoordinator - [Consumer clientId=consumer-question-bank-1, groupId=question-bank] Discovered group coordinator localhost:9092 (id: 2147483646 rack: null)
+2026-09-07 15:56:30.804 INFO  [org.springframework.kafka.KafkaListenerEndpointContainer#0-0-C-1] [] o.a.k.c.c.internals.ConsumerCoordinator - [Consumer clientId=consumer-question-bank-1, groupId=question-bank] Request joining group due to: rebalance failed due to 'This is not the correct coordinator.' (NotCoordinatorException)
+2026-09-07 15:56:30.804 INFO  [org.springframework.kafka.KafkaListenerEndpointContainer#0-0-C-1] [] o.a.k.c.c.internals.ConsumerCoordinator - [Consumer clientId=consumer-question-bank-1, groupId=question-bank] (Re-)joining group
+2026-09-07 15:56:30.807 INFO  [org.springframework.kafka.KafkaListenerEndpointContainer#0-0-C-1] [] o.a.k.c.c.internals.ConsumerCoordinator - [Consumer clientId=consumer-question-bank-1, groupId=question-bank] Group coordinator localhost:9092 (id: 2147483646 rack: null) is unavailable or invalid due to cause: error response NOT_COORDINATOR. isDisconnected: false. Rediscovery will be attempted.
+2026-09-07 15:56:30.807 INFO  [org.springframework.kafka.KafkaListenerEndpointContainer#0-0-C-1] [] o.a.k.c.c.internals.ConsumerCoordinator - [Consumer clientId=consumer-question-bank-1, groupId=question-bank] Requesting disconnect from last known coordinator localhost:9092 (id: 2147483646 rack: null)
+2026-09-07 15:56:30.808 INFO  [org.springframework.kafka.KafkaListenerEndpointContainer#0-0-C-1] [] o.a.k.c.c.internals.ConsumerCoordinator - [Consumer clientId=consumer-question-bank-1, groupId=question-bank] JoinGroup failed: This is not the correct coordinator. Marking coordinator unknown. Sent generation was Generation{generationId=-1, memberId='', protocol='null'}
+2026-09-07 15:56:30.808 INFO  [org.springframework.kafka.KafkaListenerEndpointContainer#0-0-C-1] [] org.apache.kafka.clients.NetworkClient - [Consumer clientId=consumer-question-bank-1, groupId=question-bank] Client requested disconnect from node 2147483646
+2026-09-07 15:56:30.810 INFO  [org.springframework.kafka.KafkaListenerEndpointContainer#0-0-C-1] [] o.a.k.c.c.internals.ConsumerCoordinator - [Consumer clientId=consumer-question-bank-1, groupId=question-bank] Discovered group coordinator localhost:9092 (id: 2147483646 rack: null)
+2026-09-07 15:56:30.810 INFO  [org.springframework.kafka.KafkaListenerEndpointContainer#0-0-C-1] [] o.a.k.c.c.internals.ConsumerCoordinator - [Consumer clientId=consumer-question-bank-1, groupId=question-bank] Group coordinator localhost:9092 (id: 2147483646 rack: null) is unavailable or invalid due to cause: coordinator unavailable. isDisconnected: false. Rediscovery will be attempted.
+2026-09-07 15:56:30.810 INFO  [org.springframework.kafka.KafkaListenerEndpointContainer#0-0-C-1] [] o.a.k.c.c.internals.ConsumerCoordinator - [Consumer clientId=consumer-question-bank-1, groupId=question-bank] Requesting disconnect from last known coordinator localhost:9092 (id: 2147483646 rack: null)
+2026-09-07 15:56:30.904 INFO  [org.springframework.kafka.KafkaListenerEndpointContainer#0-0-C-1] [] o.a.k.c.c.internals.ConsumerCoordinator - [Consumer clientId=consumer-question-bank-1, groupId=question-bank] Discovered group coordinator localhost:9092 (id: 2147483646 rack: null)
+2026-09-07 15:56:30.953 INFO  [org.springframework.kafka.KafkaListenerEndpointContainer#0-0-C-1] [] o.a.k.c.c.internals.ConsumerCoordinator - [Consumer clientId=consumer-question-bank-1, groupId=question-bank] Request joining group due to: rebalance failed due to 'This is not the correct coordinator.' (NotCoordinatorException)
+2026-09-07 15:56:30.953 INFO  [org.springframework.kafka.KafkaListenerEndpointContainer#0-0-C-1] [] o.a.k.c.c.internals.ConsumerCoordinator - [Consumer clientId=consumer-question-bank-1, groupId=question-bank] (Re-)joining group
+2026-09-07 15:56:30.957 INFO  [org.springframework.kafka.KafkaListenerEndpointContainer#0-0-C-1] [] o.a.k.c.c.internals.ConsumerCoordinator - [Consumer clientId=consumer-question-bank-1, groupId=question-bank] Group coordinator localhost:9092 (id: 2147483646 rack: null) is unavailable or invalid due to cause: error response NOT_COORDINATOR. isDisconnected: false. Rediscovery will be attempted.
+2026-09-07 15:56:30.957 INFO  [org.springframework.kafka.KafkaListenerEndpointContainer#0-0-C-1] [] o.a.k.c.c.internals.ConsumerCoordinator - [Consumer clientId=consumer-question-bank-1, groupId=question-bank] Requesting disconnect from last known coordinator localhost:9092 (id: 2147483646 rack: null)
+2026-09-07 15:56:30.957 INFO  [org.springframework.kafka.KafkaListenerEndpointContainer#0-0-C-1] [] o.a.k.c.c.internals.ConsumerCoordinator - [Consumer clientId=consumer-question-bank-1, groupId=question-bank] JoinGroup failed: This is not the correct coordinator. Marking coordinator unknown. Sent generation was Generation{generationId=-1, memberId='', protocol='null'}
+2026-09-07 15:56:30.958 INFO  [org.springframework.kafka.KafkaListenerEndpointContainer#0-0-C-1] [] org.apache.kafka.clients.NetworkClient - [Consumer clientId=consumer-question-bank-1, groupId=question-bank] Client requested disconnect from node 2147483646
+2026-09-07 15:56:30.960 INFO  [org.springframework.kafka.KafkaListenerEndpointContainer#0-0-C-1] [] o.a.k.c.c.internals.ConsumerCoordinator - [Consumer clientId=consumer-question-bank-1, groupId=question-bank] Discovered group coordinator localhost:9092 (id: 2147483646 rack: null)
+2026-09-07 15:56:30.961 INFO  [org.springframework.kafka.KafkaListenerEndpointContainer#0-0-C-1] [] o.a.k.c.c.internals.ConsumerCoordinator - [Consumer clientId=consumer-question-bank-1, groupId=question-bank] Group coordinator localhost:9092 (id: 2147483646 rack: null) is unavailable or invalid due to cause: coordinator unavailable. isDisconnected: false. Rediscovery will be attempted.
+2026-09-07 15:56:30.961 INFO  [org.springframework.kafka.KafkaListenerEndpointContainer#0-0-C-1] [] o.a.k.c.c.internals.ConsumerCoordinator - [Consumer clientId=consumer-question-bank-1, groupId=question-bank] Requesting disconnect from last known coordinator localhost:9092 (id: 2147483646 rack: null)
+2026-09-07 15:56:31.076 INFO  [org.springframework.kafka.KafkaListenerEndpointContainer#0-0-C-1] [] o.a.k.c.c.internals.ConsumerCoordinator - [Consumer clientId=consumer-question-bank-1, groupId=question-bank] Discovered group coordinator localhost:9092 (id: 2147483646 rack: null)
+2026-09-07 15:56:31.089 INFO  [org.springframework.kafka.KafkaListenerEndpointContainer#0-0-C-1] [] o.a.k.c.c.internals.ConsumerCoordinator - [Consumer clientId=consumer-question-bank-1, groupId=question-bank] Request joining group due to: rebalance failed due to 'This is not the correct coordinator.' (NotCoordinatorException)
+2026-09-07 15:56:31.090 INFO  [org.springframework.kafka.KafkaListenerEndpointContainer#0-0-C-1] [] o.a.k.c.c.internals.ConsumerCoordinator - [Consumer clientId=consumer-question-bank-1, groupId=question-bank] (Re-)joining group
+2026-09-07 15:56:31.092 INFO  [org.springframework.kafka.KafkaListenerEndpointContainer#0-0-C-1] [] o.a.k.c.c.internals.ConsumerCoordinator - [Consumer clientId=consumer-question-bank-1, groupId=question-bank] Group coordinator localhost:9092 (id: 2147483646 rack: null) is unavailable or invalid due to cause: error response NOT_COORDINATOR. isDisconnected: false. Rediscovery will be attempted.
+2026-09-07 15:56:31.092 INFO  [org.springframework.kafka.KafkaListenerEndpointContainer#0-0-C-1] [] o.a.k.c.c.internals.ConsumerCoordinator - [Consumer clientId=consumer-question-bank-1, groupId=question-bank] Requesting disconnect from last known coordinator localhost:9092 (id: 2147483646 rack: null)
+2026-09-07 15:56:31.092 INFO  [org.springframework.kafka.KafkaListenerEndpointContainer#0-0-C-1] [] o.a.k.c.c.internals.ConsumerCoordinator - [Consumer clientId=consumer-question-bank-1, groupId=question-bank] JoinGroup failed: This is not the correct coordinator. Marking coordinator unknown. Sent generation was Generation{generationId=-1, memberId='', protocol='null'}
+2026-09-07 15:56:31.092 INFO  [org.springframework.kafka.KafkaListenerEndpointContainer#0-0-C-1] [] org.apache.kafka.clients.NetworkClient - [Consumer clientId=consumer-question-bank-1, groupId=question-bank] Client requested disconnect from node 2147483646
+2026-09-07 15:56:31.093 INFO  [org.springframework.kafka.KafkaListenerEndpointContainer#0-0-C-1] [] o.a.k.c.c.internals.ConsumerCoordinator - [Consumer clientId=consumer-question-bank-1, groupId=question-bank] Discovered group coordinator localhost:9092 (id: 2147483646 rack: null)
+2026-09-07 15:56:31.095 INFO  [org.springframework.kafka.KafkaListenerEndpointContainer#0-0-C-1] [] o.a.k.c.c.internals.ConsumerCoordinator - [Consumer clientId=consumer-question-bank-1, groupId=question-bank] Group coordinator localhost:9092 (id: 2147483646 rack: null) is unavailable or invalid due to cause: coordinator unavailable. isDisconnected: false. Rediscovery will be attempted.
+2026-09-07 15:56:31.095 INFO  [org.springframework.kafka.KafkaListenerEndpointContainer#0-0-C-1] [] o.a.k.c.c.internals.ConsumerCoordinator - [Consumer clientId=consumer-question-bank-1, groupId=question-bank] Requesting disconnect from last known coordinator localhost:9092 (id: 2147483646 rack: null)
+2026-09-07 15:56:31.205 INFO  [org.springframework.kafka.KafkaListenerEndpointContainer#0-0-C-1] [] o.a.k.c.c.internals.ConsumerCoordinator - [Consumer clientId=consumer-question-bank-1, groupId=question-bank] Discovered group coordinator localhost:9092 (id: 2147483646 rack: null)
+2026-09-07 15:56:31.220 INFO  [org.springframework.kafka.KafkaListenerEndpointContainer#0-0-C-1] [] o.a.k.c.c.internals.ConsumerCoordinator - [Consumer clientId=consumer-question-bank-1, groupId=question-bank] Request joining group due to: rebalance failed due to 'This is not the correct coordinator.' (NotCoordinatorException)
+2026-09-07 15:56:31.221 INFO  [org.springframework.kafka.KafkaListenerEndpointContainer#0-0-C-1] [] o.a.k.c.c.internals.ConsumerCoordinator - [Consumer clientId=consumer-question-bank-1, groupId=question-bank] (Re-)joining group
+2026-09-07 15:56:31.222 INFO  [org.springframework.kafka.KafkaListenerEndpointContainer#0-0-C-1] [] o.a.k.c.c.internals.ConsumerCoordinator - [Consumer clientId=consumer-question-bank-1, groupId=question-bank] Group coordinator localhost:9092 (id: 2147483646 rack: null) is unavailable or invalid due to cause: error response NOT_COORDINATOR. isDisconnected: false. Rediscovery will be attempted.
+2026-09-07 15:56:31.222 INFO  [org.springframework.kafka.KafkaListenerEndpointContainer#0-0-C-1] [] o.a.k.c.c.internals.ConsumerCoordinator - [Consumer clientId=consumer-question-bank-1, groupId=question-bank] Requesting disconnect from last known coordinator localhost:9092 (id: 2147483646 rack: null)
+2026-09-07 15:56:31.222 INFO  [org.springframework.kafka.KafkaListenerEndpointContainer#0-0-C-1] [] o.a.k.c.c.internals.ConsumerCoordinator - [Consumer clientId=consumer-question-bank-1, groupId=question-bank] JoinGroup failed: This is not the correct coordinator. Marking coordinator unknown. Sent generation was Generation{generationId=-1, memberId='', protocol='null'}
+2026-09-07 15:56:31.222 INFO  [org.springframework.kafka.KafkaListenerEndpointContainer#0-0-C-1] [] org.apache.kafka.clients.NetworkClient - [Consumer clientId=consumer-question-bank-1, groupId=question-bank] Client requested disconnect from node 2147483646
+2026-09-07 15:56:31.224 INFO  [org.springframework.kafka.KafkaListenerEndpointContainer#0-0-C-1] [] o.a.k.c.c.internals.ConsumerCoordinator - [Consumer clientId=consumer-question-bank-1, groupId=question-bank] Discovered group coordinator localhost:9092 (id: 2147483646 rack: null)
+2026-09-07 15:56:31.224 INFO  [org.springframework.kafka.KafkaListenerEndpointContainer#0-0-C-1] [] o.a.k.c.c.internals.ConsumerCoordinator - [Consumer clientId=consumer-question-bank-1, groupId=question-bank] Group coordinator localhost:9092 (id: 2147483646 rack: null) is unavailable or invalid due to cause: coordinator unavailable. isDisconnected: false. Rediscovery will be attempted.
+2026-09-07 15:56:31.225 INFO  [org.springframework.kafka.KafkaListenerEndpointContainer#0-0-C-1] [] o.a.k.c.c.internals.ConsumerCoordinator - [Consumer clientId=consumer-question-bank-1, groupId=question-bank] Requesting disconnect from last known coordinator localhost:9092 (id: 2147483646 rack: null)
+2026-09-07 15:56:31.328 INFO  [org.springframework.kafka.KafkaListenerEndpointContainer#0-0-C-1] [] o.a.k.c.c.internals.ConsumerCoordinator - [Consumer clientId=consumer-question-bank-1, groupId=question-bank] Discovered group coordinator localhost:9092 (id: 2147483646 rack: null)
+2026-09-07 15:56:31.338 INFO  [org.springframework.kafka.KafkaListenerEndpointContainer#0-0-C-1] [] o.a.k.c.c.internals.ConsumerCoordinator - [Consumer clientId=consumer-question-bank-1, groupId=question-bank] Request joining group due to: rebalance failed due to 'This is not the correct coordinator.' (NotCoordinatorException)
+2026-09-07 15:56:31.338 INFO  [org.springframework.kafka.KafkaListenerEndpointContainer#0-0-C-1] [] o.a.k.c.c.internals.ConsumerCoordinator - [Consumer clientId=consumer-question-bank-1, groupId=question-bank] (Re-)joining group
+2026-09-07 15:56:31.341 INFO  [org.springframework.kafka.KafkaListenerEndpointContainer#0-0-C-1] [] o.a.k.c.c.internals.ConsumerCoordinator - [Consumer clientId=consumer-question-bank-1, groupId=question-bank] Group coordinator localhost:9092 (id: 2147483646 rack: null) is unavailable or invalid due to cause: error response NOT_COORDINATOR. isDisconnected: false. Rediscovery will be attempted.
+2026-09-07 15:56:31.341 INFO  [org.springframework.kafka.KafkaListenerEndpointContainer#0-0-C-1] [] o.a.k.c.c.internals.ConsumerCoordinator - [Consumer clientId=consumer-question-bank-1, groupId=question-bank] Requesting disconnect from last known coordinator localhost:9092 (id: 2147483646 rack: null)
+2026-09-07 15:56:31.341 INFO  [org.springframework.kafka.KafkaListenerEndpointContainer#0-0-C-1] [] o.a.k.c.c.internals.ConsumerCoordinator - [Consumer clientId=consumer-question-bank-1, groupId=question-bank] JoinGroup failed: This is not the correct coordinator. Marking coordinator unknown. Sent generation was Generation{generationId=-1, memberId='', protocol='null'}
+2026-09-07 15:56:31.342 INFO  [org.springframework.kafka.KafkaListenerEndpointContainer#0-0-C-1] [] org.apache.kafka.clients.NetworkClient - [Consumer clientId=consumer-question-bank-1, groupId=question-bank] Client requested disconnect from node 2147483646
+2026-09-07 15:56:31.343 INFO  [org.springframework.kafka.KafkaListenerEndpointContainer#0-0-C-1] [] o.a.k.c.c.internals.ConsumerCoordinator - [Consumer clientId=consumer-question-bank-1, groupId=question-bank] Discovered group coordinator localhost:9092 (id: 2147483646 rack: null)
+2026-09-07 15:56:31.343 INFO  [org.springframework.kafka.KafkaListenerEndpointContainer#0-0-C-1] [] o.a.k.c.c.internals.ConsumerCoordinator - [Consumer clientId=consumer-question-bank-1, groupId=question-bank] Group coordinator localhost:9092 (id: 2147483646 rack: null) is unavailable or invalid due to cause: coordinator unavailable. isDisconnected: false. Rediscovery will be attempted.
+2026-09-07 15:56:31.343 INFO  [org.springframework.kafka.KafkaListenerEndpointContainer#0-0-C-1] [] o.a.k.c.c.internals.ConsumerCoordinator - [Consumer clientId=consumer-question-bank-1, groupId=question-bank] Requesting disconnect from last known coordinator localhost:9092 (id: 2147483646 rack: null)
+2026-09-07 15:56:31.461 INFO  [org.springframework.kafka.KafkaListenerEndpointContainer#0-0-C-1] [] o.a.k.c.c.internals.ConsumerCoordinator - [Consumer clientId=consumer-question-bank-1, groupId=question-bank] Discovered group coordinator localhost:9092 (id: 2147483646 rack: null)
+2026-09-07 15:56:31.472 INFO  [org.springframework.kafka.KafkaListenerEndpointContainer#0-0-C-1] [] o.a.k.c.c.internals.ConsumerCoordinator - [Consumer clientId=consumer-question-bank-1, groupId=question-bank] Request joining group due to: rebalance failed due to 'This is not the correct coordinator.' (NotCoordinatorException)
+2026-09-07 15:56:31.473 INFO  [org.springframework.kafka.KafkaListenerEndpointContainer#0-0-C-1] [] o.a.k.c.c.internals.ConsumerCoordinator - [Consumer clientId=consumer-question-bank-1, groupId=question-bank] (Re-)joining group
+2026-09-07 15:56:31.478 INFO  [org.springframework.kafka.KafkaListenerEndpointContainer#0-0-C-1] [] o.a.k.c.c.internals.ConsumerCoordinator - [Consumer clientId=consumer-question-bank-1, groupId=question-bank] Group coordinator localhost:9092 (id: 2147483646 rack: null) is unavailable or invalid due to cause: error response NOT_COORDINATOR. isDisconnected: false. Rediscovery will be attempted.
+2026-09-07 15:56:31.478 INFO  [org.springframework.kafka.KafkaListenerEndpointContainer#0-0-C-1] [] o.a.k.c.c.internals.ConsumerCoordinator - [Consumer clientId=consumer-question-bank-1, groupId=question-bank] Requesting disconnect from last known coordinator localhost:9092 (id: 2147483646 rack: null)
+2026-09-07 15:56:31.478 INFO  [org.springframework.kafka.KafkaListenerEndpointContainer#0-0-C-1] [] o.a.k.c.c.internals.ConsumerCoordinator - [Consumer clientId=consumer-question-bank-1, groupId=question-bank] JoinGroup failed: This is not the correct coordinator. Marking coordinator unknown. Sent generation was Generation{generationId=-1, memberId='', protocol='null'}
+2026-09-07 15:56:31.478 INFO  [org.springframework.kafka.KafkaListenerEndpointContainer#0-0-C-1] [] o.a.k.c.c.internals.ConsumerCoordinator - [Consumer clientId=consumer-question-bank-1, groupId=question-bank] Request joining group due to: rebalance failed due to 'This is not the correct coordinator.' (NotCoordinatorException)
+2026-09-07 15:56:31.479 INFO  [org.springframework.kafka.KafkaListenerEndpointContainer#0-0-C-1] [] org.apache.kafka.clients.NetworkClient - [Consumer clientId=consumer-question-bank-1, groupId=question-bank] Client requested disconnect from node 2147483646
+2026-09-07 15:56:31.482 INFO  [org.springframework.kafka.KafkaListenerEndpointContainer#0-0-C-1] [] o.a.k.c.c.internals.ConsumerCoordinator - [Consumer clientId=consumer-question-bank-1, groupId=question-bank] Discovered group coordinator localhost:9092 (id: 2147483646 rack: null)
+2026-09-07 15:56:31.482 INFO  [org.springframework.kafka.KafkaListenerEndpointContainer#0-0-C-1] [] o.a.k.c.c.internals.ConsumerCoordinator - [Consumer clientId=consumer-question-bank-1, groupId=question-bank] Group coordinator localhost:9092 (id: 2147483646 rack: null) is unavailable or invalid due to cause: coordinator unavailable. isDisconnected: false. Rediscovery will be attempted.
+2026-09-07 15:56:31.482 INFO  [org.springframework.kafka.KafkaListenerEndpointContainer#0-0-C-1] [] o.a.k.c.c.internals.ConsumerCoordinator - [Consumer clientId=consumer-question-bank-1, groupId=question-bank] Requesting disconnect from last known coordinator localhost:9092 (id: 2147483646 rack: null)
+2026-09-07 15:56:31.591 INFO  [org.springframework.kafka.KafkaListenerEndpointContainer#0-0-C-1] [] o.a.k.c.c.internals.ConsumerCoordinator - [Consumer clientId=consumer-question-bank-1, groupId=question-bank] Discovered group coordinator localhost:9092 (id: 2147483646 rack: null)
+2026-09-07 15:56:31.611 INFO  [org.springframework.kafka.KafkaListenerEndpointContainer#0-0-C-1] [] o.a.k.c.c.internals.ConsumerCoordinator - [Consumer clientId=consumer-question-bank-1, groupId=question-bank] (Re-)joining group
+2026-09-07 15:56:31.615 INFO  [org.springframework.kafka.KafkaListenerEndpointContainer#0-0-C-1] [] o.a.k.c.c.internals.ConsumerCoordinator - [Consumer clientId=consumer-question-bank-1, groupId=question-bank] Group coordinator localhost:9092 (id: 2147483646 rack: null) is unavailable or invalid due to cause: error response NOT_COORDINATOR. isDisconnected: false. Rediscovery will be attempted.
+2026-09-07 15:56:31.615 INFO  [org.springframework.kafka.KafkaListenerEndpointContainer#0-0-C-1] [] o.a.k.c.c.internals.ConsumerCoordinator - [Consumer clientId=consumer-question-bank-1, groupId=question-bank] Requesting disconnect from last known coordinator localhost:9092 (id: 2147483646 rack: null)
+2026-09-07 15:56:31.615 INFO  [org.springframework.kafka.KafkaListenerEndpointContainer#0-0-C-1] [] o.a.k.c.c.internals.ConsumerCoordinator - [Consumer clientId=consumer-question-bank-1, groupId=question-bank] JoinGroup failed: This is not the correct coordinator. Marking coordinator unknown. Sent generation was Generation{generationId=-1, memberId='', protocol='null'}
+2026-09-07 15:56:31.616 INFO  [org.springframework.kafka.KafkaListenerEndpointContainer#0-0-C-1] [] org.apache.kafka.clients.NetworkClient - [Consumer clientId=consumer-question-bank-1, groupId=question-bank] Client requested disconnect from node 2147483646
+2026-09-07 15:56:31.618 INFO  [org.springframework.kafka.KafkaListenerEndpointContainer#0-0-C-1] [] o.a.k.c.c.internals.ConsumerCoordinator - [Consumer clientId=consumer-question-bank-1, groupId=question-bank] Discovered group coordinator localhost:9092 (id: 2147483646 rack: null)
+2026-09-07 15:56:31.619 INFO  [org.springframework.kafka.KafkaListenerEndpointContainer#0-0-C-1] [] o.a.k.c.c.internals.ConsumerCoordinator - [Consumer clientId=consumer-question-bank-1, groupId=question-bank] Group coordinator localhost:9092 (id: 2147483646 rack: null) is unavailable or invalid due to cause: coordinator unavailable. isDisconnected: false. Rediscovery will be attempted.
+2026-09-07 15:56:31.619 INFO  [org.springframework.kafka.KafkaListenerEndpointContainer#0-0-C-1] [] o.a.k.c.c.internals.ConsumerCoordinator - [Consumer clientId=consumer-question-bank-1, groupId=question-bank] Requesting disconnect from last known coordinator localhost:9092 (id: 2147483646 rack: null)
+
+MockHttpServletRequest:
+      HTTP Method = POST
+      Request URI = /api/auth/login
+       Parameters = {}
+          Headers = [Content-Type:"application/json;charset=UTF-8", Content-Length:"42"]
+             Body = {"username":"admin","password":"admin123"}
+    Session Attrs = {}
+
+Handler:
+             Type = com.allen.questionbank.auth.AuthController
+           Method = com.allen.questionbank.auth.AuthController#login(LoginRequest)
+
+Async:
+    Async started = false
+     Async result = null
+
+Resolved Exception:
+             Type = null
+
+ModelAndView:
+        View name = null
+             View = null
+            Model = null
+
+FlashMap:
+       Attributes = null
+
+MockHttpServletResponse:
+           Status = 200
+    Error message = null
+          Headers = [X-Request-Id:"4ff32f98-23f0-44f4-a6d5-4026217e6103", Content-Type:"application/json", X-Content-Type-Options:"nosniff", X-XSS-Protection:"0", Cache-Control:"no-cache, no-store, max-age=0, must-revalidate", Pragma:"no-cache", Expires:"0", X-Frame-Options:"DENY"]
+     Content type = application/json
+             Body = {"token":"d748623b-c08f-481a-9ee3-af724166eb4b","userId":1,"username":"admin","role":"ADMIN"}
+    Forwarded URL = null
+   Redirected URL = null
+          Cookies = []
+
+MockHttpServletRequest:
+      HTTP Method = POST
+      Request URI = /api/admin/banks
+       Parameters = {}
+          Headers = [Content-Type:"application/json;charset=UTF-8", Authorization:"Bearer d748623b-c08f-481a-9ee3-af724166eb4b", Content-Length:"22"]
+             Body = {"name":"Outbox Bank"}
+    Session Attrs = {}
+
+Handler:
+             Type = com.allen.questionbank.bank.BankController
+           Method = com.allen.questionbank.bank.BankController#createBank(CreateBankRequest)
+
+Async:
+    Async started = false
+     Async result = null
+
+Resolved Exception:
+             Type = null
+
+ModelAndView:
+        View name = null
+             View = null
+            Model = null
+
+FlashMap:
+       Attributes = null
+
+MockHttpServletResponse:
+           Status = 200
+    Error message = null
+          Headers = [X-Request-Id:"45f99734-0cac-40ea-b51e-78a6df171be6", Content-Type:"application/json", X-Content-Type-Options:"nosniff", X-XSS-Protection:"0", Cache-Control:"no-cache, no-store, max-age=0, must-revalidate", Pragma:"no-cache", Expires:"0", X-Frame-Options:"DENY"]
+     Content type = application/json
+             Body = {"id":1,"name":"Outbox Bank","description":null}
+    Forwarded URL = null
+   Redirected URL = null
+          Cookies = []
+
+MockHttpServletRequest:
+      HTTP Method = POST
+      Request URI = /api/admin/banks/1/versions
+       Parameters = {}
+          Headers = [Content-Type:"application/json;charset=UTF-8", Authorization:"Bearer d748623b-c08f-481a-9ee3-af724166eb4b", Content-Length:"126"]
+             Body = {"title":"Outbox Paper","questions":[
+  {"prompt":"q","type":"SINGLE","options":["A","B"],"correctAnswers":["A"],"score":1}
+]}
+    Session Attrs = {}
+
+Handler:
+             Type = com.allen.questionbank.bank.BankController
+           Method = com.allen.questionbank.bank.BankController#createDraft(Long, CreatePaperRequest)
+
+Async:
+    Async started = false
+     Async result = null
+
+Resolved Exception:
+             Type = null
+
+ModelAndView:
+        View name = null
+             View = null
+            Model = null
+
+FlashMap:
+       Attributes = null
+
+MockHttpServletResponse:
+           Status = 200
+    Error message = null
+          Headers = [X-Request-Id:"ceb58a8e-60c2-419f-96dc-90ad886c3edf", Content-Type:"application/json", X-Content-Type-Options:"nosniff", X-XSS-Protection:"0", Cache-Control:"no-cache, no-store, max-age=0, must-revalidate", Pragma:"no-cache", Expires:"0", X-Frame-Options:"DENY"]
+     Content type = application/json
+             Body = {"id":1,"bankId":1,"versionNo":1,"title":"Outbox Paper","status":"DRAFT","publishedAt":null}
+    Forwarded URL = null
+   Redirected URL = null
+          Cookies = []
+
+MockHttpServletRequest:
+      HTTP Method = POST
+      Request URI = /api/admin/versions/1/publish
+       Parameters = {}
+          Headers = [Authorization:"Bearer d748623b-c08f-481a-9ee3-af724166eb4b"]
+             Body = null
+    Session Attrs = {}
+
+Handler:
+             Type = com.allen.questionbank.bank.BankController
+           Method = com.allen.questionbank.bank.BankController#publish(Long)
+
+Async:
+    Async started = false
+     Async result = null
+
+Resolved Exception:
+             Type = null
+
+ModelAndView:
+        View name = null
+             View = null
+            Model = null
+
+FlashMap:
+       Attributes = null
+
+MockHttpServletResponse:
+           Status = 200
+    Error message = null
+          Headers = [X-Request-Id:"66af6194-9c78-429c-a45e-925eb01628d3", Content-Type:"application/json", X-Content-Type-Options:"nosniff", X-XSS-Protection:"0", Cache-Control:"no-cache, no-store, max-age=0, must-revalidate", Pragma:"no-cache", Expires:"0", X-Frame-Options:"DENY"]
+     Content type = application/json
+             Body = {"id":1,"bankId":1,"versionNo":1,"title":"Outbox Paper","status":"PUBLISHED","publishedAt":"2026-09-07T07:56:30.065657500Z"}
+    Forwarded URL = null
+   Redirected URL = null
+          Cookies = []
+2026-09-07 15:56:31.725 INFO  [org.springframework.kafka.KafkaListenerEndpointContainer#0-0-C-1] [] o.a.k.c.c.internals.ConsumerCoordinator - [Consumer clientId=consumer-question-bank-1, groupId=question-bank] Discovered group coordinator localhost:9092 (id: 2147483646 rack: null)
+2026-09-07 15:56:31.744 INFO  [org.springframework.kafka.KafkaListenerEndpointContainer#0-0-C-1] [] o.a.k.c.c.internals.ConsumerCoordinator - [Consumer clientId=consumer-question-bank-1, groupId=question-bank] Request joining group due to: rebalance failed due to 'This is not the correct coordinator.' (NotCoordinatorException)
+2026-09-07 15:56:31.745 INFO  [org.springframework.kafka.KafkaListenerEndpointContainer#0-0-C-1] [] o.a.k.c.c.internals.ConsumerCoordinator - [Consumer clientId=consumer-question-bank-1, groupId=question-bank] (Re-)joining group
+2026-09-07 15:56:31.748 INFO  [org.springframework.kafka.KafkaListenerEndpointContainer#0-0-C-1] [] o.a.k.c.c.internals.ConsumerCoordinator - [Consumer clientId=consumer-question-bank-1, groupId=question-bank] Group coordinator localhost:9092 (id: 2147483646 rack: null) is unavailable or invalid due to cause: error response NOT_COORDINATOR. isDisconnected: false. Rediscovery will be attempted.
+2026-09-07 15:56:31.748 INFO  [org.springframework.kafka.KafkaListenerEndpointContainer#0-0-C-1] [] o.a.k.c.c.internals.ConsumerCoordinator - [Consumer clientId=consumer-question-bank-1, groupId=question-bank] Requesting disconnect from last known coordinator localhost:9092 (id: 2147483646 rack: null)
+2026-09-07 15:56:31.748 INFO  [org.springframework.kafka.KafkaListenerEndpointContainer#0-0-C-1] [] o.a.k.c.c.internals.ConsumerCoordinator - [Consumer clientId=consumer-question-bank-1, groupId=question-bank] JoinGroup failed: This is not the correct coordinator. Marking coordinator unknown. Sent generation was Generation{generationId=-1, memberId='', protocol='null'}
+2026-09-07 15:56:31.748 INFO  [org.springframework.kafka.KafkaListenerEndpointContainer#0-0-C-1] [] org.apache.kafka.clients.NetworkClient - [Consumer clientId=consumer-question-bank-1, groupId=question-bank] Client requested disconnect from node 2147483646
+2026-09-07 15:56:31.750 INFO  [org.springframework.kafka.KafkaListenerEndpointContainer#0-0-C-1] [] o.a.k.c.c.internals.ConsumerCoordinator - [Consumer clientId=consumer-question-bank-1, groupId=question-bank] Discovered group coordinator localhost:9092 (id: 2147483646 rack: null)
+2026-09-07 15:56:31.750 INFO  [org.springframework.kafka.KafkaListenerEndpointContainer#0-0-C-1] [] o.a.k.c.c.internals.ConsumerCoordinator - [Consumer clientId=consumer-question-bank-1, groupId=question-bank] Group coordinator localhost:9092 (id: 2147483646 rack: null) is unavailable or invalid due to cause: coordinator unavailable. isDisconnected: false. Rediscovery will be attempted.
+2026-09-07 15:56:31.750 INFO  [org.springframework.kafka.KafkaListenerEndpointContainer#0-0-C-1] [] o.a.k.c.c.internals.ConsumerCoordinator - [Consumer clientId=consumer-question-bank-1, groupId=question-bank] Requesting disconnect from last known coordinator localhost:9092 (id: 2147483646 rack: null)
+[ERROR] Tests run: 1, Failures: 1, Errors: 0, Skipped: 0, Time elapsed: 29.89 s <<< FAILURE! -- in com.allen.questionbank.KafkaOutboxIntegrationTest
+[ERROR] com.allen.questionbank.KafkaOutboxIntegrationTest.publishEnqueuesOutboxRelaySendsAndConsumerDeduplicates -- Time elapsed: 3.290 s <<< FAILURE!
+org.opentest4j.AssertionFailedError: 落库时应为 PENDING，由投递器推进 ==> expected: <PENDING> but was: <SENT>
+	at org.junit.jupiter.api.AssertionFailureBuilder.build(AssertionFailureBuilder.java:151)
+	at org.junit.jupiter.api.AssertionFailureBuilder.buildAndThrow(AssertionFailureBuilder.java:132)
+	at org.junit.jupiter.api.AssertEquals.failNotEqual(AssertEquals.java:197)
+	at org.junit.jupiter.api.AssertEquals.assertEquals(AssertEquals.java:182)
+	at org.junit.jupiter.api.Assertions.assertEquals(Assertions.java:1156)
+	at com.allen.questionbank.KafkaOutboxIntegrationTest.publishEnqueuesOutboxRelaySendsAndConsumerDeduplicates(KafkaOutboxIntegrationTest.java:74)
+	at java.base/java.lang.reflect.Method.invoke(Method.java:580)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+	at java.base/java.util.ArrayList.forEach(ArrayList.java:1596)
+
+2026-09-07 15:56:31.869 INFO  [org.springframework.kafka.KafkaListenerEndpointContainer#0-0-C-1] [] o.a.k.c.c.internals.ConsumerCoordinator - [Consumer clientId=consumer-question-bank-1, groupId=question-bank] Discovered group coordinator localhost:9092 (id: 2147483646 rack: null)
+2026-09-07 15:56:31.896 INFO  [org.springframework.kafka.KafkaListenerEndpointContainer#0-0-C-1] [] o.a.k.c.c.internals.ConsumerCoordinator - [Consumer clientId=consumer-question-bank-1, groupId=question-bank] Request joining group due to: rebalance failed due to 'This is not the correct coordinator.' (NotCoordinatorException)
+2026-09-07 15:56:31.896 INFO  [org.springframework.kafka.KafkaListenerEndpointContainer#0-0-C-1] [] o.a.k.c.c.internals.ConsumerCoordinator - [Consumer clientId=consumer-question-bank-1, groupId=question-bank] (Re-)joining group
+2026-09-07 15:56:31.903 INFO  [org.springframework.kafka.KafkaListenerEndpointContainer#0-0-C-1] [] o.a.k.c.c.internals.ConsumerCoordinator - [Consumer clientId=consumer-question-bank-1, groupId=question-bank] Group coordinator localhost:9092 (id: 2147483646 rack: null) is unavailable or invalid due to cause: error response NOT_COORDINATOR. isDisconnected: false. Rediscovery will be attempted.
+2026-09-07 15:56:31.904 INFO  [org.springframework.kafka.KafkaListenerEndpointContainer#0-0-C-1] [] o.a.k.c.c.internals.ConsumerCoordinator - [Consumer clientId=consumer-question-bank-1, groupId=question-bank] Requesting disconnect from last known coordinator localhost:9092 (id: 2147483646 rack: null)
+2026-09-07 15:56:31.905 INFO  [org.springframework.kafka.KafkaListenerEndpointContainer#0-0-C-1] [] o.a.k.c.c.internals.ConsumerCoordinator - [Consumer clientId=consumer-question-bank-1, groupId=question-bank] JoinGroup failed: This is not the correct coordinator. Marking coordinator unknown. Sent generation was Generation{generationId=-1, memberId='', protocol='null'}
+2026-09-07 15:56:31.905 INFO  [org.springframework.kafka.KafkaListenerEndpointContainer#0-0-C-1] [] org.apache.kafka.clients.NetworkClient - [Consumer clientId=consumer-question-bank-1, groupId=question-bank] Client requested disconnect from node 2147483646
+2026-09-07 15:56:31.908 INFO  [org.springframework.kafka.KafkaListenerEndpointContainer#0-0-C-1] [] o.a.k.c.c.internals.ConsumerCoordinator - [Consumer clientId=consumer-question-bank-1, groupId=question-bank] Discovered group coordinator localhost:9092 (id: 2147483646 rack: null)
+2026-09-07 15:56:31.908 INFO  [org.springframework.kafka.KafkaListenerEndpointContainer#0-0-C-1] [] o.a.k.c.c.internals.ConsumerCoordinator - [Consumer clientId=consumer-question-bank-1, groupId=question-bank] Group coordinator localhost:9092 (id: 2147483646 rack: null) is unavailable or invalid due to cause: coordinator unavailable. isDisconnected: false. Rediscovery will be attempted.
+2026-09-07 15:56:31.908 INFO  [org.springframework.kafka.KafkaListenerEndpointContainer#0-0-C-1] [] o.a.k.c.c.internals.ConsumerCoordinator - [Consumer clientId=consumer-question-bank-1, groupId=question-bank] Requesting disconnect from last known coordinator localhost:9092 (id: 2147483646 rack: null)
+2026-09-07 15:56:32.000 INFO  [org.springframework.kafka.KafkaListenerEndpointContainer#0-0-C-1] [] o.a.k.c.c.internals.ConsumerCoordinator - [Consumer clientId=consumer-question-bank-1, groupId=question-bank] Discovered group coordinator localhost:9092 (id: 2147483646 rack: null)
+2026-09-07 15:56:32.016 INFO  [org.springframework.kafka.KafkaListenerEndpointContainer#0-0-C-1] [] o.a.k.c.c.internals.ConsumerCoordinator - [Consumer clientId=consumer-question-bank-1, groupId=question-bank] Request joining group due to: rebalance failed due to 'This is not the correct coordinator.' (NotCoordinatorException)
+2026-09-07 15:56:32.017 INFO  [org.springframework.kafka.KafkaListenerEndpointContainer#0-0-C-1] [] o.a.k.c.c.internals.ConsumerCoordinator - [Consumer clientId=consumer-question-bank-1, groupId=question-bank] (Re-)joining group
+2026-09-07 15:56:32.021 INFO  [org.springframework.kafka.KafkaListenerEndpointContainer#0-0-C-1] [] o.a.k.c.c.internals.ConsumerCoordinator - [Consumer clientId=consumer-question-bank-1, groupId=question-bank] Group coordinator localhost:9092 (id: 2147483646 rack: null) is unavailable or invalid due to cause: error response NOT_COORDINATOR. isDisconnected: false. Rediscovery will be attempted.
+2026-09-07 15:56:32.022 INFO  [org.springframework.kafka.KafkaListenerEndpointContainer#0-0-C-1] [] o.a.k.c.c.internals.ConsumerCoordinator - [Consumer clientId=consumer-question-bank-1, groupId=question-bank] Requesting disconnect from last known coordinator localhost:9092 (id: 2147483646 rack: null)
+2026-09-07 15:56:32.022 INFO  [org.springframework.kafka.KafkaListenerEndpointContainer#0-0-C-1] [] o.a.k.c.c.internals.ConsumerCoordinator - [Consumer clientId=consumer-question-bank-1, groupId=question-bank] JoinGroup failed: This is not the correct coordinator. Marking coordinator unknown. Sent generation was Generation{generationId=-1, memberId='', protocol='null'}
+2026-09-07 15:56:32.022 INFO  [org.springframework.kafka.KafkaListenerEndpointContainer#0-0-C-1] [] org.apache.kafka.clients.NetworkClient - [Consumer clientId=consumer-question-bank-1, groupId=question-bank] Client requested disconnect from node 2147483646
+2026-09-07 15:56:32.024 INFO  [org.springframework.kafka.KafkaListenerEndpointContainer#0-0-C-1] [] o.a.k.c.c.internals.ConsumerCoordinator - [Consumer clientId=consumer-question-bank-1, groupId=question-bank] Discovered group coordinator localhost:9092 (id: 2147483646 rack: null)
+2026-09-07 15:56:32.024 INFO  [org.springframework.kafka.KafkaListenerEndpointContainer#0-0-C-1] [] o.a.k.c.c.internals.ConsumerCoordinator - [Consumer clientId=consumer-question-bank-1, groupId=question-bank] Group coordinator localhost:9092 (id: 2147483646 rack: null) is unavailable or invalid due to cause: coordinator unavailable. isDisconnected: false. Rediscovery will be attempted.
+2026-09-07 15:56:32.024 INFO  [org.springframework.kafka.KafkaListenerEndpointContainer#0-0-C-1] [] o.a.k.c.c.internals.ConsumerCoordinator - [Consumer clientId=consumer-question-bank-1, groupId=question-bank] Requesting disconnect from last known coordinator localhost:9092 (id: 2147483646 rack: null)
+2026-09-07 15:56:32.121 INFO  [org.springframework.kafka.KafkaListenerEndpointContainer#0-0-C-1] [] o.a.k.c.c.internals.ConsumerCoordinator - [Consumer clientId=consumer-question-bank-1, groupId=question-bank] Discovered group coordinator localhost:9092 (id: 2147483646 rack: null)
+[INFO] 
+[INFO] Results:
+[INFO] 
+[ERROR] Failures: 
+[ERROR]   KafkaOutboxIntegrationTest.publishEnqueuesOutboxRelaySendsAndConsumerDeduplicates:74 落库时应为 PENDING，由投递器推进 ==> expected: <PENDING> but was: <SENT>
+[INFO] 
+[ERROR] Tests run: 1, Failures: 1, Errors: 0, Skipped: 0
+[INFO] 
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD FAILURE
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  50.103 s
+[INFO] Finished at: 2026-09-07T15:56:33+08:00
+[INFO] ------------------------------------------------------------------------
+[ERROR] Failed to execute goal org.apache.maven.plugins:maven-surefire-plugin:3.5.3:test (default-test) on project question-bank-m0: There are test failures.
+[ERROR] 
+[ERROR] See C:\Project\QuestionBank\target\surefire-reports for the individual test results.
+[ERROR] See dump files (if any exist) [date].dump, [date]-jvmRun[N].dump and [date].dumpstream.
+[ERROR] -> [Help 1]
+[ERROR] 
+[ERROR] To see the full stack trace of the errors, re-run Maven with the -e switch.
+[ERROR] Re-run Maven using the -X switch to enable full debug logging.
+[ERROR] 
+[ERROR] For more information about the errors and possible solutions, please read the following articles:
+[ERROR] [Help 1] http://cwiki.apache.org/confluence/display/MAVEN/MojoFailureException

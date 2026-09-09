@@ -1,0 +1,3 @@
+sql_captured	took	lock_ms	rows_examined	rows_sent
+TRUNCATE mysql.slow_log	4.8 ms	0.00 ms	0	0
+SELECT COUNT(*) FROM (SELECT id, title FROM paper_version WHERE UPPER(status)='PUBLISHED' 	1.9 ms	0.00 ms	200	1

@@ -1,0 +1,66 @@
+=== BCrypt strength å¯¹ç…§å®éªŒ 20260907-201729ï¼ˆå¼€ç¯ 60 RPSï¼Œæµ‹ 20sï¼Œä¸‰æ¡£ 8/10/12ï¼‰===
+mysql_version
+9.0.1
+=== æ‰“åŒ…ï¼ˆä¸€æ¬¡ï¼Œä¸‰æ¡£å…±ç”¨ï¼‰===
+jar: target/question-bank-m0-0.1.0-SNAPSHOT.jar
+
+================ strength=8 ================
+å¥åº·æ£€æŸ¥é€šè¿‡ï¼ˆç¬¬ 6 æ¬¡ï¼‰
+[loadgen] target=http://127.0.0.1:8080/api/auth/login method=POST rps=60 warmup=5s duration=20s open-loop
+[loadgen] warmup finished, start measuring
+
+=== Ñ¹²â½á¹û£¨¿ª»·£¬warmup ºóÍ³¼Æ£©===
+Ä¿±ê RPS        : 60
+Êµ²âÍÌÍÂ RPS    : 15.6
+Ñù±¾Êı          : 311 (·¢ËÍ 383)
+´íÎóÊı / ´íÎóÂÊ : 0 / 0.00%
+P50             : 63 ms
+P95             : 82 ms
+P99             : 93 ms
+P999            : 134 ms
+Max             : 134 ms
+Ô­Ê¼ JSON ÒÑĞ´Èë: output/load_login_bcrypt8_20260907-201729.json
+--- strength=8 ç»“æœæ‘˜è¦ ---
+strength=8 | å®æµ‹åå=15.55 RPSï¼ˆç›®æ ‡ 60ï¼‰ | P50=63ms | P95=82ms | P99=93ms | é”™è¯¯ç‡=0.0%
+
+================ strength=10 ================
+å¥åº·æ£€æŸ¥é€šè¿‡ï¼ˆç¬¬ 6 æ¬¡ï¼‰
+[loadgen] target=http://127.0.0.1:8080/api/auth/login method=POST rps=60 warmup=5s duration=20s open-loop
+[loadgen] warmup finished, start measuring
+
+=== Ñ¹²â½á¹û£¨¿ª»·£¬warmup ºóÍ³¼Æ£©===
+Ä¿±ê RPS        : 60
+Êµ²âÍÌÍÂ RPS    : 15.6
+Ñù±¾Êı          : 311 (·¢ËÍ 384)
+´íÎóÊı / ´íÎóÂÊ : 0 / 0.00%
+P50             : 63 ms
+P95             : 79 ms
+P99             : 105 ms
+P999            : 113 ms
+Max             : 113 ms
+Ô­Ê¼ JSON ÒÑĞ´Èë: output/load_login_bcrypt10_20260907-201729.json
+--- strength=10 ç»“æœæ‘˜è¦ ---
+strength=10 | å®æµ‹åå=15.55 RPSï¼ˆç›®æ ‡ 60ï¼‰ | P50=63ms | P95=79ms | P99=105ms | é”™è¯¯ç‡=0.0%
+
+================ strength=12 ================
+å¥åº·æ£€æŸ¥é€šè¿‡ï¼ˆç¬¬ 5 æ¬¡ï¼‰
+[loadgen] target=http://127.0.0.1:8080/api/auth/login method=POST rps=60 warmup=5s duration=20s open-loop
+[loadgen] warmup finished, start measuring
+
+=== Ñ¹²â½á¹û£¨¿ª»·£¬warmup ºóÍ³¼Æ£©===
+Ä¿±ê RPS        : 60
+Êµ²âÍÌÍÂ RPS    : 15.7
+Ñù±¾Êı          : 313 (·¢ËÍ 385)
+´íÎóÊı / ´íÎóÂÊ : 0 / 0.00%
+P50             : 63 ms
+P95             : 79 ms
+P99             : 99 ms
+P999            : 121 ms
+Max             : 121 ms
+Ô­Ê¼ JSON ÒÑĞ´Èë: output/load_login_bcrypt12_20260907-201729.json
+--- strength=12 ç»“æœæ‘˜è¦ ---
+strength=12 | å®æµ‹åå=15.65 RPSï¼ˆç›®æ ‡ 60ï¼‰ | P50=63ms | P95=79ms | P99=99ms | é”™è¯¯ç‡=0.0%
+
+=== æ±‡æ€»ï¼šä¸‰æ¡£ååå¯¹ç…§ï¼ˆè¯¦è§ä¸Šæ–¹å„æ®µä¸ output/load_login_bcrypt*/ï¼‰===
+ç†è®ºå…³ç³»ï¼šcost æ¯åŠ  1ï¼Œå•æ¬¡å“ˆå¸Œè€—æ—¶ç¿»å€ â†’ login ååè¿‘ä¼¼å‡åŠï¼ˆæœ¬æœºå®æµ‹è§ä¸Šï¼‰
+è¯æ®æ—¥å¿—: output/bcrypt_strength_20260907-201729.log

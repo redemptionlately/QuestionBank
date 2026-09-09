@@ -1,0 +1,1 @@
+{"target":"http://127.0.0.1:8080/api/papers/published","method":"GET","targetRps":100,"measuredRps":100.00,"samples":3000,"errors":0,"errorRatePct":0.00,"p50Ms":1,"p95Ms":4,"p99Ms":10,"p999Ms":70,"timestamp":"2026-09-07T06:08:04.727885900Z"}

@@ -1,0 +1,171 @@
+[INFO] Scanning for projects...
+[INFO] ------------------------------------------------------------------------
+[INFO] Reactor Build Order:
+[INFO] 
+[INFO] question-bank-parent                                               [pom]
+[INFO] monitor-spring-boot-starter                                        [jar]
+[INFO] question-bank-m0                                                   [jar]
+[INFO] 
+[INFO] -------------------< com.allen:question-bank-parent >-------------------
+[INFO] Building question-bank-parent 0.1.0-SNAPSHOT                       [1/3]
+[INFO]   from pom.xml
+[INFO] --------------------------------[ pom ]---------------------------------
+[INFO] 
+[INFO] ---------------< com.allen:monitor-spring-boot-starter >----------------
+[INFO] Building monitor-spring-boot-starter 0.1.0-SNAPSHOT                [2/3]
+[INFO]   from monitor-starter\pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- resources:3.3.1:resources (default-resources) @ monitor-spring-boot-starter ---
+[INFO] Copying 0 resource from src\main\resources to target\classes
+[INFO] Copying 1 resource from src\main\resources to target\classes
+[INFO] 
+[INFO] --- compiler:3.13.0:compile (default-compile) @ monitor-spring-boot-starter ---
+[INFO] Nothing to compile - all classes are up to date.
+[INFO] 
+[INFO] --- resources:3.3.1:testResources (default-testResources) @ monitor-spring-boot-starter ---
+[INFO] skip non existing resourceDirectory C:\Project\QuestionBank\monitor-starter\src\test\resources
+[INFO] 
+[INFO] --- compiler:3.13.0:testCompile (default-testCompile) @ monitor-spring-boot-starter ---
+[INFO] Nothing to compile - all classes are up to date.
+[INFO] 
+[INFO] --- surefire:3.5.3:test (default-test) @ monitor-spring-boot-starter ---
+[INFO] 
+[INFO] ---------------------< com.allen:question-bank-m0 >---------------------
+[INFO] Building question-bank-m0 0.1.0-SNAPSHOT                           [3/3]
+[INFO]   from app\pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- jacoco:0.8.12:prepare-agent (prepare-agent) @ question-bank-m0 ---
+[INFO] argLine set to -javaagent:C:\\Users\\Allen\\.m2\\repository\\org\\jacoco\\org.jacoco.agent\\0.8.12\\org.jacoco.agent-0.8.12-runtime.jar=destfile=C:\\Project\\QuestionBank\\app\\target\\jacoco.exec
+[INFO] 
+[INFO] --- resources:3.3.1:resources (default-resources) @ question-bank-m0 ---
+[INFO] Copying 2 resources from src\main\resources to target\classes
+[INFO] Copying 6 resources from src\main\resources to target\classes
+[INFO] 
+[INFO] --- compiler:3.13.0:compile (default-compile) @ question-bank-m0 ---
+[INFO] Nothing to compile - all classes are up to date.
+[INFO] 
+[INFO] --- resources:3.3.1:testResources (default-testResources) @ question-bank-m0 ---
+[INFO] Copying 5 resources from src\test\resources to target\test-classes
+[INFO] 
+[INFO] --- compiler:3.13.0:testCompile (default-testCompile) @ question-bank-m0 ---
+[INFO] Nothing to compile - all classes are up to date.
+[INFO] 
+[INFO] --- surefire:3.5.3:test (default-test) @ question-bank-m0 ---
+[INFO] Using auto detected provider org.apache.maven.surefire.junitplatform.JUnitPlatformProvider
+[INFO] 
+[INFO] -------------------------------------------------------
+[INFO]  T E S T S
+[INFO] -------------------------------------------------------
+[INFO] Running com.allen.questionbank.sharding.ShardingEvidenceTest
+[evidence-setup] 8 张分片物理表 + 2 张广播表已重建（主键无 AUTO_INCREMENT，submission_item 冗余 student_id，FK 移除）
+19:46:30.261 [main] INFO com.zaxxer.hikari.HikariDataSource -- HikariPool-1 - Starting...
+19:46:30.993 [main] INFO com.zaxxer.hikari.pool.HikariPool -- HikariPool-1 - Added connection conn0: url=jdbc:h2:mem:config user=SA
+19:46:31.004 [main] INFO com.zaxxer.hikari.HikariDataSource -- HikariPool-1 - Start completed.
+19:46:31.139 [main] INFO com.zaxxer.hikari.HikariDataSource -- HikariPool-2 - Starting...
+19:46:31.160 [main] INFO com.zaxxer.hikari.pool.HikariPool -- HikariPool-2 - Added connection com.mysql.cj.jdbc.ConnectionImpl@74a15f4
+19:46:31.161 [main] INFO com.zaxxer.hikari.HikariDataSource -- HikariPool-2 - Start completed.
+19:46:34.197 [main] INFO com.zaxxer.hikari.HikariDataSource -- HikariPool-3 - Starting...
+19:46:34.218 [main] INFO com.zaxxer.hikari.pool.HikariPool -- HikariPool-3 - Added connection com.mysql.cj.jdbc.ConnectionImpl@56c7ec0a
+19:46:34.218 [main] INFO com.zaxxer.hikari.HikariDataSource -- HikariPool-3 - Start completed.
+ANTLR Tool version 4.10.1 used for code generation does not match the current runtime version 4.13.0
+ANTLR Runtime version 4.10.1 used for parser compilation does not match the current runtime version 4.13.0
+ANTLR Tool version 4.10.1 used for code generation does not match the current runtime version 4.13.0
+ANTLR Runtime version 4.10.1 used for parser compilation does not match the current runtime version 4.13.0
+19:46:42.067 [main] INFO ShardingSphere-SQL -- Logic SQL: INSERT INTO practice_session (student_id, paper_version_id, status, total_score) VALUES (?, ?, 'COMPLETED', ?)
+19:46:42.067 [main] INFO ShardingSphere-SQL -- Actual SQL: ds_1 ::: INSERT INTO practice_session_1 (student_id, paper_version_id, status, total_score, id) VALUES (?, ?, 'COMPLETED', ?, ?) ::: [1, 9001, 61, 1304170182901497856]
+19:46:42.648 [main] INFO ShardingSphere-SQL -- Logic SQL: SELECT id FROM practice_session WHERE student_id = ?
+19:46:42.648 [main] INFO ShardingSphere-SQL -- Actual SQL: ds_1 ::: SELECT id FROM practice_session_1 WHERE student_id = ? ::: [1]
+19:46:42.728 [main] INFO ShardingSphere-SQL -- Logic SQL: INSERT INTO practice_session (student_id, paper_version_id, status, total_score) VALUES (?, ?, 'COMPLETED', ?)
+19:46:42.728 [main] INFO ShardingSphere-SQL -- Actual SQL: ds_0 ::: INSERT INTO practice_session_0 (student_id, paper_version_id, status, total_score, id) VALUES (?, ?, 'COMPLETED', ?, ?) ::: [2, 9002, 62, 1304170186307272705]
+19:46:42.740 [main] INFO ShardingSphere-SQL -- Logic SQL: SELECT id FROM practice_session WHERE student_id = ?
+19:46:42.740 [main] INFO ShardingSphere-SQL -- Actual SQL: ds_0 ::: SELECT id FROM practice_session_0 WHERE student_id = ? ::: [2]
+19:46:42.747 [main] INFO ShardingSphere-SQL -- Logic SQL: INSERT INTO practice_session (student_id, paper_version_id, status, total_score) VALUES (?, ?, 'COMPLETED', ?)
+19:46:42.748 [main] INFO ShardingSphere-SQL -- Actual SQL: ds_1 ::: INSERT INTO practice_session_1 (student_id, paper_version_id, status, total_score, id) VALUES (?, ?, 'COMPLETED', ?, ?) ::: [3, 9003, 63, 1304170186395353088]
+19:46:42.751 [main] INFO ShardingSphere-SQL -- Logic SQL: SELECT id FROM practice_session WHERE student_id = ?
+19:46:42.751 [main] INFO ShardingSphere-SQL -- Actual SQL: ds_1 ::: SELECT id FROM practice_session_1 WHERE student_id = ? ::: [3]
+19:46:42.752 [main] INFO ShardingSphere-SQL -- Logic SQL: INSERT INTO practice_session (student_id, paper_version_id, status, total_score) VALUES (?, ?, 'COMPLETED', ?)
+19:46:42.752 [main] INFO ShardingSphere-SQL -- Actual SQL: ds_0 ::: INSERT INTO practice_session_0 (student_id, paper_version_id, status, total_score, id) VALUES (?, ?, 'COMPLETED', ?, ?) ::: [4, 9004, 64, 1304170186416324609]
+19:46:42.758 [main] INFO ShardingSphere-SQL -- Logic SQL: SELECT id FROM practice_session WHERE student_id = ?
+19:46:42.758 [main] INFO ShardingSphere-SQL -- Actual SQL: ds_0 ::: SELECT id FROM practice_session_0 WHERE student_id = ? ::: [4]
+19:46:42.766 [main] INFO ShardingSphere-SQL -- Logic SQL: INSERT INTO practice_session (student_id, paper_version_id, status, total_score) VALUES (?, ?, 'COMPLETED', ?)
+19:46:42.766 [main] INFO ShardingSphere-SQL -- Actual SQL: ds_1 ::: INSERT INTO practice_session_1 (student_id, paper_version_id, status, total_score, id) VALUES (?, ?, 'COMPLETED', ?, ?) ::: [5, 9005, 65, 1304170186470850560]
+19:46:42.772 [main] INFO ShardingSphere-SQL -- Logic SQL: SELECT id FROM practice_session WHERE student_id = ?
+19:46:42.772 [main] INFO ShardingSphere-SQL -- Actual SQL: ds_1 ::: SELECT id FROM practice_session_1 WHERE student_id = ? ::: [5]
+19:46:42.776 [main] INFO ShardingSphere-SQL -- Logic SQL: INSERT INTO practice_session (student_id, paper_version_id, status, total_score) VALUES (?, ?, 'COMPLETED', ?)
+19:46:42.776 [main] INFO ShardingSphere-SQL -- Actual SQL: ds_0 ::: INSERT INTO practice_session_0 (student_id, paper_version_id, status, total_score, id) VALUES (?, ?, 'COMPLETED', ?, ?) ::: [6, 9006, 66, 1304170186512793601]
+19:46:42.780 [main] INFO ShardingSphere-SQL -- Logic SQL: SELECT id FROM practice_session WHERE student_id = ?
+19:46:42.780 [main] INFO ShardingSphere-SQL -- Actual SQL: ds_0 ::: SELECT id FROM practice_session_0 WHERE student_id = ? ::: [6]
+19:46:42.782 [main] INFO ShardingSphere-SQL -- Logic SQL: INSERT INTO practice_session (student_id, paper_version_id, status, total_score) VALUES (?, ?, 'COMPLETED', ?)
+19:46:42.782 [main] INFO ShardingSphere-SQL -- Actual SQL: ds_1 ::: INSERT INTO practice_session_1 (student_id, paper_version_id, status, total_score, id) VALUES (?, ?, 'COMPLETED', ?, ?) ::: [7, 9007, 67, 1304170186542153728]
+19:46:42.785 [main] INFO ShardingSphere-SQL -- Logic SQL: SELECT id FROM practice_session WHERE student_id = ?
+19:46:42.785 [main] INFO ShardingSphere-SQL -- Actual SQL: ds_1 ::: SELECT id FROM practice_session_1 WHERE student_id = ? ::: [7]
+19:46:42.787 [main] INFO ShardingSphere-SQL -- Logic SQL: INSERT INTO practice_session (student_id, paper_version_id, status, total_score) VALUES (?, ?, 'COMPLETED', ?)
+19:46:42.787 [main] INFO ShardingSphere-SQL -- Actual SQL: ds_0 ::: INSERT INTO practice_session_0 (student_id, paper_version_id, status, total_score, id) VALUES (?, ?, 'COMPLETED', ?, ?) ::: [8, 9008, 68, 1304170186558930945]
+19:46:42.790 [main] INFO ShardingSphere-SQL -- Logic SQL: SELECT id FROM practice_session WHERE student_id = ?
+19:46:42.790 [main] INFO ShardingSphere-SQL -- Actual SQL: ds_0 ::: SELECT id FROM practice_session_0 WHERE student_id = ? ::: [8]
+19:46:42.796 [main] INFO ShardingSphere-SQL -- Logic SQL: INSERT INTO submission_item (session_id, student_id, question_version_id, answer_json, score, correct) VALUES (?, ?, ?, ?, ?, ?)
+19:46:42.796 [main] INFO ShardingSphere-SQL -- Actual SQL: ds_1 ::: INSERT INTO submission_item_1 (session_id, student_id, question_version_id, answer_json, score, correct, id) VALUES (?, ?, ?, ?, ?, ?, ?) ::: [1304170182901497856, 1, 101, {"answer":"student-1-q-101"}, 88, true, 1304170186596679680]
+19:46:42.805 [main] INFO ShardingSphere-SQL -- Logic SQL: INSERT INTO submission_item (session_id, student_id, question_version_id, answer_json, score, correct) VALUES (?, ?, ?, ?, ?, ?)
+19:46:42.805 [main] INFO ShardingSphere-SQL -- Actual SQL: ds_1 ::: INSERT INTO submission_item_1 (session_id, student_id, question_version_id, answer_json, score, correct, id) VALUES (?, ?, ?, ?, ?, ?, ?) ::: [1304170182901497856, 1, 102, {"answer":"student-1-q-102"}, 72, false, 1304170186630234113]
+19:46:42.819 [main] INFO ShardingSphere-SQL -- Logic SQL: INSERT INTO submission_item (session_id, student_id, question_version_id, answer_json, score, correct) VALUES (?, ?, ?, ?, ?, ?)
+19:46:42.819 [main] INFO ShardingSphere-SQL -- Actual SQL: ds_1 ::: INSERT INTO submission_item_1 (session_id, student_id, question_version_id, answer_json, score, correct, id) VALUES (?, ?, ?, ?, ?, ?, ?) ::: [1304170182901497856, 1, 103, {"answer":"student-1-q-103"}, 95, true, 1304170186693148672]
+19:46:42.841 [main] INFO ShardingSphere-SQL -- Logic SQL: INSERT INTO submission_item (session_id, student_id, question_version_id, answer_json, score, correct) VALUES (?, ?, ?, ?, ?, ?)
+19:46:42.842 [main] INFO ShardingSphere-SQL -- Actual SQL: ds_0 ::: INSERT INTO submission_item_0 (session_id, student_id, question_version_id, answer_json, score, correct, id) VALUES (?, ?, ?, ?, ?, ?, ?) ::: [1304170186307272705, 2, 202, {"answer":"student-2-q-202"}, 80, true, 1304170186781229057]
+19:46:42.849 [main] INFO ShardingSphere-SQL -- Logic SQL: INSERT INTO submission_item (session_id, student_id, question_version_id, answer_json, score, correct) VALUES (?, ?, ?, ?, ?, ?)
+19:46:42.850 [main] INFO ShardingSphere-SQL -- Actual SQL: ds_1 ::: INSERT INTO submission_item_1 (session_id, student_id, question_version_id, answer_json, score, correct, id) VALUES (?, ?, ?, ?, ?, ?, ?) ::: [1304170186395353088, 3, 203, {"answer":"student-3-q-203"}, 80, true, 1304170186823172096]
+19:46:42.856 [main] INFO ShardingSphere-SQL -- Logic SQL: INSERT INTO submission_item (session_id, student_id, question_version_id, answer_json, score, correct) VALUES (?, ?, ?, ?, ?, ?)
+19:46:42.857 [main] INFO ShardingSphere-SQL -- Actual SQL: ds_0 ::: INSERT INTO submission_item_0 (session_id, student_id, question_version_id, answer_json, score, correct, id) VALUES (?, ?, ?, ?, ?, ?, ?) ::: [1304170186416324609, 4, 204, {"answer":"student-4-q-204"}, 80, true, 1304170186848337921]
+19:46:42.867 [main] INFO ShardingSphere-SQL -- Logic SQL: INSERT INTO submission_item (session_id, student_id, question_version_id, answer_json, score, correct) VALUES (?, ?, ?, ?, ?, ?)
+19:46:42.867 [main] INFO ShardingSphere-SQL -- Actual SQL: ds_1 ::: INSERT INTO submission_item_1 (session_id, student_id, question_version_id, answer_json, score, correct, id) VALUES (?, ?, ?, ?, ?, ?, ?) ::: [1304170186470850560, 5, 205, {"answer":"student-5-q-205"}, 80, true, 1304170186894475264]
+19:46:42.870 [main] INFO ShardingSphere-SQL -- Logic SQL: INSERT INTO submission_item (session_id, student_id, question_version_id, answer_json, score, correct) VALUES (?, ?, ?, ?, ?, ?)
+19:46:42.870 [main] INFO ShardingSphere-SQL -- Actual SQL: ds_0 ::: INSERT INTO submission_item_0 (session_id, student_id, question_version_id, answer_json, score, correct, id) VALUES (?, ?, ?, ?, ?, ?, ?) ::: [1304170186512793601, 6, 206, {"answer":"student-6-q-206"}, 80, true, 1304170186911252481]
+19:46:42.879 [main] INFO ShardingSphere-SQL -- Logic SQL: INSERT INTO submission_item (session_id, student_id, question_version_id, answer_json, score, correct) VALUES (?, ?, ?, ?, ?, ?)
+19:46:42.879 [main] INFO ShardingSphere-SQL -- Actual SQL: ds_1 ::: INSERT INTO submission_item_1 (session_id, student_id, question_version_id, answer_json, score, correct, id) VALUES (?, ?, ?, ?, ?, ?, ?) ::: [1304170186542153728, 7, 207, {"answer":"student-7-q-207"}, 80, true, 1304170186944806912]
+19:46:42.885 [main] INFO ShardingSphere-SQL -- Logic SQL: INSERT INTO submission_item (session_id, student_id, question_version_id, answer_json, score, correct) VALUES (?, ?, ?, ?, ?, ?)
+19:46:42.885 [main] INFO ShardingSphere-SQL -- Actual SQL: ds_0 ::: INSERT INTO submission_item_0 (session_id, student_id, question_version_id, answer_json, score, correct, id) VALUES (?, ?, ?, ?, ?, ?, ?) ::: [1304170186558930945, 8, 208, {"answer":"student-8-q-208"}, 80, true, 1304170186969972737]
+[evidence-1] 路由正确+物理分布：8 会话按 student_id MOD 2 精确分布 —— ds_0.session_0={2,4,6,8} / ds_1.session_1={1,3,5,7}，错位组合(_0._1/_1._0)均 0 行；答题 10 条分布 ds_0.item_0=4 / ds_1.item_1=6
+19:46:43.038 [main] INFO ShardingSphere-SQL -- Logic SQL: SELECT id, status FROM practice_session WHERE student_id = ?
+19:46:43.038 [main] INFO ShardingSphere-SQL -- Actual SQL: ds_1 ::: SELECT id, status FROM practice_session_1 WHERE student_id = ? ::: [1]
+[evidence-2] 单片路由：WHERE student_id=1 → 1 条 Actual SQL 下推 → Actual SQL: ds_1 ::: SELECT id, status FROM practice_session_1 WHERE student_id = ? ::: [1]
+19:46:43.114 [main] INFO ShardingSphere-SQL -- Logic SQL: SELECT student_id, COUNT(*) FROM practice_session GROUP BY student_id
+19:46:43.114 [main] INFO ShardingSphere-SQL -- Actual SQL: ds_0 ::: SELECT student_id, COUNT(*) FROM practice_session_0 GROUP BY student_id ORDER BY student_id ASC 
+19:46:43.114 [main] INFO ShardingSphere-SQL -- Actual SQL: ds_0 ::: SELECT student_id, COUNT(*) FROM practice_session_1 GROUP BY student_id ORDER BY student_id ASC 
+19:46:43.114 [main] INFO ShardingSphere-SQL -- Actual SQL: ds_1 ::: SELECT student_id, COUNT(*) FROM practice_session_0 GROUP BY student_id ORDER BY student_id ASC 
+19:46:43.114 [main] INFO ShardingSphere-SQL -- Actual SQL: ds_1 ::: SELECT student_id, COUNT(*) FROM practice_session_1 GROUP BY student_id ORDER BY student_id ASC 
+[evidence-3] 跨片聚合合并：GROUP BY student_id 无路由条件 → 4 条 Actual SQL 分发 4 物理表 → 归并 8 组（每生 1 会话，SUM=8）
+19:46:43.195 [main] INFO ShardingSphere-SQL -- Logic SQL: INSERT INTO exam_dict (dict_key, dict_value) VALUES (?, ?)
+19:46:43.196 [main] INFO ShardingSphere-SQL -- Actual SQL: ds_1 ::: INSERT INTO exam_dict (dict_key, dict_value) VALUES (?, ?) ::: [grading, A:90,B:80,C:60]
+19:46:43.197 [main] INFO ShardingSphere-SQL -- Actual SQL: ds_0 ::: INSERT INTO exam_dict (dict_key, dict_value) VALUES (?, ?) ::: [grading, A:90,B:80,C:60]
+[evidence-4] 广播表+全局ID：exam_dict 一次逻辑写入 → 2 库各 1 份物理副本；8 个主键全为 SNOWFLAKE（无 AUTO_INCREMENT）全局唯一不冲突: [1304170182901497856, 1304170186307272705, 1304170186395353088, 1304170186416324609, 1304170186470850560, 1304170186512793601, 1304170186542153728, 1304170186558930945]
+19:46:43.363 [main] INFO ShardingSphere-SQL -- Logic SQL: SELECT si.question_version_id, si.score FROM practice_session ps JOIN submission_item si ON si.session_id = ps.id WHERE ps.student_id = ?
+19:46:43.366 [main] INFO ShardingSphere-SQL -- Actual SQL: ds_1 ::: SELECT si.question_version_id, si.score FROM practice_session_1 ps JOIN submission_item_1 si ON si.session_id = ps.id WHERE ps.student_id = ? ::: [1]
+[evidence-5] bindingTables join：父子表同分片键对齐路由 → 1 条 Actual SQL（Actual SQL: ds_1 ::: SELECT si.question_version_id, si.score FROM practice_session_1 ps JOIN submission_item_1 si ON si.session_id = ps.id WHERE ps.student_id = ? ::: [1]），笛卡尔积 2×2=4 被消除
+19:46:43.378 [main] INFO ShardingSphere-SQL -- Logic SQL: INSERT INTO submission_item (session_id, student_id, question_version_id, answer_json, score, correct) VALUES (?, ?, ?, ?, ?, ?)
+19:46:43.379 [main] INFO ShardingSphere-SQL -- Actual SQL: ds_0 ::: INSERT INTO submission_item_0 (session_id, student_id, question_version_id, answer_json, score, correct, id) VALUES (?, ?, ?, ?, ?, ?, ?) ::: [1304170186307272705, 2, 101, {"answer":"student-2-q-101"}, 60, false, 1304170189037764608]
+19:46:43.395 [main] INFO ShardingSphere-SQL -- Logic SQL: INSERT INTO submission_item (session_id, student_id, question_version_id, answer_json, score, correct) VALUES (?, ?, ?, ?, ?, ?)
+19:46:43.395 [main] INFO ShardingSphere-SQL -- Actual SQL: ds_1 ::: INSERT INTO submission_item_1 (session_id, student_id, question_version_id, answer_json, score, correct, id) VALUES (?, ?, ?, ?, ?, ?, ?) ::: [1304170182901497856, 1, 101, {"answer":"student-1-q-101"}, 99, true, 1304170189104873473]
+[evidence-6] 唯一键兜底：同分片内重复提交 → Duplicate entry 被拒（uk 兜底有效）；跨分片同业务键（student2 引 student1 的 session+q101）物理不拦 —— 分片后业务唯一性必须把分片键纳入唯一键或引入全局索引，这是 sharding 的经典代价
+[INFO] Tests run: 6, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 16.15 s -- in com.allen.questionbank.sharding.ShardingEvidenceTest
+[INFO] 
+[INFO] Results:
+[INFO] 
+[INFO] Tests run: 6, Failures: 0, Errors: 0, Skipped: 0
+[INFO] 
+[INFO] 
+[INFO] --- jacoco:0.8.12:report (report) @ question-bank-m0 ---
+[INFO] Loading execution data file C:\Project\QuestionBank\app\target\jacoco.exec
+[INFO] Analyzed bundle 'question-bank-m0' with 87 classes
+[INFO] ------------------------------------------------------------------------
+[INFO] Reactor Summary for question-bank-parent 0.1.0-SNAPSHOT:
+[INFO] 
+[INFO] question-bank-parent ............................... SUCCESS [  0.002 s]
+[INFO] monitor-spring-boot-starter ........................ SUCCESS [  1.185 s]
+[INFO] question-bank-m0 ................................... SUCCESS [ 31.549 s]
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  33.113 s
+[INFO] Finished at: 2026-09-08T19:46:51+08:00
+[INFO] ------------------------------------------------------------------------

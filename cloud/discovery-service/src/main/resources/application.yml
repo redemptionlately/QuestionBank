@@ -1,0 +1,29 @@
+server:
+  port: 8761
+
+spring:
+  application:
+    name: discovery-service
+
+eureka:
+  instance:
+    hostname: 127.0.0.1
+    prefer-ip-address: true
+  client:
+    # 单机注册中心：不注册自己、不拉取注册表，否则启动时会有一条指向自己却还没就绪的实例
+    register-with-eureka: false
+    fetch-registry: false
+    service-url:
+      defaultZone: http://127.0.0.1:8761/eureka/
+  server:
+    # 演示环境关掉自我保护：默认自我保护会让"已下线的实例"在注册表里停留很久，
+    # 熔断/摘除这类证据会看到与实际不符的实例列表。生产必须打开——
+    # 网络抖动时它防止 Eureka 把健康实例全量剔除。
+    enable-self-preservation: false
+    eviction-interval-timer-in-ms: 4000
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info

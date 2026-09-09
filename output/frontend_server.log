@@ -1,0 +1,5 @@
+
+  QuestionBank 前端已启动
+  前端地址 : http://localhost:3000
+  API 代理 : http://127.0.0.1:8080  (所有 /api/** 请求转发至此)
+

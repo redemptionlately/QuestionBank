@@ -1,0 +1,80 @@
+# ShardingSphere-JDBC 分库分表证据配置（仅 ShardingEvidenceTest 使用，生产主线不加载本文件）。
+# 拓扑：2 库（question_bank_sharding_0/1）× 2 表（_0/_1）= 每逻辑表 4 个物理表。
+# 路由键：student_id % 2 双层一致（库与表同余），INLINE 表达式即路由公式，可读性即证据。
+# 物理表主键无 AUTO_INCREMENT：IDENTITY 在分片下只保证单表唯一，全局唯一交给 SNOWFLAKE。
+# __MYSQL_PASSWORD__ 由测试在加载前按环境变量 MYSQL_PASSWORD 替换。
+# 踩坑实锤（javap 字节码 + 官方 5.5.2 文档双确认）：SS 5.5 起数据源条目为平铺格式，
+# 连接属性（jdbcUrl/username/password/池参数）直接写在条目下；旧文档的 props: 嵌套写法
+# 在 5.5.2 被静默忽略（swapper 只读顶层键与 customPoolProps），症状为
+# Access denied for 'OS用户'@'localhost' 或 StorageUnit NPE: standardProps.get("url")==null。
+dataSources:
+  ds_0:
+    dataSourceClassName: com.zaxxer.hikari.HikariDataSource
+    driverClassName: com.mysql.cj.jdbc.Driver
+    jdbcUrl: jdbc:mysql://127.0.0.1:3306/question_bank_sharding_0?createDatabaseIfNotExist=true&useSSL=false&allowPublicKeyRetrieval=true
+    username: root
+    password: __MYSQL_PASSWORD__
+    maximumPoolSize: 4
+  ds_1:
+    dataSourceClassName: com.zaxxer.hikari.HikariDataSource
+    driverClassName: com.mysql.cj.jdbc.Driver
+    jdbcUrl: jdbc:mysql://127.0.0.1:3306/question_bank_sharding_1?createDatabaseIfNotExist=true&useSSL=false&allowPublicKeyRetrieval=true
+    username: root
+    password: __MYSQL_PASSWORD__
+    maximumPoolSize: 4
+rules:
+  - !SHARDING
+    tables:
+      practice_session:
+        actualDataNodes: ds_${0..1}.practice_session_${0..1}
+        databaseStrategy:
+          standard:
+            shardingColumn: student_id
+            shardingAlgorithmName: ds-student-inline
+        tableStrategy:
+          standard:
+            shardingColumn: student_id
+            shardingAlgorithmName: tbl-session-inline
+        keyGenerateStrategy:
+          column: id
+          keyGeneratorName: snowflake
+      submission_item:
+        # 子表冗余 student_id 作分片键：无需 join 父表即可定位分片（面试点）
+        actualDataNodes: ds_${0..1}.submission_item_${0..1}
+        databaseStrategy:
+          standard:
+            shardingColumn: student_id
+            shardingAlgorithmName: ds-student-inline
+        tableStrategy:
+          standard:
+            shardingColumn: student_id
+            shardingAlgorithmName: tbl-item-inline
+        keyGenerateStrategy:
+          column: id
+          keyGeneratorName: snowflake
+    # 同分片键 + 同余算法 → join 时路由对齐，消除 2×2 笛卡尔积
+    bindingTables:
+      - practice_session,submission_item
+    shardingAlgorithms:
+      # MOD/HASH_MOD 属自动分片算法，仅限 autoTables；手写 actualDataNodes 必须用 INLINE（实测 AlgorithmInitializationException）
+      ds-student-inline:
+        type: INLINE
+        props:
+          algorithm-expression: 'ds_${student_id % 2}'
+      tbl-session-inline:
+        type: INLINE
+        props:
+          algorithm-expression: 'practice_session_${student_id % 2}'
+      tbl-item-inline:
+        type: INLINE
+        props:
+          algorithm-expression: 'submission_item_${student_id % 2}'
+    keyGenerators:
+      snowflake:
+        type: SNOWFLAKE
+  - !BROADCAST
+    tables:
+      - exam_dict
+props:
+  # 打印 Logic SQL / Actual SQL —— 路由行为的原始铁证，直接进 output/ 证据日志
+  sql-show: true

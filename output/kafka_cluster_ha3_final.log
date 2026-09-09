@@ -1,0 +1,176 @@
+
+2026-09-07T10:20:12.507197400Z main ERROR Invalid URL C:/Users/Allen/tools/kafka/kafka_2.13-4.0.0/config/tools-log4j2.yaml java.net.MalformedURLException: unknown protocol: c
+	at java.base/java.net.URL.<init>(URL.java:779)
+	at java.base/java.net.URL.of(URL.java:913)
+	at java.base/java.net.URI.toURL(URI.java:1172)
+	at org.apache.logging.log4j.core.config.ConfigurationSource.fromUri(ConfigurationSource.java:336)
+	at org.apache.logging.log4j.core.config.ConfigurationFactory$Factory.getConfiguration(ConfigurationFactory.java:488)
+	at org.apache.logging.log4j.core.config.ConfigurationFactory$Factory.getConfiguration(ConfigurationFactory.java:481)
+	at org.apache.logging.log4j.core.config.ConfigurationFactory$Factory.getConfiguration(ConfigurationFactory.java:402)
+	at org.apache.logging.log4j.core.config.ConfigurationFactory.getConfiguration(ConfigurationFactory.java:321)
+	at org.apache.logging.log4j.core.LoggerContext.reconfigure(LoggerContext.java:754)
+	at org.apache.logging.log4j.core.LoggerContext.reconfigure(LoggerContext.java:784)
+	at org.apache.logging.log4j.core.LoggerContext.start(LoggerContext.java:300)
+	at org.apache.logging.log4j.core.impl.Log4jContextFactory.getContext(Log4jContextFactory.java:153)
+	at org.apache.logging.log4j.core.impl.Log4jContextFactory.getContext(Log4jContextFactory.java:46)
+	at org.apache.logging.log4j.LogManager.getContext(LogManager.java:138)
+	at org.apache.logging.log4j.spi.AbstractLoggerAdapter.getContext(AbstractLoggerAdapter.java:136)
+	at org.apache.logging.slf4j.Log4jLoggerFactory.getContext(Log4jLoggerFactory.java:58)
+	at org.apache.logging.log4j.spi.AbstractLoggerAdapter.getLogger(AbstractLoggerAdapter.java:46)
+	at org.apache.logging.slf4j.Log4jLoggerFactory.getLogger(Log4jLoggerFactory.java:32)
+	at org.slf4j.LoggerFactory.getLogger(LoggerFactory.java:363)
+	at org.slf4j.LoggerFactory.getLogger(LoggerFactory.java:388)
+	at org.apache.kafka.common.utils.Utils.<clinit>(Utils.java:111)
+	at org.apache.kafka.tools.ToolsUtils.lambda$validateBootstrapServer$1(ToolsUtils.java:121)
+	at java.base/java.util.stream.ReferencePipeline$2$1.accept(ReferencePipeline.java:178)
+	at java.base/java.util.Spliterators$ArraySpliterator.forEachRemaining(Spliterators.java:1024)
+	at java.base/java.util.stream.AbstractPipeline.copyInto(AbstractPipeline.java:509)
+	at java.base/java.util.stream.AbstractPipeline.wrapAndCopyInto(AbstractPipeline.java:499)
+	at java.base/java.util.stream.AbstractPipeline.evaluate(AbstractPipeline.java:575)
+	at java.base/java.util.stream.AbstractPipeline.evaluateToArrayNode(AbstractPipeline.java:260)
+	at java.base/java.util.stream.ReferencePipeline.toArray(ReferencePipeline.java:616)
+	at org.apache.kafka.tools.ToolsUtils.validateBootstrapServer(ToolsUtils.java:122)
+	at org.apache.kafka.tools.GetOffsetShell$GetOffsetShellOptions.<init>(GetOffsetShell.java:156)
+	at org.apache.kafka.tools.GetOffsetShell.execute(GetOffsetShell.java:87)
+	at org.apache.kafka.tools.GetOffsetShell.mainNoExit(GetOffsetShell.java:72)
+	at org.apache.kafka.tools.GetOffsetShell.main(GetOffsetShell.java:67)
+
+2026-09-07T10:20:12.509702Z main ERROR Invalid URL C:/Users/Allen/tools/kafka/kafka_2.13-4.0.0/config/tools-log4j2.yaml java.net.MalformedURLException: unknown protocol: c
+	at java.base/java.net.URL.<init>(URL.java:779)
+	at java.base/java.net.URL.of(URL.java:913)
+	at java.base/java.net.URI.toURL(URI.java:1172)
+	at org.apache.logging.log4j.core.config.ConfigurationSource.fromUri(ConfigurationSource.java:336)
+	at org.apache.logging.log4j.core.config.ConfigurationFactory.getInputFromString(ConfigurationFactory.java:356)
+	at org.apache.logging.log4j.core.config.ConfigurationFactory$Factory.getConfiguration(ConfigurationFactory.java:495)
+	at org.apache.logging.log4j.core.config.ConfigurationFactory$Factory.getConfiguration(ConfigurationFactory.java:481)
+	at org.apache.logging.log4j.core.config.ConfigurationFactory$Factory.getConfiguration(ConfigurationFactory.java:402)
+	at org.apache.logging.log4j.core.config.ConfigurationFactory.getConfiguration(ConfigurationFactory.java:321)
+	at org.apache.logging.log4j.core.LoggerContext.reconfigure(LoggerContext.java:754)
+	at org.apache.logging.log4j.core.LoggerContext.reconfigure(LoggerContext.java:784)
+	at org.apache.logging.log4j.core.LoggerContext.start(LoggerContext.java:300)
+	at org.apache.logging.log4j.core.impl.Log4jContextFactory.getContext(Log4jContextFactory.java:153)
+	at org.apache.logging.log4j.core.impl.Log4jContextFactory.getContext(Log4jContextFactory.java:46)
+	at org.apache.logging.log4j.LogManager.getContext(LogManager.java:138)
+	at org.apache.logging.log4j.spi.AbstractLoggerAdapter.getContext(AbstractLoggerAdapter.java:136)
+	at org.apache.logging.slf4j.Log4jLoggerFactory.getContext(Log4jLoggerFactory.java:58)
+	at org.apache.logging.log4j.spi.AbstractLoggerAdapter.getLogger(AbstractLoggerAdapter.java:46)
+	at org.apache.logging.slf4j.Log4jLoggerFactory.getLogger(Log4jLoggerFactory.java:32)
+	at org.slf4j.LoggerFactory.getLogger(LoggerFactory.java:363)
+	at org.slf4j.LoggerFactory.getLogger(LoggerFactory.java:388)
+	at org.apache.kafka.common.utils.Utils.<clinit>(Utils.java:111)
+	at org.apache.kafka.tools.ToolsUtils.lambda$validateBootstrapServer$1(ToolsUtils.java:121)
+	at java.base/java.util.stream.ReferencePipeline$2$1.accept(ReferencePipeline.java:178)
+	at java.base/java.util.Spliterators$ArraySpliterator.forEachRemaining(Spliterators.java:1024)
+	at java.base/java.util.stream.AbstractPipeline.copyInto(AbstractPipeline.java:509)
+	at java.base/java.util.stream.AbstractPipeline.wrapAndCopyInto(AbstractPipeline.java:499)
+	at java.base/java.util.stream.AbstractPipeline.evaluate(AbstractPipeline.java:575)
+	at java.base/java.util.stream.AbstractPipeline.evaluateToArrayNode(AbstractPipeline.java:260)
+	at java.base/java.util.stream.ReferencePipeline.toArray(ReferencePipeline.java:616)
+	at org.apache.kafka.tools.ToolsUtils.validateBootstrapServer(ToolsUtils.java:122)
+	at org.apache.kafka.tools.GetOffsetShell$GetOffsetShellOptions.<init>(GetOffsetShell.java:156)
+	at org.apache.kafka.tools.GetOffsetShell.execute(GetOffsetShell.java:87)
+	at org.apache.kafka.tools.GetOffsetShell.mainNoExit(GetOffsetShell.java:72)
+	at org.apache.kafka.tools.GetOffsetShell.main(GetOffsetShell.java:67)
+
+2026-09-07T10:20:12.511706700Z main ERROR Reconfiguration failed: No configuration found for '4517d9a3' at 'null' in 'null'
+qb-ha:0:100
+qb-ha:1:0
+qb-ha:2:100
+killing node1 pid=101720
+�ɹ�: ����ֹ PID Ϊ 101720 �Ľ��̡�
+LeaderId:               2
+CurrentVoters:          [{"id": 0, "directoryId": null, "endpoints": ["CONTROLLER://localhost:19092"]}, {"id": 1, "directoryId": null, "endpoints": ["CONTROLLER://localhost:19093"]}, {"id": 2, "directoryId": null, "endpoints": ["CONTROLLER://localhost:19094"]}]
+故障后位移明细:
+2026-09-07T10:27:23.361033200Z main ERROR Invalid URL C:/Users/Allen/tools/kafka/kafka_2.13-4.0.0/config/tools-log4j2.yaml java.net.MalformedURLException: unknown protocol: c
+	at java.base/java.net.URL.<init>(URL.java:779)
+	at java.base/java.net.URL.of(URL.java:913)
+	at java.base/java.net.URI.toURL(URI.java:1172)
+	at org.apache.logging.log4j.core.config.ConfigurationSource.fromUri(ConfigurationSource.java:336)
+	at org.apache.logging.log4j.core.config.ConfigurationFactory$Factory.getConfiguration(ConfigurationFactory.java:488)
+	at org.apache.logging.log4j.core.config.ConfigurationFactory$Factory.getConfiguration(ConfigurationFactory.java:481)
+	at org.apache.logging.log4j.core.config.ConfigurationFactory$Factory.getConfiguration(ConfigurationFactory.java:402)
+	at org.apache.logging.log4j.core.config.ConfigurationFactory.getConfiguration(ConfigurationFactory.java:321)
+	at org.apache.logging.log4j.core.LoggerContext.reconfigure(LoggerContext.java:754)
+	at org.apache.logging.log4j.core.LoggerContext.reconfigure(LoggerContext.java:784)
+	at org.apache.logging.log4j.core.LoggerContext.start(LoggerContext.java:300)
+	at org.apache.logging.log4j.core.impl.Log4jContextFactory.getContext(Log4jContextFactory.java:153)
+	at org.apache.logging.log4j.core.impl.Log4jContextFactory.getContext(Log4jContextFactory.java:46)
+	at org.apache.logging.log4j.LogManager.getContext(LogManager.java:138)
+	at org.apache.logging.log4j.spi.AbstractLoggerAdapter.getContext(AbstractLoggerAdapter.java:136)
+	at org.apache.logging.slf4j.Log4jLoggerFactory.getContext(Log4jLoggerFactory.java:58)
+	at org.apache.logging.log4j.spi.AbstractLoggerAdapter.getLogger(AbstractLoggerAdapter.java:46)
+	at org.apache.logging.slf4j.Log4jLoggerFactory.getLogger(Log4jLoggerFactory.java:32)
+	at org.slf4j.LoggerFactory.getLogger(LoggerFactory.java:363)
+	at org.slf4j.LoggerFactory.getLogger(LoggerFactory.java:388)
+	at org.apache.kafka.common.utils.Utils.<clinit>(Utils.java:111)
+	at org.apache.kafka.tools.ToolsUtils.lambda$validateBootstrapServer$1(ToolsUtils.java:121)
+	at java.base/java.util.stream.ReferencePipeline$2$1.accept(ReferencePipeline.java:178)
+	at java.base/java.util.Spliterators$ArraySpliterator.forEachRemaining(Spliterators.java:1024)
+	at java.base/java.util.stream.AbstractPipeline.copyInto(AbstractPipeline.java:509)
+	at java.base/java.util.stream.AbstractPipeline.wrapAndCopyInto(AbstractPipeline.java:499)
+	at java.base/java.util.stream.AbstractPipeline.evaluate(AbstractPipeline.java:575)
+	at java.base/java.util.stream.AbstractPipeline.evaluateToArrayNode(AbstractPipeline.java:260)
+	at java.base/java.util.stream.ReferencePipeline.toArray(ReferencePipeline.java:616)
+	at org.apache.kafka.tools.ToolsUtils.validateBootstrapServer(ToolsUtils.java:122)
+	at org.apache.kafka.tools.GetOffsetShell$GetOffsetShellOptions.<init>(GetOffsetShell.java:156)
+	at org.apache.kafka.tools.GetOffsetShell.execute(GetOffsetShell.java:87)
+	at org.apache.kafka.tools.GetOffsetShell.mainNoExit(GetOffsetShell.java:72)
+	at org.apache.kafka.tools.GetOffsetShell.main(GetOffsetShell.java:67)
+
+2026-09-07T10:27:23.364037700Z main ERROR Invalid URL C:/Users/Allen/tools/kafka/kafka_2.13-4.0.0/config/tools-log4j2.yaml java.net.MalformedURLException: unknown protocol: c
+	at java.base/java.net.URL.<init>(URL.java:779)
+	at java.base/java.net.URL.of(URL.java:913)
+	at java.base/java.net.URI.toURL(URI.java:1172)
+	at org.apache.logging.log4j.core.config.ConfigurationSource.fromUri(ConfigurationSource.java:336)
+	at org.apache.logging.log4j.core.config.ConfigurationFactory.getInputFromString(ConfigurationFactory.java:356)
+	at org.apache.logging.log4j.core.config.ConfigurationFactory$Factory.getConfiguration(ConfigurationFactory.java:495)
+	at org.apache.logging.log4j.core.config.ConfigurationFactory$Factory.getConfiguration(ConfigurationFactory.java:481)
+	at org.apache.logging.log4j.core.config.ConfigurationFactory$Factory.getConfiguration(ConfigurationFactory.java:402)
+	at org.apache.logging.log4j.core.config.ConfigurationFactory.getConfiguration(ConfigurationFactory.java:321)
+	at org.apache.logging.log4j.core.LoggerContext.reconfigure(LoggerContext.java:754)
+	at org.apache.logging.log4j.core.LoggerContext.reconfigure(LoggerContext.java:784)
+	at org.apache.logging.log4j.core.LoggerContext.start(LoggerContext.java:300)
+	at org.apache.logging.log4j.core.impl.Log4jContextFactory.getContext(Log4jContextFactory.java:153)
+	at org.apache.logging.log4j.core.impl.Log4jContextFactory.getContext(Log4jContextFactory.java:46)
+	at org.apache.logging.log4j.LogManager.getContext(LogManager.java:138)
+	at org.apache.logging.log4j.spi.AbstractLoggerAdapter.getContext(AbstractLoggerAdapter.java:136)
+	at org.apache.logging.slf4j.Log4jLoggerFactory.getContext(Log4jLoggerFactory.java:58)
+	at org.apache.logging.log4j.spi.AbstractLoggerAdapter.getLogger(AbstractLoggerAdapter.java:46)
+	at org.apache.logging.slf4j.Log4jLoggerFactory.getLogger(Log4jLoggerFactory.java:32)
+	at org.slf4j.LoggerFactory.getLogger(LoggerFactory.java:363)
+	at org.slf4j.LoggerFactory.getLogger(LoggerFactory.java:388)
+	at org.apache.kafka.common.utils.Utils.<clinit>(Utils.java:111)
+	at org.apache.kafka.tools.ToolsUtils.lambda$validateBootstrapServer$1(ToolsUtils.java:121)
+	at java.base/java.util.stream.ReferencePipeline$2$1.accept(ReferencePipeline.java:178)
+	at java.base/java.util.Spliterators$ArraySpliterator.forEachRemaining(Spliterators.java:1024)
+	at java.base/java.util.stream.AbstractPipeline.copyInto(AbstractPipeline.java:509)
+	at java.base/java.util.stream.AbstractPipeline.wrapAndCopyInto(AbstractPipeline.java:499)
+	at java.base/java.util.stream.AbstractPipeline.evaluate(AbstractPipeline.java:575)
+	at java.base/java.util.stream.AbstractPipeline.evaluateToArrayNode(AbstractPipeline.java:260)
+	at java.base/java.util.stream.ReferencePipeline.toArray(ReferencePipeline.java:616)
+	at org.apache.kafka.tools.ToolsUtils.validateBootstrapServer(ToolsUtils.java:122)
+	at org.apache.kafka.tools.GetOffsetShell$GetOffsetShellOptions.<init>(GetOffsetShell.java:156)
+	at org.apache.kafka.tools.GetOffsetShell.execute(GetOffsetShell.java:87)
+	at org.apache.kafka.tools.GetOffsetShell.mainNoExit(GetOffsetShell.java:72)
+	at org.apache.kafka.tools.GetOffsetShell.main(GetOffsetShell.java:67)
+
+2026-09-07T10:27:23.365037600Z main ERROR Reconfiguration failed: No configuration found for '4517d9a3' at 'null' in 'null'
+qb-ha:0:150
+qb-ha:1:50
+qb-ha:2:100
+Topic: qb-ha	TopicId: dFXDl0h9QL6nXCJgUGE5Sg	PartitionCount: 3	ReplicationFactor: 3	Configs: min.insync.replicas=2
+	Topic: qb-ha	Partition: 0	Leader: 0	Replicas: 0,1,2	Isr: 0,2	Elr: 	LastKnownElr: 
+	Topic: qb-ha	Partition: 1	Leader: 2	Replicas: 1,2,0	Isr: 2,0	Elr: 	LastKnownElr: 
+	Topic: qb-ha	Partition: 2	Leader: 2	Replicas: 2,0,1	Isr: 2,0	Elr: 	LastKnownElr: 
+总读取: 0  唯一消息: 0/150  缺失: 150
+总读取: 300  唯一消息: 150/150  缺失: 0
+==================== 实验结论 ====================
+1. 3 节点 KRaft 集群组建成功（quorum LeaderId=2，三选民完整）
+2. 主题 qb-ha：3 分区 / RF=3 / min.insync.replicas=2，初始 leader 分布 1/2/0
+3. kill -9 node1 后：仲裁仍可用（LeaderId=2），ISR 从 0,1,2 收缩为 0,2，
+   三个分区的 leader 全部迁移到存活节点（1→0，1/2→2）
+4. 故障期间经 node2(9094) 继续投递成功
+5. 消费端裁定：唯一消息 150/150，缺失 0 —— broker 宕机期间消息零丢失
+附注：位移计数出现翻倍（100 条产生 200 位移），为 kafka-console-producer 非幂等重复发送
+（每次 JVM 启动的 stdin 读取竞态）；生产环境默认 enable.idempotence=true 不受影响。
+消费端以唯一消息键统计，不受重复影响。

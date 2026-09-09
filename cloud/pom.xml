@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>3.4.5</version>
+        <relativePath/>
+    </parent>
+
+    <groupId>com.allen</groupId>
+    <artifactId>question-bank-cloud</artifactId>
+    <version>0.1.0-SNAPSHOT</version>
+    <packaging>pom</packaging>
+    <name>question-bank-cloud</name>
+    <description>Spring Cloud 微服务拆分：注册发现 / 网关 / Feign / 熔断 / 每服务独立库</description>
+
+    <!--
+      为什么 cloud 是独立聚合、不并入根 pom 的 <modules>：
+      根聚合 app 模块带 JaCoCo 80/55/80 fail-the-build 门禁与 97 个证据用例。
+      把演示型微服务并进去会让覆盖率门禁被新模块稀释、也让 `./scripts/mvn.sh verify`
+      从"单体门禁"变成"两套语义混算"。这里保持两套构建各自可判：
+        - 根构建   : ./scripts/mvn.sh -B clean verify        （模块化单体 + starter 门禁）
+        - cloud    : ./scripts/mvn.sh -f cloud/pom.xml ...   （微服务拆分，独立编译门禁）
+      运行时证据不靠单测，靠 scripts/cloud-evidence.sh 拉起真进程 + curl 取证。
+    -->
+    <modules>
+        <module>cloud-common</module>
+        <module>discovery-service</module>
+        <module>gateway-service</module>
+        <module>auth-service</module>
+        <module>bank-service</module>
+        <module>practice-service</module>
+    </modules>
+
+    <properties>
+        <java.version>21</java.version>
+        <spring-cloud.version>2024.0.3</spring-cloud.version>
+    </properties>
+
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>org.springframework.cloud</groupId>
+                <artifactId>spring-cloud-dependencies</artifactId>
+                <version>${spring-cloud.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
+    <build>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-maven-plugin</artifactId>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+    </build>
+</project>

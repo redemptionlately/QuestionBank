@@ -1,0 +1,15 @@
+mysql: [Warning] Using a password on the command line interface can be insecure.
+installed_rank	version	description	success
+1	1	m0 schema	1
+2	2	m0 query indexes	1
+mysql: [Warning] Using a password on the command line interface can be insecure.
+Table	Non_unique	Key_name	Seq_in_index	Column_name	Collation	Cardinality	Sub_part	Packed	Null	Index_type	Comment	Index_comment	Visible	Expression
+paper_version	0	PRIMARY	1	id	A	2	NULL	NULL		BTREE			YES	NULL
+paper_version	0	uk_paper_version_no	1	bank_id	A	2	NULL	NULL		BTREE			YES	NULL
+paper_version	0	uk_paper_version_no	2	version_no	A	2	NULL	NULL		BTREE			YES	NULL
+paper_version	1	fk_paper_version_creator	1	created_by	A	1	NULL	NULL		BTREE			YES	NULL
+paper_version	1	idx_paper_version_status_published_at	1	status	A	1	NULL	NULL		BTREE			YES	NULL
+paper_version	1	idx_paper_version_status_published_at	2	published_at	A	2	NULL	NULL	YES	BTREE			YES	NULL
+mysql: [Warning] Using a password on the command line interface can be insecure.
+id	select_type	table	partitions	type	possible_keys	key	key_len	ref	rows	filtered	Extra
+1	SIMPLE	paper_version	NULL	ref	idx_paper_version_status_published_at	idx_paper_version_status_published_at	82	const	2	100.00	Backward index scan

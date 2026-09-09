@@ -1,0 +1,29 @@
+=== 证据环境自愈启动（ROOT=C:/Project/QuestionBank）===
+提示：组件随本终端会话存在；新会话重跑本脚本即可（幂等）。
+  [skip] Redis 已在运行
+  [info] Kafka log.dirs 缺失（/tmp 被清空），执行 format
+  [ok]   Kafka 就绪（端口 9092，56s）
+  [ok]   Kafka broker 探活通过（api-versions 可响应）
+  [ok]   MySQL 主库 就绪（端口 3307，3s）
+  [ok]   MySQL 从库 就绪（端口 3308，3s）
+=== 配置并校验主从复制（幂等）===
+           Replica_IO_Running: Yes
+          Replica_SQL_Running: Yes
+复制收敛判定: 从库可见 repl_probe_db.repl_probe (polls=1)
+slave_port	ro	sro
+=== Kafka topic 与 cloud 专用 DB 用户（幂等）===
+  [skip] qb-events 已有 3 分区（>= 3）
+  [ok]   cloud 专用用户就绪（qb_auth/qb_bank/qb_practice，各限本库）
+
+组件                   状态
+------------------------ --------------------
+MySQL 业务库 3306     运行中
+MySQL 主库 3307        运行中
+MySQL 从库 3308        运行中
+Redis 6379               运行中
+Kafka 9092               运行中
+
+下一步（全证据复跑）：
+  MYSQL_EVIDENCE=true REDIS_EVIDENCE=true KAFKA_EVIDENCE=true READ_REPLICA_EVIDENCE=true \
+    ./scripts/mvn.sh -B clean verify
+ENV_EXIT=0

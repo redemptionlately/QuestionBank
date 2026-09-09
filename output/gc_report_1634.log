@@ -1,0 +1,12 @@
+观测窗口: 153s   GC 停顿次数: 23   累计停顿: 147ms
+G1 吞吐估算: 99.90%（停顿时间占比口径，不含并发阶段 CPU）
+Young: 15 次   Mixed: 0 次   Full: 0 次   并发阶段: 0 次
+停顿 P50: 6.30ms   P95: 12.15ms   MAX: 17.23ms   (目标 MaxGCPauseMillis=200ms)
+Young 回收均值: 190M/次   堆容量: 512M
+
+最慢 5 次停顿:
+  uptime=15.9s  Young  315M->45M/512M  17.23ms
+  uptime=17.9s  Young  220M->50M/512M  12.15ms
+  uptime=8.8s  Young  309M->29M/512M  11.98ms
+  uptime=11.8s  Young  315M->36M/512M  11.18ms
+  uptime=26.2s  Young  333M->52M/512M  10.62ms

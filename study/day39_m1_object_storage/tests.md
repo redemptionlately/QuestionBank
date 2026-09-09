@@ -1,0 +1,13 @@
+# Current
+- 打开并按当天 study.md 的“源码索引（MustRemember）”或“外部源码索引（MustRemember）”逐项定位文件、类/方法、SQL 对象和行号，独立写出对应代码或 SQL，并口述输入、输出与边界。
+
+- 设计 PDF/解析结果 key
+- 写对象不存在/权限测试
+- 写出 bucket/key、ETag、content hash、预签名 URL 和数据库补偿状态的语义。
+- 写出预签名下载所需的对象、方法、过期时间和用户范围字段。
+- 设计对象成功/数据库失败与数据库成功/对象失败的补偿状态。
+
+# External
+
+- 用 MinIO put/get/delete
+- 设计清理扫描

@@ -1,0 +1,89 @@
+server:
+  port: 8083
+
+spring:
+  application:
+    name: practice-service
+  cloud:
+    loadbalancer:
+      cache:
+        # 默认 35s：熔断恢复演示里"bank 已复活但 LB 还缓存着空实例表"会让探测一直 503。
+        # 演示收敛调快；生产保留默认即可（这是可用性与一致性的权衡，不是免费午餐）。
+        ttl: 5s
+  datasource:
+    # 专用最小权限用户（scripts/start-evidence-env.sh 幂等创建，权限只限 qb_practice 本库）。
+    # URL 不带 createDatabaseIfNotExist——schema 由脚本预建，应用账号不该有全局建库权限。
+    url: jdbc:mysql://127.0.0.1:3307/qb_practice?characterEncoding=UTF-8&useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
+    username: qb_practice
+    password: ${CLOUD_DB_PASSWORD:qb-cloud-demo-pw}
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    open-in-view: false
+  flyway:
+    enabled: true
+    baseline-on-migrate: true
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://127.0.0.1:8761/eureka/
+    registry-fetch-interval-seconds: 5
+    # 首次注册默认最长延迟 40s，gateway 的 LB 缓存在此之前拿不到实例
+    # （锚点 B 实测 503 "No servers available for service: practice-service"）
+    initial-instance-info-replication-interval-seconds: 5
+  instance:
+    prefer-ip-address: true
+    lease-renewal-interval-in-seconds: 5
+    lease-expiration-duration-in-seconds: 10
+
+feign:
+  client:
+    config:
+      default:
+        # 不配超时的 Feign = 把"本地方法调用"的错觉留给自己。
+        # 默认 connectTimeout=10s/readTimeout=60s，一次下游卡顿就能占满线程池。
+        connectTimeout: 2000
+        readTimeout: 3000
+
+resilience4j:
+  circuitbreaker:
+    instances:
+      bankService:
+        # 滑动窗口 5 次、最少 5 次才开始统计、失败率 >= 50% 就断开
+        sliding-window-size: 5
+        minimum-number-of-calls: 5
+        failure-rate-threshold: 50
+        # OPEN 后等 10 秒进入 HALF_OPEN，放 3 个探测请求
+        wait-duration-in-open-state: 10s
+        permitted-number-of-calls-in-half-open-state: 3
+        automatic-transition-from-open-to-half-open-enabled: true
+  timelimiter:
+    instances:
+      bankService:
+        timeout-duration: 4s
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,circuitbreakers,circuitbreakerevents,metrics
+  endpoint:
+    health:
+      show-details: always
+  health:
+    circuitbreakers:
+      enabled: true
+  # 链路追踪：全量采样 + OTLP/HTTP 导出到 otelcol（详见 gateway-service/application.yml 注释）。
+  # practice 是 Feign 调用方：feign-micrometer 在依赖侧，这里只需采样与导出配置
+  tracing:
+    sampling:
+      probability: 1.0
+  otlp:
+    tracing:
+      endpoint: http://127.0.0.1:4318/v1/traces
+      transport: http
+
+logging:
+  pattern:
+    level: "%5p [${spring.application.name:},%X{traceId:-},%X{spanId:-}]"

@@ -1,0 +1,137 @@
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+
+ :: Spring Boot ::                (v3.4.5)
+
+2026-09-08T22:23:01.435+08:00  INFO 108392 --- [discovery-service] [           main] c.a.c.discovery.DiscoveryApplication     : Starting DiscoveryApplication v0.1.0-SNAPSHOT using Java 21.0.12 with PID 108392 (C:\Project\QuestionBank\cloud\discovery-service\target\discovery-service-0.1.0-SNAPSHOT.jar started by Allen in C:\Project\QuestionBank)
+2026-09-08T22:23:01.437+08:00  INFO 108392 --- [discovery-service] [           main] c.a.c.discovery.DiscoveryApplication     : No active profile set, falling back to 1 default profile: "default"
+2026-09-08T22:23:02.432+08:00  INFO 108392 --- [discovery-service] [           main] o.s.cloud.context.scope.GenericScope     : BeanFactory id=4e13370f-3679-3e26-8db6-ffe10e1547a3
+2026-09-08T22:23:02.774+08:00  INFO 108392 --- [discovery-service] [           main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 8761 (http)
+2026-09-08T22:23:02.786+08:00  INFO 108392 --- [discovery-service] [           main] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2026-09-08T22:23:02.786+08:00  INFO 108392 --- [discovery-service] [           main] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.40]
+2026-09-08T22:23:02.813+08:00  INFO 108392 --- [discovery-service] [           main] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2026-09-08T22:23:02.814+08:00  INFO 108392 --- [discovery-service] [           main] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 1295 ms
+2026-09-08T22:23:04.270+08:00  INFO 108392 --- [discovery-service] [           main] c.n.d.provider.DiscoveryJerseyProvider   : Using JSON encoding codec LegacyJacksonJson
+2026-09-08T22:23:04.272+08:00  INFO 108392 --- [discovery-service] [           main] c.n.d.provider.DiscoveryJerseyProvider   : Using JSON decoding codec LegacyJacksonJson
+2026-09-08T22:23:04.729+08:00  INFO 108392 --- [discovery-service] [           main] c.n.d.provider.DiscoveryJerseyProvider   : Using XML encoding codec XStreamXml
+2026-09-08T22:23:04.730+08:00  INFO 108392 --- [discovery-service] [           main] c.n.d.provider.DiscoveryJerseyProvider   : Using XML decoding codec XStreamXml
+2026-09-08T22:23:04.994+08:00  INFO 108392 --- [discovery-service] [           main] o.s.v.b.OptionalValidatorFactoryBean     : Failed to set up a Bean Validation provider: jakarta.validation.NoProviderFoundException: Unable to create a Configuration, because no Jakarta Bean Validation provider could be found. Add a provider like Hibernate Validator (RI) to your classpath.
+2026-09-08T22:23:07.522+08:00  WARN 108392 --- [discovery-service] [           main] iguration$LoadBalancerCaffeineWarnLogger : Spring Cloud LoadBalancer is currently working with the default cache. While this cache implementation is useful for development and tests, it's recommended to use Caffeine cache in production.You can switch to using Caffeine cache, by adding it and org.springframework.cache.caffeine.CaffeineCacheManager to the classpath.
+2026-09-08T22:23:07.620+08:00  INFO 108392 --- [discovery-service] [           main] o.s.c.n.eureka.InstanceInfoFactory       : Setting initial instance status as: STARTING
+2026-09-08T22:23:07.646+08:00  INFO 108392 --- [discovery-service] [           main] com.netflix.discovery.DiscoveryClient    : Initializing Eureka in region us-east-1
+2026-09-08T22:23:07.646+08:00  INFO 108392 --- [discovery-service] [           main] com.netflix.discovery.DiscoveryClient    : Client configured to neither register nor query for data.
+2026-09-08T22:23:07.649+08:00  INFO 108392 --- [discovery-service] [           main] com.netflix.discovery.DiscoveryClient    : Discovery Client initialized at timestamp 1788877387649 with initial instances count: 0
+2026-09-08T22:23:07.690+08:00  INFO 108392 --- [discovery-service] [           main] c.n.eureka.DefaultEurekaServerContext    : Initializing ...
+2026-09-08T22:23:07.693+08:00  INFO 108392 --- [discovery-service] [           main] c.n.eureka.cluster.PeerEurekaNodes       : Adding new peer nodes [http://127.0.0.1:8761/eureka/]
+2026-09-08T22:23:07.930+08:00  INFO 108392 --- [discovery-service] [           main] c.n.d.provider.DiscoveryJerseyProvider   : Using JSON encoding codec LegacyJacksonJson
+2026-09-08T22:23:07.932+08:00  INFO 108392 --- [discovery-service] [           main] c.n.d.provider.DiscoveryJerseyProvider   : Using JSON decoding codec LegacyJacksonJson
+2026-09-08T22:23:07.932+08:00  INFO 108392 --- [discovery-service] [           main] c.n.d.provider.DiscoveryJerseyProvider   : Using XML encoding codec XStreamXml
+2026-09-08T22:23:07.932+08:00  INFO 108392 --- [discovery-service] [           main] c.n.d.provider.DiscoveryJerseyProvider   : Using XML decoding codec XStreamXml
+2026-09-08T22:23:07.989+08:00  INFO 108392 --- [discovery-service] [           main] c.n.eureka.cluster.PeerEurekaNodes       : Replica node URL:  http://127.0.0.1:8761/eureka/
+2026-09-08T22:23:08.009+08:00  INFO 108392 --- [discovery-service] [           main] c.n.e.registry.AbstractInstanceRegistry  : Finished initializing remote region registries. All known remote regions: []
+2026-09-08T22:23:08.009+08:00  INFO 108392 --- [discovery-service] [           main] c.n.eureka.DefaultEurekaServerContext    : Initialized
+2026-09-08T22:23:08.033+08:00  INFO 108392 --- [discovery-service] [           main] o.s.b.a.e.web.EndpointLinksResolver      : Exposing 2 endpoints beneath base path '/actuator'
+2026-09-08T22:23:08.161+08:00  INFO 108392 --- [discovery-service] [           main] o.s.c.n.e.s.EurekaServiceRegistry        : Registering application DISCOVERY-SERVICE with eureka with status UP
+2026-09-08T22:23:08.202+08:00  INFO 108392 --- [discovery-service] [       Thread-9] o.s.c.n.e.server.EurekaServerBootstrap   : isAws returned false
+2026-09-08T22:23:08.203+08:00  INFO 108392 --- [discovery-service] [       Thread-9] o.s.c.n.e.server.EurekaServerBootstrap   : Initialized server context
+2026-09-08T22:23:08.203+08:00  INFO 108392 --- [discovery-service] [       Thread-9] c.n.e.r.PeerAwareInstanceRegistryImpl    : Got 1 instances from neighboring DS node
+2026-09-08T22:23:08.203+08:00  INFO 108392 --- [discovery-service] [       Thread-9] c.n.e.r.PeerAwareInstanceRegistryImpl    : Renew threshold is: 1
+2026-09-08T22:23:08.204+08:00  INFO 108392 --- [discovery-service] [       Thread-9] c.n.e.r.PeerAwareInstanceRegistryImpl    : Changing status to UP
+2026-09-08T22:23:08.210+08:00  INFO 108392 --- [discovery-service] [       Thread-9] e.s.EurekaServerInitializerConfiguration : Started Eureka Server
+2026-09-08T22:23:08.227+08:00  INFO 108392 --- [discovery-service] [           main] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port 8761 (http) with context path '/'
+2026-09-08T22:23:08.228+08:00  INFO 108392 --- [discovery-service] [           main] .s.c.n.e.s.EurekaAutoServiceRegistration : Updating port to 8761
+2026-09-08T22:23:08.259+08:00  INFO 108392 --- [discovery-service] [           main] c.a.c.discovery.DiscoveryApplication     : Started DiscoveryApplication in 7.237 seconds (process running for 7.721)
+2026-09-08T22:23:08.769+08:00  INFO 108392 --- [discovery-service] [nio-8761-exec-1] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-09-08T22:23:08.770+08:00  INFO 108392 --- [discovery-service] [nio-8761-exec-1] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2026-09-08T22:23:08.771+08:00  INFO 108392 --- [discovery-service] [nio-8761-exec-1] o.s.web.servlet.DispatcherServlet        : Completed initialization in 1 ms
+2026-09-08T22:23:12.213+08:00  INFO 108392 --- [discovery-service] [a-EvictionTimer] c.n.e.registry.AbstractInstanceRegistry  : Running the evict task with compensationTime 0ms
+2026-09-08T22:23:16.215+08:00  INFO 108392 --- [discovery-service] [a-EvictionTimer] c.n.e.registry.AbstractInstanceRegistry  : Running the evict task with compensationTime 2ms
+2026-09-08T22:23:20.230+08:00  INFO 108392 --- [discovery-service] [a-EvictionTimer] c.n.e.registry.AbstractInstanceRegistry  : Running the evict task with compensationTime 14ms
+2026-09-08T22:23:24.116+08:00  INFO 108392 --- [discovery-service] [nio-8761-exec-3] c.n.e.registry.AbstractInstanceRegistry  : Registered instance AUTH-SERVICE/allen:auth-service:8081 with status UP (replication=false)
+2026-09-08T22:23:24.237+08:00  INFO 108392 --- [discovery-service] [a-EvictionTimer] c.n.e.registry.AbstractInstanceRegistry  : Running the evict task with compensationTime 6ms
+2026-09-08T22:23:24.801+08:00  INFO 108392 --- [discovery-service] [nio-8761-exec-5] c.n.e.registry.AbstractInstanceRegistry  : Registered instance AUTH-SERVICE/allen:auth-service:8081 with status UP (replication=true)
+2026-09-08T22:23:28.239+08:00  INFO 108392 --- [discovery-service] [a-EvictionTimer] c.n.e.registry.AbstractInstanceRegistry  : Running the evict task with compensationTime 2ms
+2026-09-08T22:23:29.878+08:00  INFO 108392 --- [discovery-service] [nio-8761-exec-8] c.n.e.registry.AbstractInstanceRegistry  : Registered instance BANK-SERVICE/allen:bank-service:8082 with status UP (replication=false)
+2026-09-08T22:23:30.384+08:00  INFO 108392 --- [discovery-service] [io-8761-exec-10] c.n.e.registry.AbstractInstanceRegistry  : Registered instance BANK-SERVICE/allen:bank-service:8082 with status UP (replication=true)
+2026-09-08T22:23:32.242+08:00  INFO 108392 --- [discovery-service] [a-EvictionTimer] c.n.e.registry.AbstractInstanceRegistry  : Running the evict task with compensationTime 2ms
+2026-09-08T22:23:36.004+08:00  INFO 108392 --- [discovery-service] [nio-8761-exec-4] c.n.e.registry.AbstractInstanceRegistry  : Registered instance PRACTICE-SERVICE/allen:practice-service:8083 with status UP (replication=false)
+2026-09-08T22:23:36.253+08:00  INFO 108392 --- [discovery-service] [a-EvictionTimer] c.n.e.registry.AbstractInstanceRegistry  : Running the evict task with compensationTime 11ms
+2026-09-08T22:23:36.523+08:00  INFO 108392 --- [discovery-service] [nio-8761-exec-8] c.n.e.registry.AbstractInstanceRegistry  : Registered instance PRACTICE-SERVICE/allen:practice-service:8083 with status UP (replication=true)
+2026-09-08T22:23:40.258+08:00  INFO 108392 --- [discovery-service] [a-EvictionTimer] c.n.e.registry.AbstractInstanceRegistry  : Running the evict task with compensationTime 4ms
+2026-09-08T22:23:44.269+08:00  INFO 108392 --- [discovery-service] [a-EvictionTimer] c.n.e.registry.AbstractInstanceRegistry  : Running the evict task with compensationTime 11ms
+2026-09-08T22:23:47.557+08:00  INFO 108392 --- [discovery-service] [nio-8761-exec-8] c.n.e.registry.AbstractInstanceRegistry  : Registered instance GATEWAY-SERVICE/allen:gateway-service:8080 with status UP (replication=false)
+2026-09-08T22:23:48.067+08:00  INFO 108392 --- [discovery-service] [io-8761-exec-10] c.n.e.registry.AbstractInstanceRegistry  : Registered instance GATEWAY-SERVICE/allen:gateway-service:8080 with status UP (replication=true)
+2026-09-08T22:23:48.280+08:00  INFO 108392 --- [discovery-service] [a-EvictionTimer] c.n.e.registry.AbstractInstanceRegistry  : Running the evict task with compensationTime 11ms
+2026-09-08T22:23:52.292+08:00  INFO 108392 --- [discovery-service] [a-EvictionTimer] c.n.e.registry.AbstractInstanceRegistry  : Running the evict task with compensationTime 10ms
+2026-09-08T22:23:56.295+08:00  INFO 108392 --- [discovery-service] [a-EvictionTimer] c.n.e.registry.AbstractInstanceRegistry  : Running the evict task with compensationTime 3ms
+2026-09-08T22:24:00.300+08:00  INFO 108392 --- [discovery-service] [a-EvictionTimer] c.n.e.registry.AbstractInstanceRegistry  : Running the evict task with compensationTime 6ms
+2026-09-08T22:24:04.309+08:00  INFO 108392 --- [discovery-service] [a-EvictionTimer] c.n.e.registry.AbstractInstanceRegistry  : Running the evict task with compensationTime 8ms
+2026-09-08T22:24:08.317+08:00  INFO 108392 --- [discovery-service] [a-EvictionTimer] c.n.e.registry.AbstractInstanceRegistry  : Running the evict task with compensationTime 8ms
+2026-09-08T22:24:12.317+08:00  INFO 108392 --- [discovery-service] [a-EvictionTimer] c.n.e.registry.AbstractInstanceRegistry  : Running the evict task with compensationTime 0ms
+2026-09-08T22:24:16.328+08:00  INFO 108392 --- [discovery-service] [a-EvictionTimer] c.n.e.registry.AbstractInstanceRegistry  : Running the evict task with compensationTime 11ms
+2026-09-08T22:24:20.343+08:00  INFO 108392 --- [discovery-service] [a-EvictionTimer] c.n.e.registry.AbstractInstanceRegistry  : Running the evict task with compensationTime 15ms
+2026-09-08T22:24:24.348+08:00  INFO 108392 --- [discovery-service] [a-EvictionTimer] c.n.e.registry.AbstractInstanceRegistry  : Running the evict task with compensationTime 4ms
+2026-09-08T22:24:28.360+08:00  INFO 108392 --- [discovery-service] [a-EvictionTimer] c.n.e.registry.AbstractInstanceRegistry  : Running the evict task with compensationTime 11ms
+2026-09-08T22:24:32.370+08:00  INFO 108392 --- [discovery-service] [a-EvictionTimer] c.n.e.registry.AbstractInstanceRegistry  : Running the evict task with compensationTime 9ms
+2026-09-08T22:24:36.376+08:00  INFO 108392 --- [discovery-service] [a-EvictionTimer] c.n.e.registry.AbstractInstanceRegistry  : Running the evict task with compensationTime 6ms
+2026-09-08T22:24:40.393+08:00  INFO 108392 --- [discovery-service] [a-EvictionTimer] c.n.e.registry.AbstractInstanceRegistry  : Running the evict task with compensationTime 17ms
+2026-09-08T22:24:44.408+08:00  INFO 108392 --- [discovery-service] [a-EvictionTimer] c.n.e.registry.AbstractInstanceRegistry  : Running the evict task with compensationTime 13ms
+2026-09-08T22:24:48.411+08:00  INFO 108392 --- [discovery-service] [a-EvictionTimer] c.n.e.registry.AbstractInstanceRegistry  : Running the evict task with compensationTime 3ms
+2026-09-08T22:24:52.420+08:00  INFO 108392 --- [discovery-service] [a-EvictionTimer] c.n.e.registry.AbstractInstanceRegistry  : Running the evict task with compensationTime 9ms
+2026-09-08T22:24:56.421+08:00  INFO 108392 --- [discovery-service] [a-EvictionTimer] c.n.e.registry.AbstractInstanceRegistry  : Running the evict task with compensationTime 0ms
+2026-09-08T22:25:00.430+08:00  INFO 108392 --- [discovery-service] [a-EvictionTimer] c.n.e.registry.AbstractInstanceRegistry  : Running the evict task with compensationTime 9ms
+2026-09-08T22:25:04.445+08:00  INFO 108392 --- [discovery-service] [a-EvictionTimer] c.n.e.registry.AbstractInstanceRegistry  : Running the evict task with compensationTime 14ms
+2026-09-08T22:25:08.449+08:00  INFO 108392 --- [discovery-service] [a-EvictionTimer] c.n.e.registry.AbstractInstanceRegistry  : Running the evict task with compensationTime 3ms
+2026-09-08T22:25:12.454+08:00  INFO 108392 --- [discovery-service] [a-EvictionTimer] c.n.e.registry.AbstractInstanceRegistry  : Running the evict task with compensationTime 5ms
+2026-09-08T22:25:16.456+08:00  INFO 108392 --- [discovery-service] [a-EvictionTimer] c.n.e.registry.AbstractInstanceRegistry  : Running the evict task with compensationTime 1ms
+2026-09-08T22:25:20.473+08:00  INFO 108392 --- [discovery-service] [a-EvictionTimer] c.n.e.registry.AbstractInstanceRegistry  : Running the evict task with compensationTime 17ms
+2026-09-08T22:25:20.473+08:00  INFO 108392 --- [discovery-service] [a-EvictionTimer] c.n.e.registry.AbstractInstanceRegistry  : Evicting 1 items (expired=1, evictionLimit=1)
+2026-09-08T22:25:20.475+08:00  WARN 108392 --- [discovery-service] [a-EvictionTimer] c.n.e.registry.AbstractInstanceRegistry  : DS: Registry: expired lease for GATEWAY-SERVICE/allen:gateway-service:8080
+2026-09-08T22:25:20.476+08:00  INFO 108392 --- [discovery-service] [a-EvictionTimer] c.n.e.registry.AbstractInstanceRegistry  : Cancelled instance GATEWAY-SERVICE/allen:gateway-service:8080 (replication=false)
+2026-09-08T22:25:24.483+08:00  INFO 108392 --- [discovery-service] [a-EvictionTimer] c.n.e.registry.AbstractInstanceRegistry  : Running the evict task with compensationTime 9ms
+2026-09-08T22:25:28.483+08:00  INFO 108392 --- [discovery-service] [a-EvictionTimer] c.n.e.registry.AbstractInstanceRegistry  : Running the evict task with compensationTime 0ms
+2026-09-08T22:25:32.485+08:00  INFO 108392 --- [discovery-service] [a-EvictionTimer] c.n.e.registry.AbstractInstanceRegistry  : Running the evict task with compensationTime 2ms
+2026-09-08T22:25:36.489+08:00  INFO 108392 --- [discovery-service] [a-EvictionTimer] c.n.e.registry.AbstractInstanceRegistry  : Running the evict task with compensationTime 3ms
+2026-09-08T22:25:40.497+08:00  INFO 108392 --- [discovery-service] [a-EvictionTimer] c.n.e.registry.AbstractInstanceRegistry  : Running the evict task with compensationTime 8ms
+2026-09-08T22:25:44.505+08:00  INFO 108392 --- [discovery-service] [a-EvictionTimer] c.n.e.registry.AbstractInstanceRegistry  : Running the evict task with compensationTime 7ms
+2026-09-08T22:25:48.510+08:00  INFO 108392 --- [discovery-service] [a-EvictionTimer] c.n.e.registry.AbstractInstanceRegistry  : Running the evict task with compensationTime 4ms
+2026-09-08T22:25:52.513+08:00  INFO 108392 --- [discovery-service] [a-EvictionTimer] c.n.e.registry.AbstractInstanceRegistry  : Running the evict task with compensationTime 3ms
+2026-09-08T22:25:56.523+08:00  INFO 108392 --- [discovery-service] [a-EvictionTimer] c.n.e.registry.AbstractInstanceRegistry  : Running the evict task with compensationTime 9ms
+2026-09-08T22:26:00.525+08:00  INFO 108392 --- [discovery-service] [a-EvictionTimer] c.n.e.registry.AbstractInstanceRegistry  : Running the evict task with compensationTime 1ms
+2026-09-08T22:26:00.525+08:00  INFO 108392 --- [discovery-service] [a-EvictionTimer] c.n.e.registry.AbstractInstanceRegistry  : Evicting 1 items (expired=1, evictionLimit=1)
+2026-09-08T22:26:00.525+08:00  WARN 108392 --- [discovery-service] [a-EvictionTimer] c.n.e.registry.AbstractInstanceRegistry  : DS: Registry: expired lease for PRACTICE-SERVICE/allen:practice-service:8083
+2026-09-08T22:26:00.525+08:00  INFO 108392 --- [discovery-service] [a-EvictionTimer] c.n.e.registry.AbstractInstanceRegistry  : Cancelled instance PRACTICE-SERVICE/allen:practice-service:8083 (replication=false)
+2026-09-08T22:26:04.537+08:00  INFO 108392 --- [discovery-service] [a-EvictionTimer] c.n.e.registry.AbstractInstanceRegistry  : Running the evict task with compensationTime 12ms
+2026-09-08T22:26:08.538+08:00  INFO 108392 --- [discovery-service] [a-EvictionTimer] c.n.e.registry.AbstractInstanceRegistry  : Running the evict task with compensationTime 0ms
+2026-09-08T22:26:12.549+08:00  INFO 108392 --- [discovery-service] [a-EvictionTimer] c.n.e.registry.AbstractInstanceRegistry  : Running the evict task with compensationTime 11ms
+2026-09-08T22:26:16.553+08:00  INFO 108392 --- [discovery-service] [a-EvictionTimer] c.n.e.registry.AbstractInstanceRegistry  : Running the evict task with compensationTime 3ms
+2026-09-08T22:26:20.557+08:00  INFO 108392 --- [discovery-service] [a-EvictionTimer] c.n.e.registry.AbstractInstanceRegistry  : Running the evict task with compensationTime 3ms
+2026-09-08T22:26:24.557+08:00  INFO 108392 --- [discovery-service] [a-EvictionTimer] c.n.e.registry.AbstractInstanceRegistry  : Running the evict task with compensationTime 0ms
+2026-09-08T22:26:28.565+08:00  INFO 108392 --- [discovery-service] [a-EvictionTimer] c.n.e.registry.AbstractInstanceRegistry  : Running the evict task with compensationTime 8ms
+2026-09-08T22:26:32.581+08:00  INFO 108392 --- [discovery-service] [a-EvictionTimer] c.n.e.registry.AbstractInstanceRegistry  : Running the evict task with compensationTime 16ms
+2026-09-08T22:26:36.596+08:00  INFO 108392 --- [discovery-service] [a-EvictionTimer] c.n.e.registry.AbstractInstanceRegistry  : Running the evict task with compensationTime 14ms
+2026-09-08T22:26:36.596+08:00  INFO 108392 --- [discovery-service] [a-EvictionTimer] c.n.e.registry.AbstractInstanceRegistry  : Evicting 1 items (expired=1, evictionLimit=1)
+2026-09-08T22:26:36.596+08:00  WARN 108392 --- [discovery-service] [a-EvictionTimer] c.n.e.registry.AbstractInstanceRegistry  : DS: Registry: expired lease for BANK-SERVICE/allen:bank-service:8082
+2026-09-08T22:26:36.598+08:00  INFO 108392 --- [discovery-service] [a-EvictionTimer] c.n.e.registry.AbstractInstanceRegistry  : Cancelled instance BANK-SERVICE/allen:bank-service:8082 (replication=false)
+2026-09-08T22:26:40.611+08:00  INFO 108392 --- [discovery-service] [a-EvictionTimer] c.n.e.registry.AbstractInstanceRegistry  : Running the evict task with compensationTime 14ms
+2026-09-08T22:26:44.621+08:00  INFO 108392 --- [discovery-service] [a-EvictionTimer] c.n.e.registry.AbstractInstanceRegistry  : Running the evict task with compensationTime 10ms
+2026-09-08T22:26:48.633+08:00  INFO 108392 --- [discovery-service] [a-EvictionTimer] c.n.e.registry.AbstractInstanceRegistry  : Running the evict task with compensationTime 11ms
+2026-09-08T22:26:52.637+08:00  INFO 108392 --- [discovery-service] [a-EvictionTimer] c.n.e.registry.AbstractInstanceRegistry  : Running the evict task with compensationTime 3ms
+2026-09-08T22:26:56.639+08:00  INFO 108392 --- [discovery-service] [a-EvictionTimer] c.n.e.registry.AbstractInstanceRegistry  : Running the evict task with compensationTime 1ms
+2026-09-08T22:27:00.644+08:00  INFO 108392 --- [discovery-service] [a-EvictionTimer] c.n.e.registry.AbstractInstanceRegistry  : Running the evict task with compensationTime 5ms
+2026-09-08T22:27:04.654+08:00  INFO 108392 --- [discovery-service] [a-EvictionTimer] c.n.e.registry.AbstractInstanceRegistry  : Running the evict task with compensationTime 9ms
+2026-09-08T22:27:08.657+08:00  INFO 108392 --- [discovery-service] [a-EvictionTimer] c.n.e.registry.AbstractInstanceRegistry  : Running the evict task with compensationTime 3ms
+2026-09-08T22:27:12.671+08:00  INFO 108392 --- [discovery-service] [a-EvictionTimer] c.n.e.registry.AbstractInstanceRegistry  : Running the evict task with compensationTime 13ms
+2026-09-08T22:27:16.683+08:00  INFO 108392 --- [discovery-service] [a-EvictionTimer] c.n.e.registry.AbstractInstanceRegistry  : Running the evict task with compensationTime 12ms
+2026-09-08T22:27:16.683+08:00  INFO 108392 --- [discovery-service] [a-EvictionTimer] c.n.e.registry.AbstractInstanceRegistry  : Evicting 1 items (expired=1, evictionLimit=1)
+2026-09-08T22:27:16.683+08:00  WARN 108392 --- [discovery-service] [a-EvictionTimer] c.n.e.registry.AbstractInstanceRegistry  : DS: Registry: expired lease for AUTH-SERVICE/allen:auth-service:8081
+2026-09-08T22:27:16.684+08:00  INFO 108392 --- [discovery-service] [a-EvictionTimer] c.n.e.registry.AbstractInstanceRegistry  : Cancelled instance AUTH-SERVICE/allen:auth-service:8081 (replication=false)
+2026-09-08T22:27:20.686+08:00  INFO 108392 --- [discovery-service] [a-EvictionTimer] c.n.e.registry.AbstractInstanceRegistry  : Running the evict task with compensationTime 3ms
+2026-09-08T22:27:24.696+08:00  INFO 108392 --- [discovery-service] [a-EvictionTimer] c.n.e.registry.AbstractInstanceRegistry  : Running the evict task with compensationTime 9ms
+2026-09-08T22:27:28.701+08:00  INFO 108392 --- [discovery-service] [a-EvictionTimer] c.n.e.registry.AbstractInstanceRegistry  : Running the evict task with compensationTime 5ms
+2026-09-08T22:27:32.702+08:00  INFO 108392 --- [discovery-service] [a-EvictionTimer] c.n.e.registry.AbstractInstanceRegistry  : Running the evict task with compensationTime 1ms

@@ -1,0 +1,101 @@
+[12:58:06] == 0. 基础设施（MySQL/Redis/Kafka，幂等）==
+=== 证据环境自愈启动（ROOT=C:/Project/QuestionBank）===
+提示：组件随本终端会话存在；新会话重跑本脚本即可（幂等）。
+  [skip] Redis 已在运行
+  [skip] Kafka 已在运行
+  [skip] MySQL 主库 3307 已在运行
+  [skip] MySQL 从库 3308 已在运行
+=== 配置并校验主从复制（幂等）===
+           Replica_IO_Running: Yes
+          Replica_SQL_Running: Yes
+复制收敛判定: 从库可见 repl_probe_db.repl_probe (polls=1)
+slave_port	ro	sro
+=== Kafka topic 与 cloud 专用 DB 用户（幂等）===
+  [warn] qb-events 创建失败（消费并发 3 将空转），查看 output/kafka_server.log
+  [ok]   cloud 专用用户就绪（qb_auth/qb_bank/qb_practice，各限本库）
+
+组件                   状态
+------------------------ --------------------
+MySQL 业务库 3306     运行中
+MySQL 主库 3307        运行中
+MySQL 从库 3308        运行中
+Redis 6379               运行中
+Kafka 9092               运行中
+
+下一步（全证据复跑）：
+  MYSQL_EVIDENCE=true REDIS_EVIDENCE=true KAFKA_EVIDENCE=true READ_REPLICA_EVIDENCE=true \
+    ./scripts/mvn.sh -B clean verify
+[12:59:49] == 1. 编译 cloud（跳过测试，代码正确性由 CI 与单测负责，这里只要可运行 jar）==
+[13:00:02] == 2. 拉起服务 ==
+[13:00:06] discovery 启动中 (pid 38238, port 8761)
+[13:00:18] discovery 就绪（3x0.5s）
+[13:00:22] auth 启动中 (pid 38262, port 8081)
+[13:00:26] bank 启动中 (pid 38274, port 8082)
+[13:00:30] practice 启动中 (pid 38281, port 8083)
+[13:00:43] auth-service 就绪（3x0.5s）
+[13:00:50] bank-service 就绪（1x0.5s）
+[13:00:56] practice-service 就绪（1x0.5s）
+[13:00:59] gateway 启动中 (pid 38311, port 8080)
+[13:01:13] gateway 就绪（3x0.5s）
+[13:01:14] 等待网关 LB 收敛（探测登录接口，503 = 实例列表未就绪）
+[13:01:16] 网关 LB 已收敛（1x0.5s，探测返回 401——鉴权失败是预期，说明 auth-service 可达）
+[13:01:16] ================ 证据开始 ================
+[evidence] 1.服务注册发现：Eureka 注册表实例状态
+  AUTH-SERVICE         UP  192.168.1.103:8081
+  BANK-SERVICE         UP  192.168.1.103:8082
+  PRACTICE-SERVICE     UP  192.168.1.103:8083
+[13:01:17] 通过网关登录（8080 -> auth-service）
+[evidence] 2.网关路由+登录：HTTP 200，userId=1，token 长度=86
+[evidence] 3.网关统一鉴权：无 token -> 401（期望 401）
+[evidence]   伪造 token -> 401（期望 401）
+[evidence]   绕过网关直连 bank -> 400（非 2xx 即被拒）
+[13:01:23] 教师建题库 -> 加 3 题 -> 发布
+[evidence] 4.出题发布：bankId=12 paperId=12 {"paperId":12,"version":1,"itemCount":3}
+[13:01:29] 学生登录 -> 经网关建练习会话（practice --Feign--> bank）
+[evidence] 5.Feign+幂等：两次同 clientToken 建会话 -> sessionId=26 与 26（应相等），{"sessionId":26,"paperId":12,"status":"ACTIVE","questionIds":[34,35,36]}
+[evidence] 6.判分+提交幂等：首提 3/3，重提 3（应与首提一致）
+[evidence] 6b.服务端越权防护（审计修复回归）：
+[evidence]   学生 token 给教师题库加题 -> 403（期望 403）
+[evidence]   学生 token 发布教师题库   -> 403（期望 403）
+[evidence]   学生 token 拉答案快照     -> 403（期望 403）
+[evidence]   直连伪造 TEACHER 头跨主发布 -> 403（期望 403，所有权校验兜底）
+[evidence]   判定：越权防护生效（4/4 全部 403，角色与所有权双闸都在）
+[evidence] 7.数据所有权（每服务独立 schema，表集合互不相交）：
+  qb_auth: flyway_schema_history,user_account
+  qb_bank: flyway_schema_history,outbox_event,paper_item,paper_version,question_bank,question_draft
+  qb_practice: flyway_schema_history,practice_item,practice_session
+[evidence] 8.事务性发件箱：outbox_event 全部已投递？
+  event_key	sent
+  paper-published:12:12	1
+  paper-published:11:11	1
+  paper-published:10:10	1
+[13:01:50] 限流证据：单 curl 进程 10 连接并发突发 GET /api/banks（令牌桶 2/s、容量 5）
+[evidence] 9.网关限流：10 并发突发 -> 200×5 429×5（桶容量 5、补充 2/s，突发过载部分必须被拒）
+[evidence]   判定：限流生效（5 个 200 + 5 个 429，到达间隔抖动允许 ±1）
+[13:01:56] 熔断证据：杀掉 bank-service，对 practice 连打 6 次建会话
+[13:02:35] bank 端口 8082 仍占用（winpid=92384），taskkill 强杀
+[13:02:42] bank 已停止（端口 8082 已释放）
+[evidence]   前置确认：bank 端口 8082 已关闭（连接拒绝），下面 6 次调用打到的是真实故障
+[evidence] 10.熔断触发：6 次调用状态码 = 503 503 503 503 503 503 总耗时 15001ms（5 次失败进窗口后快速失败，全部 503）
+[evidence]   熔断器状态 = OPEN（期望 OPEN）
+[evidence]   判定：熔断触发（6/6 拒绝、无一穿透到已死的 bank，状态 OPEN）
+[13:03:01] 重启 bank-service，验证自动恢复
+[13:03:04] bank 启动中 (pid 38579, port 8082)
+[13:03:27] bank-service 就绪（6x0.5s）
+[evidence]   恢复收敛：重启后第 2 次探测（每 3s）拿到首个 200，收敛耗时 7s，此时熔断器 = HALF_OPEN（半开放行中）
+[evidence]   恢复探测：200 200 200，最终熔断器状态 = CLOSED（期望 CLOSED）
+[evidence]   判定：熔断自动恢复（HALF_OPEN 探测通过 -> CLOSED，后续请求正常）
+[13:03:39] ================ 证据结束 ================
+[13:03:39] == 收尾：停止 cloud 服务 ==
+[13:04:19] gateway 端口 8080 仍占用（winpid=120008），taskkill 强杀
+[13:04:25] gateway 已停止（端口 8080 已释放）
+[13:05:05] practice 端口 8083 仍占用（winpid=72796），taskkill 强杀
+[13:05:12] practice 已停止（端口 8083 已释放）
+[13:05:51] bank 端口 8082 仍占用（winpid=118152），taskkill 强杀
+[13:05:57] bank 已停止（端口 8082 已释放）
+[13:06:36] auth 端口 8081 仍占用（winpid=73288），taskkill 强杀
+[13:06:42] auth 已停止（端口 8081 已释放）
+[13:07:21] discovery 端口 8761 仍占用（winpid=118864），taskkill 强杀
+[13:07:27] discovery 已停止（端口 8761 已释放）
+[13:07:28] 完成。证据日志: C:/Project/QuestionBank/output/cloud_evidence.log 与 C:/Project/QuestionBank/output/cloud_*.log
+CLOUD_EVIDENCE_EXIT=0

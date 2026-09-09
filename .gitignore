@@ -1,0 +1,30 @@
+target/
+.idea/
+*.iml
+.env
+output/*.jfr
+.workbuddy/
+
+# 中间件运行期产物（scripts/start-evidence-env.sh 拉起的服务产生，属于噪声不是证据）
+dump.rdb
+output/redis.log
+output/mysql_master.log
+output/mysql_slave.log
+output/replication_autostart.log
+output/kafka_server.log
+output/replication_setup_*.log
+
+# 链路追踪排障期手动拉起进程的 DEBUG 日志（中间产物，结论已固化进证据脚本与解析器）
+output/dbg_*.log
+
+# 前端独立工程（与后端分离开发，不纳入后端 Git 提交）
+frontend/
+
+# 本机数据库连接参数（含密码，绝不入库）
+scripts/.env.local
+
+# 前端旧版备份
+frontend/.legacy-backup/
+
+# 登录态 token（演示凭据也不入库）
+output/e2e_student_token.txt

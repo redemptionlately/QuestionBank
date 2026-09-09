@@ -1,0 +1,13 @@
+target/
+.git/
+.github/
+.mvn/
+output/
+study/
+docs/
+tools/
+*.log
+*.jfr
+.idea/
+.vscode/
+.workbuddy/

@@ -1,0 +1,169 @@
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+
+ :: Spring Boot ::                (v3.4.5)
+
+2026-09-07 20:25:24.372 INFO  [background-preinit] [] o.h.validator.internal.util.Version - HV000001: Hibernate Validator 8.0.2.Final
+2026-09-07 20:25:24.425 INFO  [main] [] c.a.questionbank.QuestionBankApplication - Starting QuestionBankApplication v0.1.0-SNAPSHOT using Java 21.0.12 with PID 55436 (C:\Project\QuestionBank\target\question-bank-m0-0.1.0-SNAPSHOT.jar started by Allen in C:\Project\QuestionBank)
+2026-09-07 20:25:24.426 INFO  [main] [] c.a.questionbank.QuestionBankApplication - No active profile set, falling back to 1 default profile: "default"
+2026-09-07 20:25:25.635 INFO  [main] [] o.s.d.r.c.RepositoryConfigurationDelegate - Multiple Spring Data modules found, entering strict repository configuration mode
+2026-09-07 20:25:25.637 INFO  [main] [] o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-09-07 20:25:25.791 INFO  [main] [] o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 146 ms. Found 10 JPA repository interfaces.
+2026-09-07 20:25:25.819 INFO  [main] [] o.s.d.r.c.RepositoryConfigurationDelegate - Multiple Spring Data modules found, entering strict repository configuration mode
+2026-09-07 20:25:25.823 INFO  [main] [] o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+2026-09-07 20:25:25.854 INFO  [main] [] o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.allen.questionbank.auth.UserAccountRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2026-09-07 20:25:25.855 INFO  [main] [] o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.allen.questionbank.bank.PaperVersionRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2026-09-07 20:25:25.855 INFO  [main] [] o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.allen.questionbank.bank.QuestionBankRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2026-09-07 20:25:25.855 INFO  [main] [] o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.allen.questionbank.bank.QuestionVersionRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2026-09-07 20:25:25.855 INFO  [main] [] o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.allen.questionbank.event.ConsumedEventRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2026-09-07 20:25:25.855 INFO  [main] [] o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.allen.questionbank.event.OutboxEventRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2026-09-07 20:25:25.856 INFO  [main] [] o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.allen.questionbank.importjob.ImportJobRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2026-09-07 20:25:25.856 INFO  [main] [] o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.allen.questionbank.practice.PracticeSessionRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2026-09-07 20:25:25.856 INFO  [main] [] o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.allen.questionbank.practice.SubmissionItemRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2026-09-07 20:25:25.856 INFO  [main] [] o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.allen.questionbank.practice.WrongQuestionRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2026-09-07 20:25:25.856 INFO  [main] [] o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 9 ms. Found 0 Redis repository interfaces.
+2026-09-07 20:25:28.816 INFO  [main] [] o.s.b.w.embedded.tomcat.TomcatWebServer - Tomcat initialized with port 8080 (http)
+2026-09-07 20:25:28.837 INFO  [main] [] o.apache.coyote.http11.Http11NioProtocol - Initializing ProtocolHandler ["http-nio-8080"]
+2026-09-07 20:25:28.838 INFO  [main] [] o.apache.catalina.core.StandardService - Starting service [Tomcat]
+2026-09-07 20:25:28.838 INFO  [main] [] org.apache.catalina.core.StandardEngine - Starting Servlet engine: [Apache Tomcat/10.1.40]
+2026-09-07 20:25:28.891 INFO  [main] [] o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring embedded WebApplicationContext
+2026-09-07 20:25:28.892 INFO  [main] [] o.s.b.w.s.c.ServletWebServerApplicationContext - Root WebApplicationContext: initialization completed in 4425 ms
+2026-09-07 20:25:30.982 INFO  [main] [] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2026-09-07 20:25:31.368 INFO  [main] [] com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@6c46dc02
+2026-09-07 20:25:31.371 INFO  [main] [] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2026-09-07 20:25:31.414 INFO  [main] [] org.flywaydb.core.FlywayExecutor - Database: jdbc:mysql://127.0.0.1:3306/question_bank?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC&rewriteBatchedStatements=true (MySQL 9.0)
+2026-09-07 20:25:31.445 WARN  [main] [] o.f.core.internal.database.base.Database - Flyway upgrade recommended: MySQL 9.0 is newer than this version of Flyway and support has not been tested. The latest supported version of MySQL is 8.1.
+2026-09-07 20:25:31.542 INFO  [main] [] o.f.core.internal.command.DbValidate - Successfully validated 4 migrations (execution time 00:00.064s)
+2026-09-07 20:25:31.557 INFO  [main] [] o.f.core.internal.command.DbMigrate - Current version of schema `question_bank`: 4
+2026-09-07 20:25:31.560 INFO  [main] [] o.f.core.internal.command.DbMigrate - Schema `question_bank` is up to date. No migration necessary.
+2026-09-07 20:25:31.901 INFO  [main] [] o.hibernate.jpa.internal.util.LogHelper - HHH000204: Processing PersistenceUnitInfo [name: default]
+2026-09-07 20:25:32.020 INFO  [main] [] org.hibernate.Version - HHH000412: Hibernate ORM core version 6.6.13.Final
+2026-09-07 20:25:32.057 INFO  [main] [] o.h.c.internal.RegionFactoryInitiator - HHH000026: Second-level cache disabled
+2026-09-07 20:25:32.370 INFO  [main] [] o.s.o.j.p.SpringPersistenceUnitInfo - No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-09-07 20:25:32.437 INFO  [main] [] org.hibernate.orm.connections.pooling - HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-1)']
+	Database driver: undefined/unknown
+	Database version: 9.0.1
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2026-09-07 20:25:33.778 INFO  [main] [] o.h.e.t.j.p.i.JtaPlatformInitiator - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2026-09-07 20:25:33.830 INFO  [main] [] o.s.o.j.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-09-07 20:25:35.525 INFO  [main] [] o.s.d.j.r.query.QueryEnhancerFactory - Hibernate is in classpath; If applicable, HQL parser will be used.
+2026-09-07 20:25:39.653 INFO  [main] [] o.s.s.c.a.a.c.InitializeUserDetailsBeanManagerConfigurer$InitializeUserDetailsManagerConfigurer - Global AuthenticationManager configured with UserDetailsService bean with name unusedFormLoginUserDetailsService
+2026-09-07 20:25:42.314 INFO  [main] [] o.s.b.a.e.web.EndpointLinksResolver - Exposing 4 endpoints beneath base path '/actuator'
+2026-09-07 20:25:44.089 INFO  [main] [] o.apache.coyote.http11.Http11NioProtocol - Starting ProtocolHandler ["http-nio-8080"]
+2026-09-07 20:25:44.113 INFO  [main] [] o.s.b.w.embedded.tomcat.TomcatWebServer - Tomcat started on port 8080 (http) with context path '/'
+2026-09-07 20:25:44.150 INFO  [main] [] c.a.questionbank.QuestionBankApplication - Started QuestionBankApplication in 20.132 seconds (process running for 20.605)
+2026-09-07 20:25:44.585 INFO  [http-nio-8080-exec-1] [] o.a.c.c.C.[Tomcat].[localhost].[/] - Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-09-07 20:25:44.585 INFO  [http-nio-8080-exec-1] [] o.s.web.servlet.DispatcherServlet - Initializing Servlet 'dispatcherServlet'
+2026-09-07 20:25:44.587 INFO  [http-nio-8080-exec-1] [] o.s.web.servlet.DispatcherServlet - Completed initialization in 2 ms
+2026-09-07 20:25:46.673 WARN  [http-nio-8080-exec-2] [aee5552d-906b-487d-b140-a7bb484a98df] c.a.q.ops.ServiceLatencyAspect - 慢调用 AuthService.login(..) 耗时 246 ms
+2026-09-07 20:25:46.949 WARN  [http-nio-8080-exec-6] [b12e8d36-d7f6-44cc-932c-1c27fb0fe1f2] c.a.q.ops.ServiceLatencyAspect - 慢调用 AuthService.login(..) 耗时 249 ms
+2026-09-07 20:25:47.202 WARN  [http-nio-8080-exec-4] [f5afcaaf-794d-480b-92ec-51d72c0f1cad] c.a.q.ops.ServiceLatencyAspect - 慢调用 AuthService.login(..) 耗时 244 ms
+2026-09-07 20:25:47.470 WARN  [http-nio-8080-exec-10] [6e449911-3d1d-49e1-ab7a-18f1ece1b207] c.a.q.ops.ServiceLatencyAspect - 慢调用 AuthService.login(..) 耗时 257 ms
+2026-09-07 20:25:47.731 WARN  [http-nio-8080-exec-3] [5dbfb92c-ad4c-4ed2-8c5d-c05947e3c31c] c.a.q.ops.ServiceLatencyAspect - 慢调用 AuthService.login(..) 耗时 251 ms
+2026-09-07 20:25:47.978 WARN  [http-nio-8080-exec-7] [c4bbee65-85ae-4f9b-8abc-21ae837cacd2] c.a.q.ops.ServiceLatencyAspect - 慢调用 AuthService.login(..) 耗时 239 ms
+2026-09-07 20:25:48.192 WARN  [http-nio-8080-exec-8] [dc356ee7-ac1a-42f2-be69-7b89902abfc5] c.a.q.ops.ServiceLatencyAspect - 慢调用 AuthService.login(..) 耗时 207 ms
+2026-09-07 20:25:48.449 WARN  [http-nio-8080-exec-5] [a88c6f9f-0873-4426-ba7d-d6441128bc32] c.a.q.ops.ServiceLatencyAspect - 慢调用 AuthService.login(..) 耗时 249 ms
+2026-09-07 20:25:48.721 WARN  [http-nio-8080-exec-9] [a0e533b5-cebe-4bb9-808c-051ee26023aa] c.a.q.ops.ServiceLatencyAspect - 慢调用 AuthService.login(..) 耗时 257 ms
+2026-09-07 20:25:48.969 WARN  [http-nio-8080-exec-1] [0d4752ec-6447-40aa-9425-d43a6918100c] c.a.q.ops.ServiceLatencyAspect - 慢调用 AuthService.login(..) 耗时 233 ms
+2026-09-07 20:25:49.231 WARN  [http-nio-8080-exec-2] [a6e24f28-6971-445f-b5a9-7e0a2e57447e] c.a.q.ops.ServiceLatencyAspect - 慢调用 AuthService.login(..) 耗时 254 ms
+2026-09-07 20:25:49.491 WARN  [http-nio-8080-exec-6] [69e3a99c-647c-4180-a795-0197f2dd76ce] c.a.q.ops.ServiceLatencyAspect - 慢调用 AuthService.login(..) 耗时 240 ms
+2026-09-07 20:25:49.732 WARN  [http-nio-8080-exec-4] [5a57183f-8c7e-4d8f-90aa-3b5f9e3fda86] c.a.q.ops.ServiceLatencyAspect - 慢调用 AuthService.login(..) 耗时 223 ms
+2026-09-07 20:25:49.973 WARN  [http-nio-8080-exec-10] [e783102a-15a3-43da-b7ae-3de6c776442d] c.a.q.ops.ServiceLatencyAspect - 慢调用 AuthService.login(..) 耗时 232 ms
+2026-09-07 20:25:50.200 WARN  [http-nio-8080-exec-3] [0833ffb6-d696-4a5a-878a-5dab5eebe203] c.a.q.ops.ServiceLatencyAspect - 慢调用 AuthService.login(..) 耗时 217 ms
+2026-09-07 20:25:50.456 WARN  [http-nio-8080-exec-7] [7c1b49f3-6c5e-4177-8edc-9657f62dd2c6] c.a.q.ops.ServiceLatencyAspect - 慢调用 AuthService.login(..) 耗时 242 ms
+2026-09-07 20:25:50.688 WARN  [http-nio-8080-exec-8] [6526103a-ff41-4bab-ba7a-00bbe7f673c0] c.a.q.ops.ServiceLatencyAspect - 慢调用 AuthService.login(..) 耗时 225 ms
+2026-09-07 20:25:50.942 WARN  [http-nio-8080-exec-5] [5fa3fa14-bd7e-4498-8815-fb67a2bea739] c.a.q.ops.ServiceLatencyAspect - 慢调用 AuthService.login(..) 耗时 229 ms
+2026-09-07 20:25:51.162 WARN  [http-nio-8080-exec-9] [f45557be-e574-4688-8b4b-321690d7c11f] c.a.q.ops.ServiceLatencyAspect - 慢调用 AuthService.login(..) 耗时 214 ms
+2026-09-07 20:25:51.424 WARN  [http-nio-8080-exec-1] [8c39d17a-2bd6-493b-b42a-ce0baff5ef06] c.a.q.ops.ServiceLatencyAspect - 慢调用 AuthService.login(..) 耗时 250 ms
+2026-09-07 20:25:51.679 WARN  [http-nio-8080-exec-2] [6bd4c135-0e8c-441d-a8a2-2ac43f43134e] c.a.q.ops.ServiceLatencyAspect - 慢调用 AuthService.login(..) 耗时 246 ms
+2026-09-07 20:25:51.919 WARN  [http-nio-8080-exec-6] [b7bad4dc-9ecd-4733-8e26-746d487d5935] c.a.q.ops.ServiceLatencyAspect - 慢调用 AuthService.login(..) 耗时 225 ms
+2026-09-07 20:25:52.157 WARN  [http-nio-8080-exec-4] [c5e80722-ae4d-43ed-8bb1-a2064161df04] c.a.q.ops.ServiceLatencyAspect - 慢调用 AuthService.login(..) 耗时 227 ms
+2026-09-07 20:25:52.389 WARN  [http-nio-8080-exec-10] [b00be657-6d6f-4b67-bb14-50f884f291bb] c.a.q.ops.ServiceLatencyAspect - 慢调用 AuthService.login(..) 耗时 226 ms
+2026-09-07 20:25:52.627 WARN  [http-nio-8080-exec-3] [52acd4b5-a2c4-47db-8cbe-362e30eced9e] c.a.q.ops.ServiceLatencyAspect - 慢调用 AuthService.login(..) 耗时 227 ms
+2026-09-07 20:25:52.865 WARN  [http-nio-8080-exec-7] [c507ec0c-55c1-4f6d-a5a7-bcfd0fd7d5e3] c.a.q.ops.ServiceLatencyAspect - 慢调用 AuthService.login(..) 耗时 226 ms
+2026-09-07 20:25:53.104 WARN  [http-nio-8080-exec-8] [a0983a9f-c508-485f-b030-b5928225b172] c.a.q.ops.ServiceLatencyAspect - 慢调用 AuthService.login(..) 耗时 225 ms
+2026-09-07 20:25:53.349 WARN  [http-nio-8080-exec-5] [1d9b9504-b02e-43f2-ae4a-e9fdc7f3e115] c.a.q.ops.ServiceLatencyAspect - 慢调用 AuthService.login(..) 耗时 230 ms
+2026-09-07 20:25:53.570 WARN  [http-nio-8080-exec-9] [980c687f-7e63-4d15-9422-1d1c63df17a3] c.a.q.ops.ServiceLatencyAspect - 慢调用 AuthService.login(..) 耗时 214 ms
+2026-09-07 20:25:53.806 WARN  [http-nio-8080-exec-1] [44ad0772-2e7c-47e8-9f75-d68b8b70756e] c.a.q.ops.ServiceLatencyAspect - 慢调用 AuthService.login(..) 耗时 227 ms
+2026-09-07 20:25:54.029 WARN  [http-nio-8080-exec-2] [da3bf8c0-e8fc-46c5-965d-d5b4a3b83be1] c.a.q.ops.ServiceLatencyAspect - 慢调用 AuthService.login(..) 耗时 218 ms
+2026-09-07 20:25:54.275 WARN  [http-nio-8080-exec-6] [53d8dcda-4af5-47ea-a302-dd641781210b] c.a.q.ops.ServiceLatencyAspect - 慢调用 AuthService.login(..) 耗时 233 ms
+2026-09-07 20:25:54.509 WARN  [http-nio-8080-exec-4] [7c100c97-4179-4ac7-9fd2-5f32950da959] c.a.q.ops.ServiceLatencyAspect - 慢调用 AuthService.login(..) 耗时 225 ms
+2026-09-07 20:25:54.751 WARN  [http-nio-8080-exec-10] [0a4a7780-e963-49bb-9170-10b33076bcb2] c.a.q.ops.ServiceLatencyAspect - 慢调用 AuthService.login(..) 耗时 229 ms
+2026-09-07 20:25:54.991 WARN  [http-nio-8080-exec-3] [4283bb2a-30c3-49e3-9df0-12ac7cef1343] c.a.q.ops.ServiceLatencyAspect - 慢调用 AuthService.login(..) 耗时 232 ms
+2026-09-07 20:25:55.218 WARN  [http-nio-8080-exec-7] [7b695894-3dea-4480-9cf7-327f890f27a3] c.a.q.ops.ServiceLatencyAspect - 慢调用 AuthService.login(..) 耗时 222 ms
+2026-09-07 20:25:55.467 WARN  [http-nio-8080-exec-8] [4ef74833-da9b-4210-882e-2256986da6fd] c.a.q.ops.ServiceLatencyAspect - 慢调用 AuthService.login(..) 耗时 236 ms
+2026-09-07 20:25:55.693 WARN  [http-nio-8080-exec-5] [15f49674-091b-4907-bc8f-ede8f54d3307] c.a.q.ops.ServiceLatencyAspect - 慢调用 AuthService.login(..) 耗时 216 ms
+2026-09-07 20:25:55.924 WARN  [http-nio-8080-exec-9] [f4cd8084-f108-4251-904f-ed90d8b68864] c.a.q.ops.ServiceLatencyAspect - 慢调用 AuthService.login(..) 耗时 225 ms
+2026-09-07 20:25:56.152 WARN  [http-nio-8080-exec-1] [8ce9b074-86a0-4dff-ae75-64293368d612] c.a.q.ops.ServiceLatencyAspect - 慢调用 AuthService.login(..) 耗时 222 ms
+2026-09-07 20:25:56.416 WARN  [http-nio-8080-exec-2] [1d1c5cad-7749-4dc7-beff-11674b63459b] c.a.q.ops.ServiceLatencyAspect - 慢调用 AuthService.login(..) 耗时 248 ms
+2026-09-07 20:25:56.655 WARN  [http-nio-8080-exec-6] [8b28935a-ebbb-41f5-be10-776952871e4e] c.a.q.ops.ServiceLatencyAspect - 慢调用 AuthService.login(..) 耗时 225 ms
+2026-09-07 20:25:56.900 WARN  [http-nio-8080-exec-4] [7055f89a-dd3a-4098-a40e-5978db0aa383] c.a.q.ops.ServiceLatencyAspect - 慢调用 AuthService.login(..) 耗时 232 ms
+2026-09-07 20:25:57.141 WARN  [http-nio-8080-exec-10] [17b8f002-9cd3-4b9b-9afe-46d3b8e9e14a] c.a.q.ops.ServiceLatencyAspect - 慢调用 AuthService.login(..) 耗时 235 ms
+2026-09-07 20:25:57.380 WARN  [http-nio-8080-exec-3] [eb722c03-06e5-442c-90e9-4ce879db676e] c.a.q.ops.ServiceLatencyAspect - 慢调用 AuthService.login(..) 耗时 231 ms
+2026-09-07 20:25:57.614 WARN  [http-nio-8080-exec-7] [a26d06de-1e87-4d26-835d-7e42600d7f60] c.a.q.ops.ServiceLatencyAspect - 慢调用 AuthService.login(..) 耗时 228 ms
+2026-09-07 20:25:57.854 WARN  [http-nio-8080-exec-8] [56a78301-1b1f-4dae-a25f-a5ce58d6aa8b] c.a.q.ops.ServiceLatencyAspect - 慢调用 AuthService.login(..) 耗时 230 ms
+2026-09-07 20:25:58.095 WARN  [http-nio-8080-exec-5] [e4ba8912-f7b4-4935-b333-35de6eaaeb92] c.a.q.ops.ServiceLatencyAspect - 慢调用 AuthService.login(..) 耗时 232 ms
+2026-09-07 20:25:58.333 WARN  [http-nio-8080-exec-9] [ac5fa40e-7a9f-4337-bea2-91e4e9a092a5] c.a.q.ops.ServiceLatencyAspect - 慢调用 AuthService.login(..) 耗时 231 ms
+2026-09-07 20:25:58.572 WARN  [http-nio-8080-exec-1] [72830169-e5d7-4ca4-87e2-943172cb849e] c.a.q.ops.ServiceLatencyAspect - 慢调用 AuthService.login(..) 耗时 230 ms
+2026-09-07 20:25:58.813 WARN  [http-nio-8080-exec-2] [ce2d6ef4-90a4-4cf3-92c3-61db935b6bac] c.a.q.ops.ServiceLatencyAspect - 慢调用 AuthService.login(..) 耗时 221 ms
+2026-09-07 20:25:59.041 WARN  [http-nio-8080-exec-6] [7674be28-c880-4668-85af-d0f6e3a17b03] c.a.q.ops.ServiceLatencyAspect - 慢调用 AuthService.login(..) 耗时 215 ms
+2026-09-07 20:25:59.285 WARN  [http-nio-8080-exec-4] [7bbfcb3c-517e-4a29-a056-b5df62b148d7] c.a.q.ops.ServiceLatencyAspect - 慢调用 AuthService.login(..) 耗时 232 ms
+2026-09-07 20:25:59.512 WARN  [http-nio-8080-exec-10] [cc4a5577-ff62-4f8b-9b74-36299e3847ce] c.a.q.ops.ServiceLatencyAspect - 慢调用 AuthService.login(..) 耗时 219 ms
+2026-09-07 20:25:59.756 WARN  [http-nio-8080-exec-3] [00095e03-36e1-4454-a3b9-5f8205a85c84] c.a.q.ops.ServiceLatencyAspect - 慢调用 AuthService.login(..) 耗时 234 ms
+2026-09-07 20:26:00.002 WARN  [http-nio-8080-exec-7] [8154091b-2546-41db-958b-bf42d19a6152] c.a.q.ops.ServiceLatencyAspect - 慢调用 AuthService.login(..) 耗时 230 ms
+2026-09-07 20:26:00.235 WARN  [http-nio-8080-exec-8] [f27497d9-c4cf-4fdf-bb42-31c8b6043b0f] c.a.q.ops.ServiceLatencyAspect - 慢调用 AuthService.login(..) 耗时 228 ms
+2026-09-07 20:26:00.499 WARN  [http-nio-8080-exec-5] [384e636f-1d4b-45d2-92b2-b45497943a63] c.a.q.ops.ServiceLatencyAspect - 慢调用 AuthService.login(..) 耗时 256 ms
+2026-09-07 20:26:00.750 WARN  [http-nio-8080-exec-9] [5873ce42-ac37-45f9-831d-276e66e55672] c.a.q.ops.ServiceLatencyAspect - 慢调用 AuthService.login(..) 耗时 239 ms
+2026-09-07 20:26:01.018 WARN  [http-nio-8080-exec-1] [60ec4c1d-f507-46c6-a50d-117fa0bd9ec3] c.a.q.ops.ServiceLatencyAspect - 慢调用 AuthService.login(..) 耗时 244 ms
+2026-09-07 20:26:01.252 WARN  [http-nio-8080-exec-2] [3ceb8a14-2d49-4f39-9621-837c10facc30] c.a.q.ops.ServiceLatencyAspect - 慢调用 AuthService.login(..) 耗时 224 ms
+2026-09-07 20:26:01.514 WARN  [http-nio-8080-exec-6] [f7d8d18d-3063-4893-939c-25b771c8848a] c.a.q.ops.ServiceLatencyAspect - 慢调用 AuthService.login(..) 耗时 254 ms
+2026-09-07 20:26:01.762 WARN  [http-nio-8080-exec-4] [f37202df-4eba-4103-980d-5ab22615172c] c.a.q.ops.ServiceLatencyAspect - 慢调用 AuthService.login(..) 耗时 237 ms
+2026-09-07 20:26:02.057 WARN  [http-nio-8080-exec-10] [ec8ee946-3e82-4c45-a175-5bf5bc864939] c.a.q.ops.ServiceLatencyAspect - 慢调用 AuthService.login(..) 耗时 288 ms
+2026-09-07 20:26:02.294 WARN  [http-nio-8080-exec-3] [87aa0cbf-918c-41b0-8c2a-db8218280482] c.a.q.ops.ServiceLatencyAspect - 慢调用 AuthService.login(..) 耗时 226 ms
+2026-09-07 20:26:02.506 WARN  [http-nio-8080-exec-7] [ef7ce522-303d-4627-adaa-cdbb662ed8a9] c.a.q.ops.ServiceLatencyAspect - 慢调用 AuthService.login(..) 耗时 204 ms
+2026-09-07 20:26:02.739 WARN  [http-nio-8080-exec-8] [1fb8d128-b949-4fd7-ae72-78caed20b21f] c.a.q.ops.ServiceLatencyAspect - 慢调用 AuthService.login(..) 耗时 225 ms
+2026-09-07 20:26:02.979 WARN  [http-nio-8080-exec-5] [2f3945d0-2467-410b-bff2-780b66e255e8] c.a.q.ops.ServiceLatencyAspect - 慢调用 AuthService.login(..) 耗时 232 ms
+2026-09-07 20:26:03.214 WARN  [http-nio-8080-exec-9] [a653dd4f-7094-40cf-b718-2e55f5e28870] c.a.q.ops.ServiceLatencyAspect - 慢调用 AuthService.login(..) 耗时 230 ms
+2026-09-07 20:26:03.448 WARN  [http-nio-8080-exec-1] [b326b969-90f1-46fc-b4ff-3de754dbdb08] c.a.q.ops.ServiceLatencyAspect - 慢调用 AuthService.login(..) 耗时 229 ms
+2026-09-07 20:26:03.686 WARN  [http-nio-8080-exec-2] [86059aed-4c7a-4291-aa5c-c8658452b41b] c.a.q.ops.ServiceLatencyAspect - 慢调用 AuthService.login(..) 耗时 224 ms
+2026-09-07 20:26:03.932 WARN  [http-nio-8080-exec-6] [df0a9969-0d56-412b-997d-a5b61f429217] c.a.q.ops.ServiceLatencyAspect - 慢调用 AuthService.login(..) 耗时 238 ms
+2026-09-07 20:26:04.165 WARN  [http-nio-8080-exec-4] [3bb1251a-31dd-4dbc-9d59-8e2a7ea9d55f] c.a.q.ops.ServiceLatencyAspect - 慢调用 AuthService.login(..) 耗时 226 ms
+2026-09-07 20:26:04.423 WARN  [http-nio-8080-exec-10] [972bb21a-9f96-4e87-a1b9-246c97d9c8c0] c.a.q.ops.ServiceLatencyAspect - 慢调用 AuthService.login(..) 耗时 249 ms
+2026-09-07 20:26:04.667 WARN  [http-nio-8080-exec-3] [31d222c7-434e-4181-9f41-0efa534d3a3a] c.a.q.ops.ServiceLatencyAspect - 慢调用 AuthService.login(..) 耗时 237 ms
+2026-09-07 20:26:04.919 WARN  [http-nio-8080-exec-7] [dc34c43e-c4f6-48ec-a251-5c598cfb49a2] c.a.q.ops.ServiceLatencyAspect - 慢调用 AuthService.login(..) 耗时 243 ms
+2026-09-07 20:26:05.161 WARN  [http-nio-8080-exec-8] [1bdcb444-da1b-4846-86aa-97e198ee77d0] c.a.q.ops.ServiceLatencyAspect - 慢调用 AuthService.login(..) 耗时 229 ms
+2026-09-07 20:26:05.396 WARN  [http-nio-8080-exec-5] [4f46a4a9-6df2-4257-80f7-9bfc7b985e1f] c.a.q.ops.ServiceLatencyAspect - 慢调用 AuthService.login(..) 耗时 230 ms
+2026-09-07 20:26:05.632 WARN  [http-nio-8080-exec-9] [8eb41bae-4e21-4ad6-93e8-3df33397e14b] c.a.q.ops.ServiceLatencyAspect - 慢调用 AuthService.login(..) 耗时 227 ms
+2026-09-07 20:26:05.878 WARN  [http-nio-8080-exec-1] [8a1cfdf1-5210-43ce-947f-de576f43e6df] c.a.q.ops.ServiceLatencyAspect - 慢调用 AuthService.login(..) 耗时 238 ms
+2026-09-07 20:26:06.112 WARN  [http-nio-8080-exec-2] [884560cd-1fc4-463a-9a62-dd4e4742ee49] c.a.q.ops.ServiceLatencyAspect - 慢调用 AuthService.login(..) 耗时 228 ms
+2026-09-07 20:26:06.349 WARN  [http-nio-8080-exec-6] [0986e623-adc7-40a8-8211-33563cc82a6f] c.a.q.ops.ServiceLatencyAspect - 慢调用 AuthService.login(..) 耗时 231 ms
+2026-09-07 20:26:06.599 WARN  [http-nio-8080-exec-4] [c41044e4-38dc-491e-87c7-f200ab386c58] c.a.q.ops.ServiceLatencyAspect - 慢调用 AuthService.login(..) 耗时 242 ms
+2026-09-07 20:26:06.849 WARN  [http-nio-8080-exec-10] [dfb250f0-9625-4584-96e4-1945b4651890] c.a.q.ops.ServiceLatencyAspect - 慢调用 AuthService.login(..) 耗时 244 ms
+2026-09-07 20:26:07.095 WARN  [http-nio-8080-exec-3] [c649bee9-1b8b-462f-ac4f-a81117af051d] c.a.q.ops.ServiceLatencyAspect - 慢调用 AuthService.login(..) 耗时 236 ms
+2026-09-07 20:26:07.336 WARN  [http-nio-8080-exec-7] [d032d0e4-d942-40f1-9c25-fbc8f8569956] c.a.q.ops.ServiceLatencyAspect - 慢调用 AuthService.login(..) 耗时 231 ms
+2026-09-07 20:26:07.583 WARN  [http-nio-8080-exec-8] [fb8fbd2d-dd80-4f1a-bbfb-bb63170f26f0] c.a.q.ops.ServiceLatencyAspect - 慢调用 AuthService.login(..) 耗时 229 ms
+2026-09-07 20:26:07.808 WARN  [http-nio-8080-exec-5] [5f90d4c6-5eb9-462c-a120-e838fcdde329] c.a.q.ops.ServiceLatencyAspect - 慢调用 AuthService.login(..) 耗时 219 ms
+2026-09-07 20:26:08.043 WARN  [http-nio-8080-exec-9] [756f6b9b-69b5-4882-81ef-5cf4fd554c2a] c.a.q.ops.ServiceLatencyAspect - 慢调用 AuthService.login(..) 耗时 230 ms
+2026-09-07 20:26:08.285 WARN  [http-nio-8080-exec-1] [caf78424-31a4-4a43-ba2a-10236790e5fa] c.a.q.ops.ServiceLatencyAspect - 慢调用 AuthService.login(..) 耗时 234 ms
+2026-09-07 20:26:08.516 WARN  [http-nio-8080-exec-2] [205fff10-c256-4c85-a093-937c1d7e73cb] c.a.q.ops.ServiceLatencyAspect - 慢调用 AuthService.login(..) 耗时 222 ms
+2026-09-07 20:26:08.763 WARN  [http-nio-8080-exec-6] [6f8dbe3f-6cfc-4b09-ab98-48f5dd748ef6] c.a.q.ops.ServiceLatencyAspect - 慢调用 AuthService.login(..) 耗时 233 ms
+2026-09-07 20:26:08.997 WARN  [http-nio-8080-exec-4] [bd3d7590-53c3-4fb0-80da-548e5a11fe24] c.a.q.ops.ServiceLatencyAspect - 慢调用 AuthService.login(..) 耗时 229 ms
+2026-09-07 20:26:09.231 WARN  [http-nio-8080-exec-10] [acf5970e-d8ad-4e7c-8148-69a0a46aa193] c.a.q.ops.ServiceLatencyAspect - 慢调用 AuthService.login(..) 耗时 227 ms
+2026-09-07 20:26:09.492 WARN  [http-nio-8080-exec-3] [14df240c-78cb-4f06-a969-838731e2df8d] c.a.q.ops.ServiceLatencyAspect - 慢调用 AuthService.login(..) 耗时 244 ms
+2026-09-07 20:26:09.727 WARN  [http-nio-8080-exec-7] [1e078f16-93c9-4cc9-a889-675915f834d4] c.a.q.ops.ServiceLatencyAspect - 慢调用 AuthService.login(..) 耗时 226 ms
+2026-09-07 20:26:09.976 WARN  [http-nio-8080-exec-8] [c478e99d-cb53-4d72-8863-25b4ce010f1f] c.a.q.ops.ServiceLatencyAspect - 慢调用 AuthService.login(..) 耗时 235 ms
+2026-09-07 20:26:10.222 WARN  [http-nio-8080-exec-5] [45414c0b-a902-4162-8df4-23adc2a9b993] c.a.q.ops.ServiceLatencyAspect - 慢调用 AuthService.login(..) 耗时 238 ms
+2026-09-07 20:26:10.452 WARN  [http-nio-8080-exec-9] [df68b855-0b4e-4eb2-b23d-ba5dd0c283b0] c.a.q.ops.ServiceLatencyAspect - 慢调用 AuthService.login(..) 耗时 222 ms
+2026-09-07 20:26:10.696 WARN  [http-nio-8080-exec-1] [1938e4f8-0d69-4e5b-ba18-67b411451eb0] c.a.q.ops.ServiceLatencyAspect - 慢调用 AuthService.login(..) 耗时 230 ms
+2026-09-07 20:26:10.932 WARN  [http-nio-8080-exec-2] [ffe89455-4989-4da1-a1d7-c0fc9709ca0d] c.a.q.ops.ServiceLatencyAspect - 慢调用 AuthService.login(..) 耗时 228 ms
+2026-09-07 20:26:11.161 WARN  [http-nio-8080-exec-6] [90616471-bc3e-46d8-9cb6-238b745b6bbc] c.a.q.ops.ServiceLatencyAspect - 慢调用 AuthService.login(..) 耗时 223 ms
+2026-09-07 20:26:11.382 WARN  [http-nio-8080-exec-4] [64c0894f-01e7-4dc6-80fc-72bfc4fc2ec0] c.a.q.ops.ServiceLatencyAspect - 慢调用 AuthService.login(..) 耗时 216 ms

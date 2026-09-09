@@ -1,0 +1,87 @@
+[22:22:07] == 0. 基础设施（MySQL 3307/Redis/Kafka，幂等）==
+=== 证据环境自愈启动（ROOT=C:/Project/QuestionBank）===
+提示：组件随本终端会话存在；新会话重跑本脚本即可（幂等）。
+  [skip] Redis 已在运行
+  [skip] Kafka 已在运行
+  [skip] MySQL 主库 3307 已在运行
+  [skip] MySQL 从库 3308 已在运行
+=== 配置并校验主从复制（幂等）===
+           Replica_IO_Running: Yes
+          Replica_SQL_Running: Yes
+复制收敛判定: 从库可见 repl_probe_db.repl_probe (polls=1)
+slave_port	ro	sro
+
+组件                   状态
+------------------------ --------------------
+MySQL 业务库 3306     运行中
+MySQL 主库 3307        运行中
+MySQL 从库 3308        运行中
+Redis 6379               运行中
+Kafka 9092               运行中
+
+下一步（全证据复跑）：
+  MYSQL_EVIDENCE=true REDIS_EVIDENCE=true KAFKA_EVIDENCE=true READ_REPLICA_EVIDENCE=true \
+    ./scripts/mvn.sh -B clean verify
+[22:22:31] == 1. 拉起 OTLP 接收端（otelcol debug exporter）==
+[22:22:35] collector 启动中 (pid 21879, otlp/http :4318)
+[22:22:36] collector 就绪（4318 已监听）
+[22:22:37] == 2. 编译 cloud（链路追踪依赖已入四服务 pom）==
+[22:22:57] == 3. 拉起 5 服务 ==
+[22:23:00] discovery 启动中 (pid 21900, port 8761)
+[22:23:09] discovery 就绪（2x0.5s）
+[22:23:13] auth 启动中 (pid 21916, port 8081)
+[22:23:16] bank 启动中 (pid 21923, port 8082)
+[22:23:20] practice 启动中 (pid 21930, port 8083)
+[22:23:25] auth-service 就绪（1x0.5s）
+[22:23:30] bank-service 就绪（1x0.5s）
+[22:23:37] practice-service 就绪（1x0.5s）
+[22:23:40] gateway 启动中 (pid 21955, port 8080)
+[22:23:49] gateway 就绪（2x0.5s）
+[22:23:51] 网关 LB 已收敛（1x0.5s，探测返回 401——鉴权失败是预期）
+[22:23:52] ================ 链路追踪证据开始 ================
+[22:23:52] 教师登录 -> 建库 -> 出题 -> 发布（每步都经网关，都是被追踪请求）
+[22:23:58] bankId=10 paperId=10
+[22:23:58] 锚点A：GET /api/banks（教师 token）
+[22:23:59] 等待 practice-service 注册并进入 gateway LB 缓存
+[22:24:06] 锚点B：POST /api/practice/sessions（学生 token，触发 Feign 跨服务）
+[22:24:08] 锚点C：GET /api/banks（伪造 token）
+[evidence] 0.锚点请求返回码：A(带token读库)=200(期望200) B(Feign建会话)=200(期望200) C(伪造token)=401(期望401)
+[22:24:09] 等待 span 导出（批量 5s 周期）
+[22:24:23] bank 日志锚点行：[bank-service,db43c9e7bca798903c5d9dd2f651ad46,c020f59bab54d8f8]
+  导出齐备等待：1 轮（每轮 3s，上限 45s），解析得到 143 个 span / 105 条 trace
+  解析得到 143 个 span / 105 条 trace
+[evidence] 1.跨3服务同一trace：traceId=db43c9e7bca798903c5d9dd2f651ad46
+           服务分布=['auth-service', 'bank-service', 'gateway-service', 'practice-service']，span 数=7（每服务至少一个 span 同源）
+           调用树：
+    [gateway-service|Server] http post  http=-
+      | [gateway-service|Client] http get  http=-
+      |   | [auth-service|Server] http get /internal/token/verify  http=-
+      | [gateway-service|Client] HTTP POST  http=200
+      |   | [practice-service|Server] http post /api/practice/sessions  http=-
+      |   |   | [practice-service|Client] HTTP GET  http=200
+      |   |   |   | [bank-service|Server] http get /internal/papers/{paperId}/snapshot  http=-
+[evidence] 2.W3C传播（跨服务 parent 链闭合）：trace 2c4b6fb09e58…(auth-service/bank-service/gateway-service) 根=1 断链=0；trace 2433922607e6…(auth-service/bank-service/gateway-service) 根=1 断链=0；trace ed0536bfe514…(auth-service/bank-service/gateway-service) 根=1 断链=0；trace ae4b16b8e5fc…(auth-service/bank-service/gateway-service) 根=1 断链=0；trace fa32007fa516…(auth-service/bank-service/gateway-service) 根=1 断链=0；trace 478c6f4b15b7…(auth-service/bank-service/gateway-service) 根=1 断链=0；trace db43c9e7bca7…(auth-service/bank-service/gateway-service/practice-service) 根=1 断链=0（traceparent 由上游透传：验签 auth、路由 bank、Feign 快照的 SERVER.span.Parent 均落在同 trace 上游 CLIENT span）
+[evidence] 3.Feign传播：traceId=db43c9e7bca798903c5d9dd2f651ad46 中 practice CLIENT span 存在=True，bank SERVER span.Parent==practice CLIENT span = True（feign-micrometer 透传 traceparent）
+[evidence] 4.错误路径追踪：伪造 token 的 401 请求在 collector 中有 gateway span（traceId=2b1d63e221759250...，http.response.status_code=401，1 个相关 span）
+[evidence] 5.日志-链路互查：bank 日志行 traceId=db43c9e7bca79890... 在 collector 反查命中=True，spanId 命中同 trace 的 span=True（logging.pattern.level 注入 MDC 成立）
+[evidence] 判定：链路追踪 5 项证据全部成立
+[22:24:24] ================ 链路追踪证据结束 ================
+[22:24:24] == 收尾：停止 cloud 服务与 collector ==
+[safe-delete][SAFE_DELETE_BULK_CONFIRM_REQUIRED] {"count":52,"threshold":50,"scope":"turn","targets":["/c/Project/QuestionBank/.workbuddy/pids/tracing_gateway.pid"],"targetCount":1}
+[22:24:58] gateway 端口 8080 仍占用（winpid=105616），taskkill 强杀
+[22:25:04] gateway 已停止（端口 8080 已释放）
+[safe-delete][SAFE_DELETE_BULK_CONFIRM_REQUIRED] {"count":52,"threshold":50,"scope":"turn","targets":["/c/Project/QuestionBank/.workbuddy/pids/tracing_practice.pid"],"targetCount":1}
+[22:25:38] practice 端口 8083 仍占用（winpid=113544），taskkill 强杀
+[22:25:44] practice 已停止（端口 8083 已释放）
+[safe-delete][SAFE_DELETE_BULK_CONFIRM_REQUIRED] {"count":52,"threshold":50,"scope":"turn","targets":["/c/Project/QuestionBank/.workbuddy/pids/tracing_bank.pid"],"targetCount":1}
+[22:26:17] bank 端口 8082 仍占用（winpid=104904），taskkill 强杀
+[22:26:23] bank 已停止（端口 8082 已释放）
+[safe-delete][SAFE_DELETE_BULK_CONFIRM_REQUIRED] {"count":52,"threshold":50,"scope":"turn","targets":["/c/Project/QuestionBank/.workbuddy/pids/tracing_auth.pid"],"targetCount":1}
+[22:26:56] auth 端口 8081 仍占用（winpid=93256），taskkill 强杀
+[22:27:01] auth 已停止（端口 8081 已释放）
+[safe-delete][SAFE_DELETE_BULK_CONFIRM_REQUIRED] {"count":52,"threshold":50,"scope":"turn","targets":["/c/Project/QuestionBank/.workbuddy/pids/tracing_discovery.pid"],"targetCount":1}
+[22:27:34] discovery 端口 8761 仍占用（winpid=108392），taskkill 强杀
+[22:27:40] discovery 已停止（端口 8761 已释放）
+[safe-delete][SAFE_DELETE_BULK_CONFIRM_REQUIRED] {"count":52,"threshold":50,"scope":"turn","targets":["/c/Project/QuestionBank/.workbuddy/pids/tracing_collector.pid"],"targetCount":1}
+[22:27:55] collector 已停止
+[22:27:55] 完成。证据日志: C:/Project/QuestionBank/output/tracing_evidence.log（本文件）与 C:/Project/QuestionBank/output/tracing_collector.log（原始 span）

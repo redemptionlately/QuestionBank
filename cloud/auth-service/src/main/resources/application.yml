@@ -1,0 +1,59 @@
+server:
+  port: 8081
+
+spring:
+  application:
+    name: auth-service
+  datasource:
+    # 专用最小权限用户（scripts/start-evidence-env.sh 幂等创建，权限只限 qb_auth 本库）。
+    # URL 不带 createDatabaseIfNotExist——schema 由脚本预建，应用账号不该有全局建库权限。
+    # 生产换环境：密码从环境注入（CLOUD_DB_PASSWORD），不复用演示默认值。
+    url: jdbc:mysql://127.0.0.1:3307/qb_auth?characterEncoding=UTF-8&useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
+    username: qb_auth
+    password: ${CLOUD_DB_PASSWORD:qb-cloud-demo-pw}
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    open-in-view: false
+  flyway:
+    enabled: true
+    baseline-on-migrate: true
+
+auth:
+  token:
+    # 演示用固定密钥；生产必须从密钥管理服务注入，且支持轮换（同时接受新旧两个密钥）
+    secret: qb-cloud-demo-secret-please-rotate-in-production
+    ttl-millis: 3600000
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://127.0.0.1:8761/eureka/
+    registry-fetch-interval-seconds: 5
+    # 同 practice：首次注册默认最长延迟 40s，evidence 环境调快消除时序竞争
+    initial-instance-info-replication-interval-seconds: 5
+  instance:
+    prefer-ip-address: true
+    lease-renewal-interval-in-seconds: 5
+    lease-expiration-duration-in-seconds: 10
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info
+  endpoint:
+    health:
+      show-details: always
+  # 链路追踪：全量采样 + OTLP/HTTP 导出到 otelcol（详见 gateway-service/application.yml 注释）
+  tracing:
+    sampling:
+      probability: 1.0
+  otlp:
+    tracing:
+      endpoint: http://127.0.0.1:4318/v1/traces
+      transport: http
+
+logging:
+  pattern:
+    level: "%5p [${spring.application.name:},%X{traceId:-},%X{spanId:-}]"

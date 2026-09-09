@@ -1,0 +1,65 @@
+services:
+  mysql:
+    image: mysql:8.4
+    container_name: question-bank-m0-mysql
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: question_bank
+      MYSQL_USER: question_bank
+      MYSQL_PASSWORD: question_bank
+      MYSQL_ROOT_PASSWORD: root_password_change_me
+    ports:
+      - "127.0.0.1:3307:3306"
+    volumes:
+      - question_bank_mysql:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-uquestion_bank", "-pquestion_bank"]
+      interval: 5s
+      timeout: 5s
+      retries: 20
+
+  redis:
+    image: redis:7.4-alpine
+    container_name: question-bank-m0-redis
+    restart: unless-stopped
+    # 内存上限 + LRU 淘汰：缓存实例必须设上限，否则内存会被写满。
+    command: ["redis-server", "--appendonly", "yes", "--maxmemory", "256mb", "--maxmemory-policy", "allkeys-lru"]
+    ports:
+      # 本机已有 Windows 原生 Redis 占用 6379，容器版映射到 6380 避免冲突。
+      - "127.0.0.1:6380:6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+
+  app:
+    build: .
+    container_name: question-bank-m0-app
+    depends_on:
+      mysql:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    environment:
+      DB_URL: jdbc:mysql://mysql:3306/question_bank?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
+      DB_USERNAME: question_bank
+      DB_PASSWORD: question_bank
+      SPRING_DATA_REDIS_HOST: redis
+      SPRING_DATA_REDIS_PORT: "6379"
+      # local = 进程内缓存（默认，可一键回退）；redis = 共享缓存
+      APP_CACHE_BACKEND: redis
+      JAVA_OPTS: -XX:MaxRAMPercentage=75
+    ports:
+      - "127.0.0.1:8080:8080"
+    healthcheck:
+      test: ["CMD", "curl", "-fsS", "http://localhost:8080/actuator/health/readiness"]
+      interval: 15s
+      timeout: 3s
+      start_period: 40s
+      retries: 3
+
+volumes:
+  question_bank_mysql:
+    name: question-bank-m0_question_bank_mysql
+    external: true

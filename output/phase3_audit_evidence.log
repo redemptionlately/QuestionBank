@@ -1,0 +1,61 @@
+[23:38:36] ===== Item 3：Kafka 消费并发 3 的前提（分区数 >= 并发度）=====
+=== 证据环境自愈启动（ROOT=C:/Project/QuestionBank）===
+提示：组件随本终端会话存在；新会话重跑本脚本即可（幂等）。
+  [ok]   Redis 就绪（端口 6379，0s）
+  [info] Kafka log.dirs 存在（JVM 视角 C:/tmp/kraft-combined-logs），仍执行 format（--ignore-formatted 幂等）
+  [ok]   Kafka 就绪（端口 9092，54s）
+  [ok]   Kafka broker 探活通过（api-versions 可响应）
+  [ok]   MySQL 主库 就绪（端口 3307，4s）
+  [ok]   MySQL 从库 就绪（端口 3308，4s）
+=== 配置并校验主从复制（幂等）===
+           Replica_IO_Running: Yes
+          Replica_SQL_Running: Yes
+复制收敛判定: 从库可见 repl_probe_db.repl_probe (polls=1)
+slave_port	ro	sro
+=== Kafka topic 与 cloud 专用 DB 用户（幂等）===
+  [skip] qb-events 已有 3 分区（>= 3）
+  [ok]   cloud 专用用户就绪（qb_auth/qb_bank/qb_practice，各限本库）
+
+组件                   状态
+------------------------ --------------------
+MySQL 业务库 3306     运行中
+MySQL 主库 3307        运行中
+MySQL 从库 3308        运行中
+Redis 6379               运行中
+Kafka 9092               运行中
+
+下一步（全证据复跑）：
+  MYSQL_EVIDENCE=true REDIS_EVIDENCE=true KAFKA_EVIDENCE=true READ_REPLICA_EVIDENCE=true \
+    ./scripts/mvn.sh -B clean verify
+[evidence] 消费者并发度（KafkaConsumerConfig.setConcurrency）= 3
+[evidence] qb-events 分区数 = 3（要求 >= 3）
+[evidence]   分区明细（前 3 个 partition 的 leader 分布）：
+[evidence]   	Topic: qb-events	Partition: 0	Leader: 1	Replicas: 1	Isr: 1	Elr: 	LastKnownElr: 
+[evidence]   	Topic: qb-events	Partition: 1	Leader: 1	Replicas: 1	Isr: 1	Elr: 	LastKnownElr: 
+[evidence]   	Topic: qb-events	Partition: 2	Leader: 1	Replicas: 1	Isr: 1	Elr: 	LastKnownElr: 
+[23:51:43] ===== Item 12：cloud 专用最小权限用户（不再是 root 连库）=====
+[evidence] 专用用户清单：
+[evidence]   qb_auth	127.0.0.1
+[evidence]   qb_bank	127.0.0.1
+[evidence]   qb_practice	127.0.0.1
+[evidence] qb_auth 的 GRANT 作用范围 = ON qb_auth.* 
+[evidence] qb_bank 的 GRANT 作用范围 = ON qb_bank.* 
+[evidence] qb_practice 的 GRANT 作用范围 = ON qb_practice.* 
+[evidence]   判定：三个用户的 GRANT 均只作用于各自本库，无跨库/全局权限
+[evidence] cloud 配置中仍用 root 连库的服务数 = 0（要求 0）
+[evidence] 用 qb_auth 专用账号直连成功：CURRENT_USER() = qb_auth@127.0.0.1
+[23:51:54] ===== Item 18：cloud auth 请求体参数校验（@Valid + 统一错误契约）=====
+[23:51:58] discovery 启动中 (pid 11730, port 8761)
+[23:52:12] discovery 就绪（3s）
+[23:52:14] auth 启动中 (pid 11761, port 8081)
+[23:52:36] auth 就绪（5s）
+[evidence] 空 username/password -> HTTP 400
+[evidence] 错误体 = {"code":"VALIDATION_ERROR","message":"password: password 不能为空","requestId":null,"timestamp":"2026-09-09T04:52:36.564521900Z"}
+[evidence] 合法登录 -> HTTP 200（期望 200，证明 @Valid 没有误伤正常请求）
+[23:52:40] ===== 收尾：停止本次取证拉起的服务 =====
+[23:53:41] auth 强杀残留 (winpid=104188)
+[23:53:44] auth 已停止（端口 8081 已释放）
+[23:54:35] discovery 强杀残留 (winpid=84112)
+[23:54:38] discovery 已停止（端口 8761 已释放）
+[23:54:38] 三项证据全部通过。原始日志：C:/Project/QuestionBank/output/phase3_*.log
+PHASE3_EVIDENCE_EXIT=0

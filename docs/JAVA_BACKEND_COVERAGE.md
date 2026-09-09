@@ -1,0 +1,94 @@
+# Java 后端求职覆盖与真实状态
+
+> 原则：**源码存在 ≠ 掌握**。下面每一条都标注了可以复跑的命令与落在 `output/` 的原始证据文件。
+> 没有证据的一律写进「未接入 / 未验证」，不写进简历。
+
+## 已实现并测试（app 94 + monitor-starter 3 = 97 个测试，全证据环境下 0 失败 0 跳过；GitHub Actions 云端全证据环境亦全绿）
+
+> CI 证据：<https://github.com/redemptionlately/QuestionBank/actions/runs/34117813609>
+> （ubuntu-latest 上 mysql:9.0 / redis:7 / apache/kafka:4.0.0 三个服务容器真实运行，
+> `REDIS_EVIDENCE/KAFKA_EVIDENCE/MYSQL_EVIDENCE=true` 全量测试 + Jacoco 门禁 + 打包，全部通过）
+
+- Java 21、Maven、Spring Boot 3.4、MVC 参数校验、统一异常响应
+- 无状态 Bearer 认证、角色授权、资源归属校验（IDOR 在 service 层修）
+- JPA Entity/Repository、事务、悲观行锁、`REQUIRES_NEW` 传播行为
+- Flyway V1/V2/V3、MySQL 9.0.1 与 H2、索引与 EXPLAIN 命中/失效对照
+- 题库版本发布、练习保存、确定性判分、错题聚合、提交幂等与并发回滚
+- **Redis 共享缓存**：cache-aside + TTL 抖动 + `afterCommit` 淘汰 + 故障降级（`app.cache.backend` 一键回退本地）
+- **Redis 分布式锁**：`SET NX PX` + Lua 校验 token 释放（防误删）+ Redis INCR fencing token；提交路径可选启用
+  `app.lock.backend=redis`（锁在事务外获取、事务提交后释放），并发 4 路实测 1 成功 + 3 显式拒绝
+- **Redis 令牌桶限流**：Lua 原子"补充 + 扣减"，毫令牌整数运算避免浮点漂移；`app.rate-limit.backend=redis`
+  多实例共享配额，实测容量 3 → 放行 3 次 + 429 3 次；Redis 故障 fail-open（放行并告警）
+- 持久化异步任务 `ImportJob`（after-commit 调度、状态机可查询）
+- 固定窗口限流（429 + Retry-After）、原子请求指标、requestId 链路、结构化日志
+- 自定义 Actuator 健康探针（实测 `SELECT 1` 延迟，超阈值 DOWN）、AOP 慢调用埋点
+- Docker Compose（mysql/redis/app）、多阶段 Dockerfile（非 root + HEALTHCHECK + 层缓存）、GitHub Actions CI（三服务容器 + 覆盖率门禁 + 镜像构建冒烟）、Jacoco 覆盖率门禁
+- **MyBatis 与 JPA 双栈共存**：JPA 管实体写入，MyBatis 动态 SQL 接管错题本复杂读查询（条件全可选筛选 + LIMIT/OFFSET 分页 + 聚合统计 + 二级缓存 LRU/TTL）；StatementHandler 层拦截插件做慢 SQL 监控与真实执行计数（缓存命中测试靠它证明"第二次没打数据库"）
+- 开环压测器（虚拟线程）+ JFR 录制
+- **MySQL 读写分离**：GTID 主从一键脚本（3307 主 / 3308 从 super_read_only）+ `AbstractRoutingDataSource` 路由 + `LazyConnectionDataSourceProxy` 延迟取连接；`SELECT @@port` 实证读写分流、super_read_only 硬拒错误方向写
+- **K8s 部署**：Deployment/Service/Secret/HPA（CPU 70%，1→3），CI 内 kind 集群全链路部署 + 探针 + HPA 真实指标断言
+- **自研 Spring Boot Starter（Maven 多模块）**：`monitor-spring-boot-starter`（@AutoConfiguration + 条件装配 + imports 注册），ApplicationContextRunner 条件矩阵测试；业务方单依赖接入慢 SQL 监控
+- **ArchUnit 架构守护**：5 条规则进 CI，上岗首跑抓出 2 处真实反向依赖并修复
+- **Spring Cloud 微服务拆分（cloud/ 独立聚合，六模块）**：Eureka 注册发现（注册/续约/剔除参数可观测）+ Gateway 统一鉴权（服务名验签 → 透传 X-User-Id，401/503 分流）+ Redis 令牌桶限流（10 并发突发 5 放行 5 个 429）+ RequestId 全链路透传；OpenFeign 契约模块（provider/consumer 编译期同步签名）；Resilience4j 熔断（5 连败 OPEN → 10s HALF_OPEN → 3 探测 CLOSED 全程实测）；每服务独立 MySQL schema（`SHOW TABLES` 三库互不相交 = 数据所有权物理证据）；试卷快照固化使判分不依赖 bank（下游挂了已开会话仍能交卷）；事务性发件箱与业务同事务落库、relay 投 Kafka 实测 sent=1。**运行时证据在本机**：`./scripts/cloud-evidence.sh` 一键拉起 Eureka+网关+3 服务（5 JVM）复跑 10 项 curl 证据；CI 加 cloud-compile job 只做编译门禁
+
+## 证据索引
+
+| 维度 | 复跑命令 | 产出 | 结论 |
+|---|---|---|---|
+| 数据库 · 索引 | `MYSQL_EVIDENCE=true ./scripts/mysql-evidence.sh` | `output/mysql_evidence_*.log` | 5000 行下命中 `idx_paper_version_status_published_at`（type=ref, rows=800, Backward index scan 无 filesort）；`UPPER(status)` 包裹后 type=ALL, rows=9640, Using filesort |
+| 数据库 · 隔离级别 | 同上 | 同上 | RR 下同一事务两次读为快照值、提交后才见新值；RC 下第二次读立即可见 |
+| 数据库 · 锁 | 同上 | 同上 | `FOR UPDATE` 第二个写者锁等待超时（errorCode 1205） |
+| 数据库 · 死锁 | `MYSQL_EVIDENCE=true ./scripts/mvn.sh test -Dtest=MysqlRealDbIntegrationTest#deadlockDetectedAndVictimRolledBack` | `output/mysql_deadlock_evidence.log` | 两事务交叉加锁（A 持行A等行B / B 持行B等行A），InnoDB 死锁检测器立即介入：牺牲者收到 SQLSTATE 40001 / errorCode 1213 并回滚，幸存事务正常拿到锁提交；`SHOW ENGINE INNODB STATUS` 的 LATEST DETECTED DEADLOCK 段落完整展示双方 RECORD LOCKS（lock_mode X locks rec but not gap）与 SQL |
+| 数据库 · 慢查询日志 | `./scripts/slow-query-evidence.sh` | `output/slow_query_evidence_*.log` | 全局开启 slow_query_log（阈值 1ms，TABLE 输出）→ 失效索引查询（UPPER 包裹，rows_examined=**5000** 全表扫）被捕获、命中索引的同一查询**不出现**在日志里（阈值生效的对照组）→ 还原配置。注意读 `@@global.*` 而非 `@@`：SET GLOBAL 不影响当前会话 |
+| 并发 · 压测 | `./scripts/loadtest.sh` | `output/load_published_*.json`、`load_login_*.json`、`load_*.jfr` | published @100RPS：P50 2ms / P95 5ms / P99 10ms，错误率 0%；login @20RPS 实测 15.6 RPS（BCrypt 打满） |
+| Java · 并发语义 | `./scripts/mvn.sh test -Dtest=JvmConcurrencyEvidenceTest` | surefire 输出 | volatile 可见性；虚拟线程 117ms vs 平台线程池 1287ms（5000 个阻塞任务）；AbortPolicy 拒绝 |
+| Java · AQS 手写实现 | `./scripts/mvn.sh test -Dtest=AqsEvidenceTest -Dsurefire.failIfNoSpecifiedTests=false` | surefire 输出（6 条 [evidence]） | 手写 AQS 独占可重入锁 + 共享模式信号量，与 JDK `ReentrantLock` 三方对照：**8×20000 自增 = 无锁 28437 / JDK 锁 160000 / 自研锁 160000**（无锁丢 82% 更新，对照组不是装饰）；可重入计数必须与释放次数严格配对（获取 3 次只释放 2 次时等待线程仍被阻塞）；非持有者释放抛 `IllegalMonitorStateException`；`await()` 期间锁可被他人获取（实证 await 真的释放了锁，否则无人能 signal）；共享模式并发峰值=许可数且许可完整归还。**tryLock 对持有者自己是重入成功（与 JDK 一致），对其他线程才立即返回 false（0ms，不排队）**——这条最初被我写错（以为自己持锁时返回 false），是测试纠正了认知 |
+| Java · 类加载机制 | `./scripts/mvn.sh test -Dtest=ClassLoaderEvidenceTest -Dsurefire.failIfNoSpecifiedTests=false` | surefire 输出（4 条 [evidence]） | 自定义加载器请求 `java.lang.String` → 由 bootstrap 提供（`getClassLoader()`=null），请求应用类 → 由应用加载器提供（`findClass` 根本没执行）= 双亲委派实证；**同名类被两个加载器定义就是两个不同的 Class，互转抛 `ClassCastException`**（类身份 = 类本身 + 定义它的加载器）；重写 `loadClass` 先自己 `defineClass` 即可绕过父加载器（委派是 `loadClass` 的默认实现，是约定不是强制）；TCCL 让父加载器的代码"向下"看到子加载器的类（SPI 的机制基础），实验后必须还原 TCCL 以免污染其他测试 |
+| 分布式 · Redis | `REDIS_EVIDENCE=true ./scripts/mvn.sh test -Dtest=RedisCacheIntegrationTest` | surefire 输出 | 命中/未命中计数、发布后提交再淘汰、Redis 宕机降级到 DB |
+| 分布式 · 锁 | `REDIS_EVIDENCE=true ./scripts/mvn.sh test -Dtest='RedisLock*,RedisGuarded*'` | surefire 输出 | 互斥、误删防护、TTL 自动释放、fencing 单调递增；加锁并发 4 路 = 1 成功 + 3 拒绝；**故意绕过锁后数据库行锁 + 幂等键仍给出一致结果（4 路得分全为 0）** |
+| 分布式 · 限流 | 同上 | 同上 | 令牌桶容量 5 放行 5；耗尽后按时间补充；共享限流容量 3 → 放行 3 + 429×3 |
+| 测试 · 覆盖率 | `./scripts/mvn.sh -B clean verify`（本地）；CI 全证据环境见「运维 · CI/CD」行 | `target/site/jacoco/index.html` | 本地默认 H2 跑 41 个测试（6 个证据测试类 19 个用例按环境变量门控跳过）；全证据环境 60 个测试全绿（Redis/Kafka/MySQL 证据测试在 CI 服务容器上真实运行）。bundle 实测指令 85.3% / 分支 65.2% / 行 89.8%，低于 80/55/80 构建失败——**本地与 CI 都曾真实触发过失败并靠补测试而非调阈值修复**（CI 那次：证据测试被跳过稀释至 74% 直接挂构建） |
+| 测试 · 变异强度 | `./scripts/mvn.sh -B test org.pitest:pitest-maven:mutationCoverage` | `output/pit_*.log`、`target/pit-reports/` | event.* 包 30 个变异体：杀死 21（70%），测试强度 91%（覆盖到的变异中 91% 被断言杀死）。变异测试驱动补强 4 处断言缺口，并抓出一个真缺陷（OutboxPublisher 把校验异常写进 try 导致两种失败路径被 catch 坍缩——已重构修复）；1 个存活为等价变异（`length()>480` 边界：480 字符截断后不变），1 个经人工变异实验证明测试可杀死但 PIT minion 与 Mockito inline 代理存在兼容问题（记录在案） |
+| 并发 · GC 行为 | `./scripts/loadtest.sh`（已内置 `-Xlog:gc*`）+ `./scripts/gc-report.sh output/gc_*.log` | `output/gc_report_*.log` | 153s 压测窗口：23 次停顿共 147ms，G1 吞吐 99.90%；Young 15 次 / Mixed 0 / **Full 0**；停顿 P50 6.3ms / P95 12.2ms / MAX 17.2ms（目标 200ms）；Young 均次回收 190M。应用 P99 5ms 与 GC MAX 17ms 对照，说明延迟不受 GC 支配 |
+| 并发 · GC 调优对照 | `./scripts/gc-compare-zgc.sh`（ZGC 分代，同负载 @100RPS） | `output/gc_report_zgc_*.log` | 同一负载下 ZGC 停顿 P50 **0.011ms** / MAX **0.027ms**（G1 为 6.3/17.2ms，低约 3 个数量级），累计停顿 0.29ms vs 147ms；**但应用 P99 两者同为 10ms**——瓶颈不在 GC 时换收集器不改善延迟，选型要按延迟目标与吞吐/内存开销权衡，不是无脑上 ZGC |
+| 并发 · JFR 热点分析 | `$JDK/bin/jfr view --width 120 hot-methods output/load_*.jfr`（同 allocation-by-class / gc-pauses） | `output/jfr_analysis_*.log` + [`performance_tuning_report.md`](performance_tuning_report.md)（完整调优报告：定位→优化→复测对照→明确权衡） | profile 级采样实锤：`BCrypt.key` 占执行采样 **84.01%**——登录吞吐被 BCrypt 打满不是推理而是 profiler 数据；分配大户 byte[] 50%（BCrypt+IO）；GC 视图与 gc-report 数字互相印证（22-23 次停顿 / 142-147ms）。扩展登录容量的正确方向：横向加实例 / 降 cost factor / 限流，而不是调连接池 |
+| 数据库 · MyBatis 动态 SQL | `./scripts/mvn.sh test -Dtest=WrongQuestionQueryMapperTest`（H2）；`MYSQL_EVIDENCE=true ./scripts/mvn.sh test -Dtest=MysqlRealDbIntegrationTest`（真实库） | surefire 输出 | 条件全可选筛选/分页/聚合的动态 SQL 证据：8 个 H2 用例（各筛选分支、分页越界空页、聚合手算对照、**二级缓存真实命中**——StatementHandler 层计数器证明同参数第二次 summarize 没打数据库）；真实 MySQL 上 MyBatis 结果与手写 SQL **逐行一致** + 聚合对照一致。设计要点：JPA 写路径不变、MyBatis 只接管读查询；聚合缓存 60s TTL 是刻意的弱一致窗口（JPA 写入 MyBatis 感知不到），证据测试用独立用户隔离缓存 key 正是绕开这个坑的示范 |
+| 并发 · BCrypt cost 三档实测 | `./scripts/bcrypt-strength-benchmark.sh` | `output/bcrypt_strength_*.log`、`load_login_bcrypt*.json` | cost 8/10/12（替换存储哈希后压 login @60 RPS 饱和发射）：**52.65 → 15.5 → 4.15 RPS，P50 18/64/238ms**——cost 翻倍吞吐减半与理论严格吻合。附带发现：只改 encoder 配置不影响 login 耗时，因为 **BCrypt 的 cost 自描述在哈希前缀里**，验证端按数据的 cost 走（v1 实验三档一致的原因，已写进报告）；strength 已提为可配 `app.security.bcrypt-strength` |
+| Spring · 事务失效变式 | `./scripts/mvn.sh test -Dtest=TransactionFailureModeTest` | surefire 输出（5 条 [evidence]） | 五条路径实测：RuntimeException 经代理传播=回滚（基准）；**自调用绕过代理=逐句自动提交回滚失效**（注入引用是代理、方法内 this 是目标对象，同一实例两种身份）；异常被 catch 吞掉=照常提交；受检异常默认不回滚=已提交；`rollbackFor=Exception.class`=回滚 |
+| 运维 · Prometheus 端点 | `./scripts/prometheus-evidence.sh` | `output/prometheus_evidence_*.log` | micrometer-registry-prometheus 暴露 `/actuator/prometheus`（抓取器无用户 token，放行 + 注释说明生产用网络隔离），制造 RED 流量后抓取 453 行：`http_server_requests_seconds_count` 按 method/uri/status/outcome 维度区分 200/401/IOException 样本、`jvm_memory_used_bytes` 分代、`hikaricp_connections(_active/_idle/_max)` |
+| 分布式 · Outbox | `./scripts/mvn.sh test -Dtest='Outbox*,OutboxRelay*'` | surefire 输出 | 事务内落库 PENDING；投递器发送成功才标 SENT、失败 requeue 直至 maxAttempts 停 FAILED 等人工；消费端按 eventKey 唯一键幂等（重复投递只记一次）；畸形/无键消息跳过不崩溃；单元测试曾抓出"序列化为 null 时静默落空事件"的真 bug |
+| 分布式 · Kafka 端到端 | 先起本地 Kafka 4.0（KRaft 单机，`./scripts/kafka-evidence.sh` 自动 format+启动），再 `KAFKA_EVIDENCE=true ./scripts/mvn.sh test -Dtest=KafkaOutboxIntegrationTest` | `output/kafka_evidence_*.log` | 发布 API → outbox 落库 → 投递器发 Kafka → 消费者写 consumed_event → 同一 eventKey 手动重投，consumed_event 不增第二条。日志行：`[evidence] outbox→kafka→消费幂等 全链路通过` |
+| 分布式 · 死信队列 | `KAFKA_EVIDENCE=true ./scripts/mvn.sh test -Dtest=KafkaDltIntegrationTest` | `output/kafka_dlt_evidence_*.log` | 毒丸消息（payload.fail=true）→ 消费者抛异常 → DefaultErrorHandler 重试 2 次（200ms 间隔）→ DeadLetterPublishingRecoverer 投递到 qb-events.DLT（独立消费组轮询验证消息真实落盘）→ **consumed_event 无该记录**（失败 ≠ 消费成功）。与"畸形消息直接跳过"区分：合法但业务失败的消息走 DLT，坏消息跳过 |
+| 分布式 · 多 broker 高可用 | 3 节点 KRaft 集群（`config/cluster-demo/server-{0,1,2}.properties`，单机三进程 9092/9093/9094），故障注入与裁定过程见 `output/kafka_cluster_ha3_final.log` | 同左 | 主题 RF=3 / min.isr=2，leader 分布 1/2/0；**kill -9 node1**：元数据仲裁仍可用（LeaderId=2）、ISR 收缩 0,1,2→0,2、三分区 leader 全部迁移至存活节点；故障期经 node2 继续投递成功；消费端唯一消息裁定 **150/150 缺失 0——宕机期间零丢失**。附注：console producer 非幂等导致位移翻倍（300 读取 / 150 唯一），生产默认幂等生产者无此问题 |
+| 运维 · 备份恢复 | `./scripts/backup-restore-drill.sh` | `output/backup_restore_evidence_*.log` | mysqldump --single-transaction 一致性快照（420K）→ 恢复到独立校验库 → 10 张表逐表行数比对全部一致（paper_version 5000 行完整恢复）→ 清理。脚本含防假一致设计：表名 \r 清洗 + 查询失败时绝不判定"一致" |
+| 运维 · CI/CD | 推送到 <https://github.com/redemptionlately/QuestionBank>（Actions 自动触发） | [run 34117813609](https://github.com/redemptionlately/QuestionBank/actions/runs/34117813609) 及后续全绿 runs | GitHub Actions ubuntu-latest：mysql:9.0 / redis:7 / apache/kafka:4.0.0（KRaft）三服务容器健康检查全过 → Kafka broker 探活步骤 success → `./mvnw -B verify`（REDIS/KAFKA/MYSQL_EVIDENCE 全开，79 测试含证据测试全跑）→ Jacoco 门禁 80/55/80 通过 → 独立复跑 MysqlRealDbIntegrationTest → 打包可执行 jar → **docker build 镜像冒烟**（多阶段构建、镜像体积、非 root、容器探针、HEALTHCHECK 状态）。覆盖率门禁是 fail-the-build 硬门禁：曾因证据测试被跳过稀释至 74% 真实触发失败，补齐服务容器后转绿。**镜像冒烟首跑抓出本机永远发现不了的真缺陷**：noble 镜像无 curl（HEALTHCHECK 永远失败）+ readiness 子路径被 Security 拦截 401，均已修复并加回归测试 |
+| 数据库 · 读写分离 | `./scripts/replication-setup.sh`（一键搭主从）；`READ_REPLICA_EVIDENCE=true MYSQL_EVIDENCE=true ./scripts/mvn.sh test -Dtest=ReadReplicaRoutingIntegrationTest` | `output/replication_setup_*.log`、surefire 输出 | 真实 MySQL 9.0 主从（本机 3307 主 + 3308 从 super_read_only，GTID AUTO_POSITION，与 3306 业务库完全隔离）：**readOnly 事务路由从库 3308、写事务路由主库 3307（SELECT @@port 铁证）**，主写→从可见复制收敛 **≈8ms**，错误路由方向的写被 super_read_only 硬拒绝（路由设计"错误即失败"）。工程要点：LazyConnectionDataSourceProxy 把连接获取推迟到首条 SQL（否则 Hibernate 事务 begin 阶段抓连接时 read-only 标志未就位，路由恒落主库）；@Profile 隔离装配零侵入默认环境；H2 双库 sentinel 测试给 CI 全环境跑路由逻辑 |
+| 数据库 · 分库分表 | `MYSQL_SHARDING_EVIDENCE=true bash scripts/sharding-evidence.sh` | `output/sharding_evidence_*.log` | ShardingSphere-JDBC 5.5.2 真机 6 项证据（2 库×2 表，student_id INLINE 双层路由，纯 JDBC 独立 DataSource，主线仍 JPA 单库不受影响）：①物理直查 8 行精确落位 + 错位组合 0 行叉积断言 ②带分片键查询单片下推（sql-show：`Actual SQL: ds_1 ::: ... practice_session_1 ...` 恰 1 条）③无路由条件 GROUP BY 4 条 Actual SQL 广播归并 8 组 ④广播表一次写入 2 库各 1 份 + SNOWFLAKE 主键全局唯一（≈1.3e18，替代 IDENTITY——自增分片下只保证单表唯一）⑤bindingTables join 对齐 1 条 Actual SQL（笛卡尔积 2×2=4 消除）⑥唯一键边界如实固化：同分片 uk 拒绝 Duplicate entry、跨分片同业务键物理不拦。schema 三改造：主键去自增 / FK 移除（跨库不可达）/ 子表冗余 student_id（免 join 路由）。SS 5.5 三坑留了字节码+官方文档实锤：数据源 YAML 平铺格式（旧 `props:` 嵌套被静默忽略，症状 `'Allen'@'localhost'` / StorageUnit NPE）、Maven 依赖图不含 pool-hikari（SPI 缺失 → 标准 props 全丢）、自动算法（MOD）不配手写 actualDataNodes |
+| 运维 · K8s 部署 | CI 自动：kind 集群（[run 34128573685](https://github.com/redemptionlately/QuestionBank/actions/runs/34128573685) 的 k8s-deploy job） | `deploy/k8s/`（mysql.yaml: Deployment+Service+Secret；app.yaml: Deployment+Service+HPA） | kind 集群全链路：metrics-server 安装 → 三资源 kubectl apply → MySQL rollout → 应用 rollout（**readiness 探针通过 = Flyway 在 K8s 环境首次迁移完成**）→ pod 内探针冒烟 `readiness {"status":"UP"}` / `liveness {"status":"UP"}` → **HPA 真实指标就绪（CPU=1%，非 <unknown>）**。探针走 /actuator/health/**（镜像冒烟修复的放行在 K8s 探针上再次闭环）；JVM 资源按 limits 1Gi + MaxRAMPercentage=75 容器感知 |
+| Spring · 自研 Starter | `./scripts/mvn.sh -B verify`（根聚合构建：starter 3 用例 + app 全量） | `monitor-starter/`（独立 Maven 模块，可单独发布） | 自研 `monitor-spring-boot-starter`：`@AutoConfiguration` + `@ConditionalOnClass/@ConditionalOnProperty` + `META-INF/spring/...AutoConfiguration.imports` 注册 StatementHandler 拦截器；`@ConfigurationProperties(prefix="app.mybatis")` 属性绑定（慢 SQL 阈值可配）；`ApplicationContextRunner` 条件矩阵 3 用例（默认装配 / 属性禁用 / 阈值绑定）。业务方单依赖即获得慢 SQL 监控，starter 与业务零耦合可复用 |
+| 测试 · 架构守护 | `./scripts/mvn.sh test -Dtest=ArchitectureTest` | surefire 输出 | ArchUnit 5 条规则进 CI：跨域 Repository 禁依赖、common 不碰业务域、Controller 不碰 Repository、禁字段注入、禁 System.out/java.util.logging。**上岗首跑抓出 2 处真实架构债**：common.CurrentUser 反向依赖 auth 包（迁入 auth）、common.CacheConfig 泛型绑定 bank.PaperResponse（迁为 bank.BankCacheConfig）——规则是可执行的架构约束，不是摆设 |
+| 运维 · 证据环境自愈 | `./scripts/start-evidence-env.sh start`（Windows；同一入口支持 `stop` / `status`） | `output/full_verify_coldstart.log` | 一条命令把 Redis(6379)、Kafka(9092 KRaft)、MySQL 主从(3307 主 / 3308 从 super_read_only) 从零恢复到可复现状态，各步幂等：已运行的跳过、datadir 存在则免初始化、Kafka 的 `log.dirs` 因 /tmp 被清空而消失时按需 format。**冷启动实测**：环境全灭 → 一条命令恢复 → 全量 `verify` 87 测试 **0 失败 0 跳过**（此前 3 个真实主从用例因缺少环境被门控跳过，覆盖率 86.3%/66.1%/90.6% 门禁通过）。连带修掉两个真实缺陷：①探针表原落在 Flyway 管理的 `replica_demo` 里，会让迁移以"非空库无 schema history"失败 → 改到独立 `repl_probe_db`；②复制脚本用**无密码**探活，把在运行的实例误判成"未启动"从而整段跳过复制配置 → 改为密码优先、无密码兜底。边界：本机安全策略禁用 cmd/PowerShell 脱离启动，组件随终端会话存在，新会话重跑本脚本即可 |
+| 架构 · Spring Cloud 拆分 | `./scripts/cloud-evidence.sh`（同一入口支持 `stop` / `status`） | `output/cloud_evidence_console.log` + `output/cloud_<svc>.log`（5 个 JVM 各自日志） | 一键拉起 Eureka(8761)+Gateway(8080)+auth/bank/practice(8081-8083) 五进程，10 项 `[evidence]`：①注册发现（Eureka 注册表 4 服务全 UP）②网关路由+登录 ③统一鉴权（无 token/伪造 token 均 401，**绕过网关直连也被拒**=服务自己是最后防线）④出题发布（唯一约束兜底并发 409 设计）⑤Feign 跨服务建会话 + clientToken 幂等（两次同 token 同 sessionId）⑥本地判分 + 重复提交不重复计分 ⑦数据所有权（`SHOW TABLES` qb_auth/qb_bank/qb_practice 表集合互不相交）⑧事务性发件箱（outbox_event 与发布同事务、relay 投 Kafka 后 sent=1）⑨网关 Redis 令牌桶限流（10 并发突发 → 5 放行 5×429；**两个测法坑都真实踩过**：串行连发测不出限流——每请求过 auth 验签数百 ms，2/s 补充追平消耗；MSYS 逐个 fork 后台 curl 散布 2s+ 同样追平——必须单 curl 进程 `--parallel --parallel-immediate` 同刻开 10 连接，且每个 URL 要各配一个 `-o`，否则响应体漏进 stdout 污染计数）⑩熔断恢复（杀 bank → 6 次调用全部快速失败 503 → `/actuator/circuitbreakers` OPEN → 重启后服务发现收敛 → HALF_OPEN → CLOSED；**"杀服务"唯一成功判据是端口真正释放**——JVM shutdown hook 慢死 30s+，且本机 Git Bash 不转换 `//F`、taskkill 收到字面参数报错，必须单斜杠 `taskkill /F /PID`，恢复等待用轮询而非固定 sleep——LB 缓存默认 35s，猜小了探测全 503 还会把 HALF_OPEN 打回 OPEN）。边界：CI 只做 cloud 编译门禁，运行时证据在本机；配置中心/隔离舱未接入（链路追踪已闭环，见下行） |
+| 运维 · 链路追踪 | `./scripts/tracing-evidence.sh` | `output/tracing_evidence_console.log` + `output/tracing_collector.log`（otelcol debug exporter 原始 span 落盘，解析对象就是落盘原件） | cloud 四服务接入 Micrometer Tracing（`micrometer-tracing-bridge-otel` + `opentelemetry-exporter-otlp`，OTLP/HTTP 导出，otelcol-contrib 0.160.0 :4318 接收、debug exporter 打印每个 span），5 项 `[evidence]`：①跨 4 服务同一 traceId——学生建会话 7 span 全链一树（网关入口 → 验签 auth → 路由 practice → Feign → bank /internal 快照）②跨服务 parent 链闭合（根唯一、每个 span 的 parent 都解析到同 trace 上游）③Feign 传播（`feign-micrometer` 透传 traceparent，bank SERVER.parent == practice CLIENT span）④401 错误路径留痕（伪造 token 的 gateway span 带 `http.response.status_code=401`）⑤日志-链路互查（`[snapshot]` 行 MDC traceId/spanId 在 collector 中反查双命中）。三个实测坑各留原始日志：①**@LoadBalanced builder 被 Spring Cloud 以同名 bean 覆盖 Boot 的 prototype builder**——LB 过滤器在而 ObservationWebClientCustomizer 从未生效，验签 span 全成孤立根 trace（修法=构造器链式补 `observationRegistry`；而手动再挂同一个 LB 过滤器 = 双重解析、把实例 IP 当服务名 503，也实测踩过）②**Eureka 首次注册默认 40s + 网关 LB 缓存刷新 35s 的时序竞争**打出 `No servers available for service: practice-service`（修法=注册/刷新调快到 5s/2s + 脚本轮询 eureka apps API 确认注册再发锚点请求）③**span 批量异步导出**（断言轮询到"多服务同 trace"信号而非固定 sleep，sleep 撞上批次未齐是假阴性）；日志锚点必须取请求路径行——@Scheduled 调度线程日志同样带 MDC traceId/spanId，任意抓首行会把后台调度 trace 当请求 trace 误抓 |
+
+完整调优闭环（定位 → 优化 → 前后对照 → 权衡）单独立卷：[`docs/performance_tuning_report.md`](performance_tuning_report.md)。
+
+压测结论只绑定本机环境（32C32G、Windows 11、JDK 21.0.12、同机 MySQL 9.0.1、HikariCP 最大 10 连接、
+paper_version 5000 行 / PUBLISHED 500 行、开环 100 RPS、warmup 10s），**不外推为生产容量**。
+
+## 仍未接入或未验证（写简历时排除）
+
+- Kafka 跨机房容灾与生产级部署（本机 3 节点集群已验证选主/ISR/零丢失，见证据表；跨机带宽与延迟特性未测）
+- Elasticsearch、`search_after` 深分页（未接入）
+- Redis 集群/哨兵、Redlock 与其争议场景（当前单机 Redis）
+- 真实 PDF 解析、对象存储、文件病毒扫描
+- OAuth2/OIDC、JWT 刷新与撤销、多租户
+- 网关、服务发现、熔断隔离舱（~~Kubernetes~~ **已闭环（2026-09-07）**：kind 集群 CI 全链路部署验证，见证据表「运维 · K8s 部署」；Ingress/多环境发布/生产级集群运维未涉及；~~网关/服务发现/熔断~~ **cloud 拆分已闭环（2026-09-08）**：Eureka+Gateway+Feign+Resilience4j 本机 10 项证据，见证据表「架构 · Spring Cloud 拆分」；~~分布式追踪~~ **已闭环（2026-09-08）**：四服务 Micrometer Tracing + OTLP 导出 5 项证据，见证据表「运维 · 链路追踪」；配置中心、bulkhead 隔离舱仍**未接入**）
+- Spring Cloud Config 配置中心、Nacos、~~链路追踪（Micrometer Tracing / OpenTelemetry）~~ **已闭环（2026-09-08）**：见证据表「运维 · 链路追踪」、多实例水平扩容验证（当前单实例演示）
+- ~~分库分表~~ **已闭环（2026-09-08）**：ShardingSphere-JDBC 5.5.2 2 库×2 表真机 6 项证据，见证据表「数据库 · 分库分表」；扩容迁移（双写/影子表/一致性哈希）与线上分片运维未涉及
+- ~~Docker/CI 无法验证~~ **已闭环（2026-09-07）**：本机 Docker 不可用，但 CI 在 GitHub Actions 的 ubuntu 容器内真实跑了 mysql:9.0 / redis:7 / apache/kafka:4.0.0 三服务容器 + 全量测试 + 覆盖率门禁 + 打包（[run 34117813609](https://github.com/redemptionlately/QuestionBank/actions/runs/34117813609) 全绿）——Dockerfile/compose 的运行时正确性已由云端 Docker 验证，本机 WSL 拦截不再是证据缺口。本机 Windows 下 Docker Desktop 的本地图形化体验仍属未验证
+
+## 简历边界
+
+源代码存在不等于用户掌握。只有能复述数据流、亲手修改核心代码、运行测试、解释失败边界并完成变式，
+对应能力才可写入简历。当前工程测试通过证明的是代码状态，不证明学习完成或生产容量。

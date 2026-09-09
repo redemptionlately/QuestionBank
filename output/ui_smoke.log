@@ -1,0 +1,13 @@
+PASS open login page
+PASS admin login renders shell
+PASS admin sees bank menu, opens papers
+PASS paper detail modal shows questions
+PASS logout to login page
+PASS student login + start exam flow
+PASS answer all questions with autosave
+  submitBtn occlusion: CLEAR
+  score ring shows: 0分
+PASS submit and render score ring
+PASS wrong-question page renders stats
+PASS theme toggle flips data-theme
+console errors: NONE

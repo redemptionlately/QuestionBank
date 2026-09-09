@@ -1,0 +1,61 @@
+2026-09-09 00:45:09.764 INFO  [main] [] o.f.core.internal.command.DbValidate - Successfully validated 4 migrations (execution time 00:00.006s)
+2026-09-09 00:45:09.767 INFO  [main] [] o.f.core.internal.command.DbMigrate - Current version of schema "public": 4
+2026-09-09 00:45:09.767 INFO  [main] [] o.f.core.internal.command.DbMigrate - Schema "public" is up to date. No migration necessary.
+2026-09-09 00:45:09.830 INFO  [main] [] o.hibernate.jpa.internal.util.LogHelper - HHH000204: Processing PersistenceUnitInfo [name: default]
+2026-09-09 00:45:09.836 INFO  [main] [] o.h.c.internal.RegionFactoryInitiator - HHH000026: Second-level cache disabled
+2026-09-09 00:45:09.849 INFO  [main] [] o.s.o.j.p.SpringPersistenceUnitInfo - No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-09-09 00:45:09.851 INFO  [main] [] org.hibernate.orm.connections.pooling - HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-10)']
+	Database driver: undefined/unknown
+	Database version: 2.3.232
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2026-09-09 00:45:09.916 INFO  [main] [] o.h.e.t.j.p.i.JtaPlatformInitiator - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2026-09-09 00:45:09.918 INFO  [main] [] o.s.o.j.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-09-09 00:45:10.263 INFO  [main] [] o.s.s.c.a.a.c.InitializeUserDetailsBeanManagerConfigurer$InitializeUserDetailsManagerConfigurer - Global AuthenticationManager configured with UserDetailsService bean with name unusedFormLoginUserDetailsService
+2026-09-09 00:45:10.430 INFO  [main] [] o.s.b.a.e.web.EndpointLinksResolver - Exposing 3 endpoints beneath base path '/actuator'
+2026-09-09 00:45:10.825 INFO  [main] [] c.a.q.TransactionPropagationIntegrationTest - Started TransactionPropagationIntegrationTest in 1.547 seconds (process running for 90.012)
+[evidence] REQUIRES_NEW：外层回滚=已撤销，内层=保留
+[evidence] BankService 代理类型: com.allen.questionbank.bank.BankService$$SpringCGLIB$$0
+[INFO] Tests run: 2, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 1.586 s -- in com.allen.questionbank.TransactionPropagationIntegrationTest
+[INFO] Running com.allen.questionbank.WrongQuestionQueryMapperTest
+2026-09-09 00:45:10.861 INFO  [main] [] o.s.t.c.s.AnnotationConfigContextLoaderUtils - Could not detect default configuration classes for test class [com.allen.questionbank.WrongQuestionQueryMapperTest]: WrongQuestionQueryMapperTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+2026-09-09 00:45:10.865 INFO  [main] [] o.s.b.t.c.SpringBootTestContextBootstrapper - Found @SpringBootConfiguration com.allen.questionbank.QuestionBankApplication for test class com.allen.questionbank.WrongQuestionQueryMapperTest
+2026-09-09 00:45:10.960 WARN  [main] [] o.apache.ibatis.io.SerialFilterChecker - As you are using functionality that deserializes object streams, it is recommended to define the JEP-290 serial filter. Please refer to https://docs.oracle.com/pls/topic/lookup?ctx=javase15&id=GUID-8296D8E8-2B93-4B9A-856E-0A65AF9B8C66
+[INFO] Tests run: 8, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 0.139 s -- in com.allen.questionbank.WrongQuestionQueryMapperTest
+[INFO] 
+[INFO] Results:
+[INFO] 
+[WARNING] Tests run: 112, Failures: 0, Errors: 0, Skipped: 3
+[INFO] 
+[INFO] 
+[INFO] --- jacoco:0.8.12:report (report) @ question-bank-m0 ---
+[INFO] Loading execution data file C:\Project\QuestionBank\app\target\jacoco.exec
+[INFO] Analyzed bundle 'question-bank-m0' with 88 classes
+[INFO] 
+[INFO] --- jar:3.4.2:jar (default-jar) @ question-bank-m0 ---
+[INFO] Building jar: C:\Project\QuestionBank\app\target\question-bank-m0-0.1.0-SNAPSHOT.jar
+[INFO] 
+[INFO] --- spring-boot:3.4.5:repackage (repackage) @ question-bank-m0 ---
+[INFO] Replacing main artifact C:\Project\QuestionBank\app\target\question-bank-m0-0.1.0-SNAPSHOT.jar with repackaged archive, adding nested dependencies in BOOT-INF/.
+[INFO] The original artifact has been renamed to C:\Project\QuestionBank\app\target\question-bank-m0-0.1.0-SNAPSHOT.jar.original
+[INFO] 
+[INFO] --- jacoco:0.8.12:check (jacoco-check) @ question-bank-m0 ---
+[INFO] Loading execution data file C:\Project\QuestionBank\app\target\jacoco.exec
+[INFO] Analyzed bundle 'question-bank-m0' with 88 classes
+[INFO] All coverage checks have been met.
+[INFO] ------------------------------------------------------------------------
+[INFO] Reactor Summary for question-bank-parent 0.1.0-SNAPSHOT:
+[INFO] 
+[INFO] question-bank-parent ............................... SUCCESS [  0.133 s]
+[INFO] monitor-spring-boot-starter ........................ SUCCESS [ 11.211 s]
+[INFO] question-bank-m0 ................................... SUCCESS [02:35 min]
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  02:47 min
+[INFO] Finished at: 2026-09-09T00:45:18+08:00
+[INFO] ------------------------------------------------------------------------
+VERIFY_EXIT=0

@@ -1,0 +1,55 @@
+=== 1/5 基线：记录源库关键表行数 ===
+outbox_event	0
+paper_version	5019
+practice_session	0
+question_bank	2
+question_version	0
+user_account	2
+outbox_event	0
+paper_version	5019
+practice_session	0
+question_bank	2
+question_version	0
+user_account	2
+
+=== 2/5 mysqldump 全量备份（单事务一致性快照）===
+备份文件: output/backup_question_bank_20260907_1703.sql (420K)
+
+=== 3/5 恢复到独立校验库 question_bank_restore ===
+恢复完成
+
+=== 4/5 一致性比对：源库 vs 恢复库逐表行数 ===
+ERROR 1103 (42000) at line 1: Incorrect table name 'consumed_event'
+ERROR 1103 (42000) at line 1: Incorrect table name 'consumed_event'
+consumed_event        source=         restored=         OK
+ERROR 1103 (42000) at line 1: Incorrect table name 'import_job'
+ERROR 1103 (42000) at line 1: Incorrect table name 'import_job'
+import_job            source=         restored=         OK
+ERROR 1103 (42000) at line 1: Incorrect table name 'outbox_event'
+ERROR 1103 (42000) at line 1: Incorrect table name 'outbox_event'
+outbox_event          source=         restored=         OK
+ERROR 1103 (42000) at line 1: Incorrect table name 'paper_version'
+ERROR 1103 (42000) at line 1: Incorrect table name 'paper_version'
+paper_version         source=         restored=         OK
+ERROR 1103 (42000) at line 1: Incorrect table name 'practice_session'
+ERROR 1103 (42000) at line 1: Incorrect table name 'practice_session'
+practice_session      source=         restored=         OK
+ERROR 1103 (42000) at line 1: Incorrect table name 'question_bank'
+ERROR 1103 (42000) at line 1: Incorrect table name 'question_bank'
+question_bank         source=         restored=         OK
+ERROR 1103 (42000) at line 1: Incorrect table name 'question_version'
+ERROR 1103 (42000) at line 1: Incorrect table name 'question_version'
+question_version      source=         restored=         OK
+ERROR 1103 (42000) at line 1: Incorrect table name 'submission_item'
+ERROR 1103 (42000) at line 1: Incorrect table name 'submission_item'
+submission_item       source=         restored=         OK
+ERROR 1103 (42000) at line 1: Incorrect table name 'user_account'
+ERROR 1103 (42000) at line 1: Incorrect table name 'user_account'
+user_account          source=         restored=         OK
+ERROR 1103 (42000) at line 1: Incorrect table name 'wrong_question'
+ERROR 1103 (42000) at line 1: Incorrect table name 'wrong_question'
+wrong_question        source=         restored=         OK
+全部一致：恢复库与源库逐表行数完全相同
+
+=== 5/5 清理校验库 ===
+校验库已删除（备份文件保留: output/backup_question_bank_20260907_1703.sql）

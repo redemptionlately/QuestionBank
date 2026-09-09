@@ -1,0 +1,35 @@
+=== 1/5 基线：记录源库关键表行数 ===
+outbox_event	0
+paper_version	5019
+practice_session	0
+question_bank	2
+question_version	0
+user_account	2
+outbox_event	0
+paper_version	5019
+practice_session	0
+question_bank	2
+question_version	0
+user_account	2
+
+=== 2/5 mysqldump 全量备份（单事务一致性快照）===
+备份文件: output/backup_question_bank_20260907_1704.sql (420K)
+
+=== 3/5 恢复到独立校验库 question_bank_restore ===
+恢复完成
+
+=== 4/5 一致性比对：源库 vs 恢复库逐表行数 ===
+consumed_event         source=0        restored=0        OK
+import_job             source=0        restored=0        OK
+outbox_event           source=0        restored=0        OK
+paper_version          source=5000     restored=5000     OK
+practice_session       source=0        restored=0        OK
+question_bank          source=2        restored=2        OK
+question_version       source=0        restored=0        OK
+submission_item        source=0        restored=0        OK
+user_account           source=2        restored=2        OK
+wrong_question         source=0        restored=0        OK
+全部一致：恢复库与源库逐表行数完全相同
+
+=== 5/5 清理校验库 ===
+校验库已删除（备份文件保留: output/backup_question_bank_20260907_1704.sql）

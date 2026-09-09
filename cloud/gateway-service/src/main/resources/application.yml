@@ -1,0 +1,85 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: gateway-service
+  cloud:
+    gateway:
+      discovery:
+        locator:
+          # 关掉自动路由：开启后会按服务名生成 /AUTH-SERVICE/** 之类的路由，
+          # 大小写敏感且暴露上游服务名，等于把内部拓扑贴在公网上。显式配置 routes 更可控。
+          enabled: false
+      routes:
+        - id: auth-service
+          uri: lb://auth-service
+          predicates:
+            - Path=/api/auth/**
+        - id: bank-service
+          uri: lb://bank-service
+          predicates:
+            - Path=/api/banks/**
+          filters:
+            - name: RequestRateLimiter
+              args:
+                # 令牌桶：每秒补 2 个，桶容量 5。连续第 6 次请求开始 429。
+                # 数值刻意压得很低，为了在同一台机器上可复现 429 证据。
+                redis-rate-limiter.replenishRate: 2
+                redis-rate-limiter.burstCapacity: 5
+                key-resolver: "#{@ipKeyResolver}"
+        - id: practice-service
+          uri: lb://practice-service
+          predicates:
+            - Path=/api/practice/**
+      httpclient:
+        connect-timeout: 2000
+        response-timeout: 8s
+    loadbalancer:
+      cache:
+        # LB 缓存刷新默认 35s：子服务刚注册进 eureka 的头 35s 内 gateway 仍会
+        # "No servers available for service: practice-service"（锚点 B 实测 503）。
+        # evidence 环境把刷新调快到 2s，配合子服务的快速注册（5s）消除时序竞争。
+        refresh-interval: 2s
+  data:
+    redis:
+      host: 127.0.0.1
+      port: 6379
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://127.0.0.1:8761/eureka/
+    registry-fetch-interval-seconds: 5
+  instance:
+    prefer-ip-address: true
+    lease-renewal-interval-in-seconds: 5
+    lease-expiration-duration-in-seconds: 10
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,gateway,metrics
+  endpoint:
+    health:
+      show-details: always
+  # 链路追踪：全量采样（默认 0.1 会随机丢 span，演示证据要求每条请求都可追溯）
+  tracing:
+    sampling:
+      probability: 1.0
+  # OTLP/HTTP 导出。接收端 = otelcol-contrib 0.160.0（debug exporter 把每个 span 原样打印到
+  # output/tracing_collector.log，证据脚本用 python 从中解析 Trace/Span/ParentSpanId）。
+  # 下载通道注记：GitHub 二进制用 curl 直连/代理下载均被本机沙箱掐断流写入，最终以 python
+  # 分块续传拉取成功（curl 连 Maven Central 的流写入同样被掐——是 curl 专属问题，非网络问题）
+  otlp:
+    tracing:
+      endpoint: http://127.0.0.1:4318/v1/traces
+      transport: http
+
+logging:
+  # 日志关联：MDC 里的 traceId/spanId 打进每行日志，日志行可与 Zipkin 中的 trace 互相反查
+  pattern:
+    level: "%5p [${spring.application.name:},%X{traceId:-},%X{spanId:-}]"
+  level:
+    org.springframework.cloud.gateway: INFO

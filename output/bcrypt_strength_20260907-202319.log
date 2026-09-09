@@ -1,0 +1,71 @@
+=== BCrypt strength å¯¹ç…§å®éªŒ v2 20260907-202319ï¼ˆå¼€ç¯ 60 RPSï¼Œæµ‹ 20sï¼Œå“ˆå¸Œ cost 8/10/12ï¼‰===
+mysql_version
+9.0.1
+=== ç”Ÿæˆä¸‰æ¡£å“ˆå¸Œï¼ˆcost=8/10/12ï¼ŒåŒä¸€æ˜æ–‡ student123ï¼‰===
+HASH8  = $2a$08$VcTofW3OajrSFoZvGqyQxekXaXo5ArQEx7sQ6muwbfK.RDZzMZrp.
+HASH10 = $2a$10$Tq17eMY496/BGZhnPVMa6Oq1H13jHq5.jnSL8tXFt0UBrTVVXM7Ne
+HASH12 = $2a$12$jw6p3vsVipISK84kOiL2f.yiLi6zQcI4it7fDTdPiNaBmtD04T2j.
+=== æ‰“åŒ…ï¼ˆä¸€æ¬¡ï¼Œä¸‰æ¡£å…±ç”¨ï¼‰===
+jar: target/question-bank-m0-0.1.0-SNAPSHOT.jar
+student åŸå“ˆå¸Œï¼ˆå®éªŒåæ¢å¤ï¼‰: $2a$10$CcsslkvO/N75NY0nhyrCjORx0FSax3cF6F1C/AmOEstXs0Nlq7YYe
+
+================ hash cost=8 ================
+å¥åº·æ£€æŸ¥é€šè¿‡ï¼ˆç¬¬ 5 æ¬¡ï¼‰
+[loadgen] target=http://127.0.0.1:8080/api/auth/login method=POST rps=60 warmup=5s duration=20s open-loop
+[loadgen] warmup finished, start measuring
+
+=== Ñ¹²â½á¹û£¨¿ª»·£¬warmup ºóÍ³¼Æ£©===
+Ä¿±ê RPS        : 60
+Êµ²âÍÌÍÂ RPS    : 52.7
+Ñù±¾Êı          : 1053 (·¢ËÍ 1255)
+´íÎóÊı / ´íÎóÂÊ : 0 / 0.00%
+P50             : 18 ms
+P95             : 29 ms
+P99             : 45 ms
+P999            : 60 ms
+Max             : 64 ms
+Ô­Ê¼ JSON ÒÑĞ´Èë: output/load_login_bcrypt8_20260907-202319.json
+--- cost=8 ç»“æœæ‘˜è¦ ---
+cost=8 | å®æµ‹åå=52.65 RPSï¼ˆç›®æ ‡ 60ï¼‰ | P50=18ms | P95=29ms | P99=45ms | é”™è¯¯ç‡=0.0%
+
+================ hash cost=10 ================
+å¥åº·æ£€æŸ¥é€šè¿‡ï¼ˆç¬¬ 5 æ¬¡ï¼‰
+[loadgen] target=http://127.0.0.1:8080/api/auth/login method=POST rps=60 warmup=5s duration=20s open-loop
+[loadgen] warmup finished, start measuring
+
+=== Ñ¹²â½á¹û£¨¿ª»·£¬warmup ºóÍ³¼Æ£©===
+Ä¿±ê RPS        : 60
+Êµ²âÍÌÍÂ RPS    : 15.5
+Ñù±¾Êı          : 310 (·¢ËÍ 387)
+´íÎóÊı / ´íÎóÂÊ : 0 / 0.00%
+P50             : 64 ms
+P95             : 78 ms
+P99             : 90 ms
+P999            : 116 ms
+Max             : 116 ms
+Ô­Ê¼ JSON ÒÑĞ´Èë: output/load_login_bcrypt10_20260907-202319.json
+--- cost=10 ç»“æœæ‘˜è¦ ---
+cost=10 | å®æµ‹åå=15.5 RPSï¼ˆç›®æ ‡ 60ï¼‰ | P50=64ms | P95=78ms | P99=90ms | é”™è¯¯ç‡=0.0%
+
+================ hash cost=12 ================
+å¥åº·æ£€æŸ¥é€šè¿‡ï¼ˆç¬¬ 5 æ¬¡ï¼‰
+[loadgen] target=http://127.0.0.1:8080/api/auth/login method=POST rps=60 warmup=5s duration=20s open-loop
+[loadgen] warmup finished, start measuring
+
+=== Ñ¹²â½á¹û£¨¿ª»·£¬warmup ºóÍ³¼Æ£©===
+Ä¿±ê RPS        : 60
+Êµ²âÍÌÍÂ RPS    : 4.2
+Ñù±¾Êı          : 83 (·¢ËÍ 103)
+´íÎóÊı / ´íÎóÂÊ : 0 / 0.00%
+P50             : 238 ms
+P95             : 259 ms
+P99             : 298 ms
+P999            : 298 ms
+Max             : 298 ms
+Ô­Ê¼ JSON ÒÑĞ´Èë: output/load_login_bcrypt12_20260907-202319.json
+--- cost=12 ç»“æœæ‘˜è¦ ---
+cost=12 | å®æµ‹åå=4.15 RPSï¼ˆç›®æ ‡ 60ï¼‰ | P50=238ms | P95=259ms | P99=298ms | é”™è¯¯ç‡=0.0%
+
+=== æ¢å¤æ ¡éªŒï¼ˆä¸‹æ–¹åº”ä¸åŸå“ˆå¸Œä¸€è‡´ï¼‰===
+=== æ¢å¤ student åŸå“ˆå¸Œ ===
+$2a$10$CcsslkvO/N75NY0nhyrCjORx0FSax3cF6F1C/AmOEstXs0Nlq7YYe

@@ -1,0 +1,110 @@
+2026-09-07T10:16:04.034377900Z main ERROR Invalid URL C:/Users/Allen/tools/kafka/kafka_2.13-4.0.0/config/tools-log4j2.yaml java.net.MalformedURLException: unknown protocol: c
+	at java.base/java.net.URL.<init>(URL.java:779)
+	at java.base/java.net.URL.of(URL.java:913)
+	at java.base/java.net.URI.toURL(URI.java:1172)
+	at org.apache.logging.log4j.core.config.ConfigurationSource.fromUri(ConfigurationSource.java:336)
+	at org.apache.logging.log4j.core.config.ConfigurationFactory$Factory.getConfiguration(ConfigurationFactory.java:488)
+	at org.apache.logging.log4j.core.config.ConfigurationFactory$Factory.getConfiguration(ConfigurationFactory.java:481)
+	at org.apache.logging.log4j.core.config.ConfigurationFactory$Factory.getConfiguration(ConfigurationFactory.java:402)
+	at org.apache.logging.log4j.core.config.ConfigurationFactory.getConfiguration(ConfigurationFactory.java:321)
+	at org.apache.logging.log4j.core.LoggerContext.reconfigure(LoggerContext.java:754)
+	at org.apache.logging.log4j.core.LoggerContext.reconfigure(LoggerContext.java:784)
+	at org.apache.logging.log4j.core.LoggerContext.start(LoggerContext.java:300)
+	at org.apache.logging.log4j.core.impl.Log4jContextFactory.getContext(Log4jContextFactory.java:153)
+	at org.apache.logging.log4j.core.impl.Log4jContextFactory.getContext(Log4jContextFactory.java:46)
+	at org.apache.logging.log4j.LogManager.getContext(LogManager.java:138)
+	at org.apache.logging.log4j.spi.AbstractLoggerAdapter.getContext(AbstractLoggerAdapter.java:136)
+	at org.apache.logging.slf4j.Log4jLoggerFactory.getContext(Log4jLoggerFactory.java:58)
+	at org.apache.logging.log4j.spi.AbstractLoggerAdapter.getLogger(AbstractLoggerAdapter.java:46)
+	at org.apache.logging.slf4j.Log4jLoggerFactory.getLogger(Log4jLoggerFactory.java:32)
+	at org.slf4j.LoggerFactory.getLogger(LoggerFactory.java:363)
+	at org.slf4j.LoggerFactory.getLogger(LoggerFactory.java:388)
+	at org.apache.kafka.tools.TopicCommand.<clinit>(TopicCommand.java:82)
+
+2026-09-07T10:16:04.037888100Z main ERROR Invalid URL C:/Users/Allen/tools/kafka/kafka_2.13-4.0.0/config/tools-log4j2.yaml java.net.MalformedURLException: unknown protocol: c
+	at java.base/java.net.URL.<init>(URL.java:779)
+	at java.base/java.net.URL.of(URL.java:913)
+	at java.base/java.net.URI.toURL(URI.java:1172)
+	at org.apache.logging.log4j.core.config.ConfigurationSource.fromUri(ConfigurationSource.java:336)
+	at org.apache.logging.log4j.core.config.ConfigurationFactory.getInputFromString(ConfigurationFactory.java:356)
+	at org.apache.logging.log4j.core.config.ConfigurationFactory$Factory.getConfiguration(ConfigurationFactory.java:495)
+	at org.apache.logging.log4j.core.config.ConfigurationFactory$Factory.getConfiguration(ConfigurationFactory.java:481)
+	at org.apache.logging.log4j.core.config.ConfigurationFactory$Factory.getConfiguration(ConfigurationFactory.java:402)
+	at org.apache.logging.log4j.core.config.ConfigurationFactory.getConfiguration(ConfigurationFactory.java:321)
+	at org.apache.logging.log4j.core.LoggerContext.reconfigure(LoggerContext.java:754)
+	at org.apache.logging.log4j.core.LoggerContext.reconfigure(LoggerContext.java:784)
+	at org.apache.logging.log4j.core.LoggerContext.start(LoggerContext.java:300)
+	at org.apache.logging.log4j.core.impl.Log4jContextFactory.getContext(Log4jContextFactory.java:153)
+	at org.apache.logging.log4j.core.impl.Log4jContextFactory.getContext(Log4jContextFactory.java:46)
+	at org.apache.logging.log4j.LogManager.getContext(LogManager.java:138)
+	at org.apache.logging.log4j.spi.AbstractLoggerAdapter.getContext(AbstractLoggerAdapter.java:136)
+	at org.apache.logging.slf4j.Log4jLoggerFactory.getContext(Log4jLoggerFactory.java:58)
+	at org.apache.logging.log4j.spi.AbstractLoggerAdapter.getLogger(AbstractLoggerAdapter.java:46)
+	at org.apache.logging.slf4j.Log4jLoggerFactory.getLogger(Log4jLoggerFactory.java:32)
+	at org.slf4j.LoggerFactory.getLogger(LoggerFactory.java:363)
+	at org.slf4j.LoggerFactory.getLogger(LoggerFactory.java:388)
+	at org.apache.kafka.tools.TopicCommand.<clinit>(TopicCommand.java:82)
+
+2026-09-07T10:16:04.037888100Z main ERROR Reconfiguration failed: No configuration found for '4517d9a3' at 'null' in 'null'
+Topic: qb-ha	TopicId: dFXDl0h9QL6nXCJgUGE5Sg	PartitionCount: 3	ReplicationFactor: 3	Configs: min.insync.replicas=2
+	Topic: qb-ha	Partition: 0	Leader: 0	Replicas: 0,1,2	Isr: 0,1,2	Elr: 	LastKnownElr: 
+	Topic: qb-ha	Partition: 1	Leader: 1	Replicas: 1,2,0	Isr: 1,2,0	Elr: 	LastKnownElr: 
+	Topic: qb-ha	Partition: 2	Leader: 2	Replicas: 2,0,1	Isr: 2,0,1	Elr: 	LastKnownElr: 
+4/7 正常期投递后分区末端位移合计: 227.635（预期 100）
+LeaderId:               2
+CurrentVoters:          [{"id": 0, "directoryId": null, "endpoints": ["CONTROLLER://localhost:19092"]}, {"id": 1, "directoryId": null, "endpoints": ["CONTROLLER://localhost:19093"]}, {"id": 2, "directoryId": null, "endpoints": ["CONTROLLER://localhost:19094"]}]
+--- 故障后副本分布（观察 leader 迁移与 ISR 收缩）---
+2026-09-07T10:22:23.857371400Z main ERROR Invalid URL C:/Users/Allen/tools/kafka/kafka_2.13-4.0.0/config/tools-log4j2.yaml java.net.MalformedURLException: unknown protocol: c
+	at java.base/java.net.URL.<init>(URL.java:779)
+	at java.base/java.net.URL.of(URL.java:913)
+	at java.base/java.net.URI.toURL(URI.java:1172)
+	at org.apache.logging.log4j.core.config.ConfigurationSource.fromUri(ConfigurationSource.java:336)
+	at org.apache.logging.log4j.core.config.ConfigurationFactory$Factory.getConfiguration(ConfigurationFactory.java:488)
+	at org.apache.logging.log4j.core.config.ConfigurationFactory$Factory.getConfiguration(ConfigurationFactory.java:481)
+	at org.apache.logging.log4j.core.config.ConfigurationFactory$Factory.getConfiguration(ConfigurationFactory.java:402)
+	at org.apache.logging.log4j.core.config.ConfigurationFactory.getConfiguration(ConfigurationFactory.java:321)
+	at org.apache.logging.log4j.core.LoggerContext.reconfigure(LoggerContext.java:754)
+	at org.apache.logging.log4j.core.LoggerContext.reconfigure(LoggerContext.java:784)
+	at org.apache.logging.log4j.core.LoggerContext.start(LoggerContext.java:300)
+	at org.apache.logging.log4j.core.impl.Log4jContextFactory.getContext(Log4jContextFactory.java:153)
+	at org.apache.logging.log4j.core.impl.Log4jContextFactory.getContext(Log4jContextFactory.java:46)
+	at org.apache.logging.log4j.LogManager.getContext(LogManager.java:138)
+	at org.apache.logging.log4j.spi.AbstractLoggerAdapter.getContext(AbstractLoggerAdapter.java:136)
+	at org.apache.logging.slf4j.Log4jLoggerFactory.getContext(Log4jLoggerFactory.java:58)
+	at org.apache.logging.log4j.spi.AbstractLoggerAdapter.getLogger(AbstractLoggerAdapter.java:46)
+	at org.apache.logging.slf4j.Log4jLoggerFactory.getLogger(Log4jLoggerFactory.java:32)
+	at org.slf4j.LoggerFactory.getLogger(LoggerFactory.java:363)
+	at org.slf4j.LoggerFactory.getLogger(LoggerFactory.java:388)
+	at org.apache.kafka.tools.TopicCommand.<clinit>(TopicCommand.java:82)
+
+2026-09-07T10:22:23.859742600Z main ERROR Invalid URL C:/Users/Allen/tools/kafka/kafka_2.13-4.0.0/config/tools-log4j2.yaml java.net.MalformedURLException: unknown protocol: c
+	at java.base/java.net.URL.<init>(URL.java:779)
+	at java.base/java.net.URL.of(URL.java:913)
+	at java.base/java.net.URI.toURL(URI.java:1172)
+	at org.apache.logging.log4j.core.config.ConfigurationSource.fromUri(ConfigurationSource.java:336)
+	at org.apache.logging.log4j.core.config.ConfigurationFactory.getInputFromString(ConfigurationFactory.java:356)
+	at org.apache.logging.log4j.core.config.ConfigurationFactory$Factory.getConfiguration(ConfigurationFactory.java:495)
+	at org.apache.logging.log4j.core.config.ConfigurationFactory$Factory.getConfiguration(ConfigurationFactory.java:481)
+	at org.apache.logging.log4j.core.config.ConfigurationFactory$Factory.getConfiguration(ConfigurationFactory.java:402)
+	at org.apache.logging.log4j.core.config.ConfigurationFactory.getConfiguration(ConfigurationFactory.java:321)
+	at org.apache.logging.log4j.core.LoggerContext.reconfigure(LoggerContext.java:754)
+	at org.apache.logging.log4j.core.LoggerContext.reconfigure(LoggerContext.java:784)
+	at org.apache.logging.log4j.core.LoggerContext.start(LoggerContext.java:300)
+	at org.apache.logging.log4j.core.impl.Log4jContextFactory.getContext(Log4jContextFactory.java:153)
+	at org.apache.logging.log4j.core.impl.Log4jContextFactory.getContext(Log4jContextFactory.java:46)
+	at org.apache.logging.log4j.LogManager.getContext(LogManager.java:138)
+	at org.apache.logging.log4j.spi.AbstractLoggerAdapter.getContext(AbstractLoggerAdapter.java:136)
+	at org.apache.logging.slf4j.Log4jLoggerFactory.getContext(Log4jLoggerFactory.java:58)
+	at org.apache.logging.log4j.spi.AbstractLoggerAdapter.getLogger(AbstractLoggerAdapter.java:46)
+	at org.apache.logging.slf4j.Log4jLoggerFactory.getLogger(Log4jLoggerFactory.java:32)
+	at org.slf4j.LoggerFactory.getLogger(LoggerFactory.java:363)
+	at org.slf4j.LoggerFactory.getLogger(LoggerFactory.java:388)
+	at org.apache.kafka.tools.TopicCommand.<clinit>(TopicCommand.java:82)
+
+2026-09-07T10:22:23.860742800Z main ERROR Reconfiguration failed: No configuration found for '4517d9a3' at 'null' in 'null'
+Topic: qb-ha	TopicId: dFXDl0h9QL6nXCJgUGE5Sg	PartitionCount: 3	ReplicationFactor: 3	Configs: min.insync.replicas=2
+	Topic: qb-ha	Partition: 0	Leader: 0	Replicas: 0,1,2	Isr: 0,2	Elr: 	LastKnownElr: 
+	Topic: qb-ha	Partition: 1	Leader: 2	Replicas: 1,2,0	Isr: 2,0	Elr: 	LastKnownElr: 
+	Topic: qb-ha	Partition: 2	Leader: 2	Replicas: 2,0,1	Isr: 2,0	Elr: 	LastKnownElr: 
+6/7 故障期投递后分区末端位移合计: 340.338（预期 150）
+7/7 结论: 位移计数异常（before=227.635 after=340.338），需排查

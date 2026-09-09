@@ -1,0 +1,55 @@
+=== å‹æµ‹å¼€å§‹ 20260907-140626 ===
+JDK: java version "21.0.12" 2026-07-21 LTS
+mysql_version	isolation
+9.0.1	REPEATABLE-READ
+=== 1/6 æ‰“åŒ… ===
+jar: target/question-bank-m0-0.1.0-SNAPSHOT.jar
+=== 2/6 çŒå…¥ç§å­æ•°æ® ===
+ERROR 3636 (HY000) at line 11: Recursive query aborted after 1001 iterations. Try increasing @@cte_max_recursion_depth to a larger value.
+=== 3/6 å¯åŠ¨åº”ç”¨ ===
+åº”ç”¨ PID=2155
+å¥åº·æ£€æŸ¥é€šè¿‡ï¼ˆç¬¬ 4 æ¬¡ï¼‰
+=== 4/6 è·å– token ===
+token å·²ä¿å­˜
+=== JFR å½•åˆ¶å¯åŠ¨ ===
+2155:
+java.io.IOException: ¾Ü¾ø·ÃÎÊ¡£
+	at jdk.attach/sun.tools.attach.VirtualMachineImpl.openProcess(Native Method)
+=== 5/6 åœºæ™¯ Aï¼šGET /api/papers/publishedï¼ˆè¯»è·¯å¾„ï¼Œå¼€ç¯ 100 RPSï¼‰===
+[loadgen] target=http://127.0.0.1:8080/api/papers/published method=GET rps=100 warmup=10s duration=30s open-loop
+[loadgen] warmup finished, start measuring
+
+=== Ñ¹²â½á¹û£¨¿ª»·£¬warmup ºóÍ³¼Æ£©===
+Ä¿±ê RPS        : 100
+Êµ²âÍÌÍÂ RPS    : 100.0
+Ñù±¾Êı          : 3000 (·¢ËÍ 4001)
+´íÎóÊı / ´íÎóÂÊ : 0 / 0.00%
+P50             : 1 ms
+P95             : 4 ms
+P99             : 10 ms
+P999            : 70 ms
+Max             : 95 ms
+Ô­Ê¼ JSON ÒÑĞ´Èë: output/load_published_20260907-140626.json
+
+=== 5/6 åœºæ™¯ Bï¼šPOST /api/auth/loginï¼ˆBCrypt å¯†é›†ï¼Œå¼€ç¯ 20 RPSï¼‰===
+[loadgen] target=http://127.0.0.1:8080/api/auth/login method=POST rps=20 warmup=5s duration=20s open-loop
+[loadgen] warmup finished, start measuring
+
+=== Ñ¹²â½á¹û£¨¿ª»·£¬warmup ºóÍ³¼Æ£©===
+Ä¿±ê RPS        : 20
+Êµ²âÍÌÍÂ RPS    : 16.0
+Ñù±¾Êı          : 320 (·¢ËÍ 397)
+´íÎóÊı / ´íÎóÂÊ : 0 / 0.00%
+P50             : 61 ms
+P95             : 73 ms
+P99             : 80 ms
+P999            : 87 ms
+Max             : 87 ms
+Ô­Ê¼ JSON ÒÑĞ´Èë: output/load_login_20260907-140626.json
+
+=== HikariCP / Tomcat æ± æŒ‡æ ‡ ===
+{"code":"AUTH_REQUIRED","message":"????","requestId":"e381ddce-c3ff-4e15-9f33-f0a39c8a2819","timestamp":"2026-09-07T06:08:32.319147900Z"}
+{"code":"AUTH_REQUIRED","message":"????","requestId":"e0d364bf-9d62-4d3d-8202-97f664e4c4d3","timestamp":"2026-09-07T06:08:32.858363500Z"}
+è¯æ®æ—¥å¿—: output/load_20260907-140626.log
+JFR æ–‡ä»¶: output/load_20260907-140626.jfr (å¯ç”¨ JDK Mission Control æˆ– jfr summary æŸ¥çœ‹)
+=== 6/6 åœæ­¢åº”ç”¨ ===

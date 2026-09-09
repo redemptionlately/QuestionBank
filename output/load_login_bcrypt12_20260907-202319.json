@@ -1,0 +1,1 @@
+{"target":"http://127.0.0.1:8080/api/auth/login","method":"POST","targetRps":60,"measuredRps":4.15,"samples":83,"errors":0,"errorRatePct":0.00,"p50Ms":238,"p95Ms":259,"p99Ms":298,"p999Ms":298,"timestamp":"2026-09-07T12:26:11.423545100Z"}

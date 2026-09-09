@@ -1,0 +1,11 @@
+收集器: ZGC(generational)   观测窗口: 60s   停顿阶段数: 24（6 轮回收）   累计停顿: 0.29ms
+ZGC 吞吐估算: 100.000%（仅 STW 阶段口径）
+Mark Start: 0   Mark End: 12   Relocate Start: 12
+单次停顿 P50: 0.011ms   P95: 0.020ms   MAX: 0.027ms
+
+最慢 5 次:
+  uptime=38.0s  Pause Mark End  0.027ms
+  uptime=38.2s  Pause Mark End  0.020ms
+  uptime=38.1s  Pause Relocate Start  0.018ms
+  uptime=10.7s  Pause Mark End  0.017ms
+  uptime=7.0s  Pause Mark End  0.016ms

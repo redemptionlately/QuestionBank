@@ -1,0 +1,470 @@
+[INFO] Scanning for projects...
+[INFO] 
+[INFO] ---------------------< com.allen:question-bank-m0 >---------------------
+[INFO] Building question-bank-m0 0.1.0-SNAPSHOT
+[INFO]   from pom.xml
+[INFO] --------------------------------[ jar ]---------------------------------
+[INFO] 
+[INFO] --- jacoco:0.8.12:prepare-agent (prepare-agent) @ question-bank-m0 ---
+[INFO] argLine set to -javaagent:C:\\Users\\Allen\\.m2\\repository\\org\\jacoco\\org.jacoco.agent\\0.8.12\\org.jacoco.agent-0.8.12-runtime.jar=destfile=C:\\Project\\QuestionBank\\target\\jacoco.exec
+[INFO] 
+[INFO] --- resources:3.3.1:resources (default-resources) @ question-bank-m0 ---
+[INFO] Copying 1 resource from src\main\resources to target\classes
+[INFO] Copying 5 resources from src\main\resources to target\classes
+[INFO] 
+[INFO] --- compiler:3.13.0:compile (default-compile) @ question-bank-m0 ---
+[INFO] Nothing to compile - all classes are up to date.
+[INFO] 
+[INFO] --- resources:3.3.1:testResources (default-testResources) @ question-bank-m0 ---
+[INFO] Copying 4 resources from src\test\resources to target\test-classes
+[INFO] 
+[INFO] --- compiler:3.13.0:testCompile (default-testCompile) @ question-bank-m0 ---
+[INFO] Nothing to compile - all classes are up to date.
+[INFO] 
+[INFO] --- surefire:3.5.3:test (default-test) @ question-bank-m0 ---
+[INFO] Using auto detected provider org.apache.maven.surefire.junitplatform.JUnitPlatformProvider
+[INFO] 
+[INFO] -------------------------------------------------------
+[INFO]  T E S T S
+[INFO] -------------------------------------------------------
+[INFO] Running com.allen.questionbank.KafkaDltIntegrationTest
+17:02:39.036 [main] INFO org.springframework.test.context.support.AnnotationConfigContextLoaderUtils -- Could not detect default configuration classes for test class [com.allen.questionbank.KafkaDltIntegrationTest]: KafkaDltIntegrationTest does not declare any static, non-private, non-final, nested classes annotated with @Configuration.
+17:02:39.511 [main] INFO org.springframework.boot.test.context.SpringBootTestContextBootstrapper -- Found @SpringBootConfiguration com.allen.questionbank.QuestionBankApplication for test class com.allen.questionbank.KafkaDltIntegrationTest
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+
+ :: Spring Boot ::                (v3.4.5)
+
+2026-09-07 17:02:40.948 INFO  [background-preinit] [] o.h.validator.internal.util.Version - HV000001: Hibernate Validator 8.0.2.Final
+2026-09-07 17:02:41.078 INFO  [main] [] c.a.questionbank.KafkaDltIntegrationTest - Starting KafkaDltIntegrationTest using Java 21.0.12 with PID 83100 (started by Allen in C:\Project\QuestionBank)
+2026-09-07 17:02:41.079 INFO  [main] [] c.a.questionbank.KafkaDltIntegrationTest - The following 2 profiles are active: "test", "kafka"
+2026-09-07 17:02:44.696 INFO  [main] [] o.s.d.r.c.RepositoryConfigurationDelegate - Multiple Spring Data modules found, entering strict repository configuration mode
+2026-09-07 17:02:44.701 INFO  [main] [] o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-09-07 17:02:45.270 INFO  [main] [] o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 533 ms. Found 10 JPA repository interfaces.
+2026-09-07 17:02:45.329 INFO  [main] [] o.s.d.r.c.RepositoryConfigurationDelegate - Multiple Spring Data modules found, entering strict repository configuration mode
+2026-09-07 17:02:45.331 INFO  [main] [] o.s.d.r.c.RepositoryConfigurationDelegate - Bootstrapping Spring Data Redis repositories in DEFAULT mode.
+2026-09-07 17:02:45.419 INFO  [main] [] o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.allen.questionbank.auth.UserAccountRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2026-09-07 17:02:45.420 INFO  [main] [] o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.allen.questionbank.bank.PaperVersionRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2026-09-07 17:02:45.420 INFO  [main] [] o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.allen.questionbank.bank.QuestionBankRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2026-09-07 17:02:45.420 INFO  [main] [] o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.allen.questionbank.bank.QuestionVersionRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2026-09-07 17:02:45.420 INFO  [main] [] o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.allen.questionbank.event.ConsumedEventRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2026-09-07 17:02:45.421 INFO  [main] [] o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.allen.questionbank.event.OutboxEventRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2026-09-07 17:02:45.421 INFO  [main] [] o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.allen.questionbank.importjob.ImportJobRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2026-09-07 17:02:45.422 INFO  [main] [] o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.allen.questionbank.practice.PracticeSessionRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2026-09-07 17:02:45.422 INFO  [main] [] o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.allen.questionbank.practice.SubmissionItemRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2026-09-07 17:02:45.422 INFO  [main] [] o.s.d.r.c.RepositoryConfigurationExtensionSupport - Spring Data Redis - Could not safely identify store assignment for repository candidate interface com.allen.questionbank.practice.WrongQuestionRepository; If you want this repository to be a Redis repository, consider annotating your entities with one of these annotations: org.springframework.data.redis.core.RedisHash (preferred), or consider extending one of the following types with your repository: org.springframework.data.keyvalue.repository.KeyValueRepository
+2026-09-07 17:02:45.423 INFO  [main] [] o.s.d.r.c.RepositoryConfigurationDelegate - Finished Spring Data repository scanning in 35 ms. Found 0 Redis repository interfaces.
+2026-09-07 17:02:48.034 INFO  [main] [] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Starting...
+2026-09-07 17:02:48.701 INFO  [main] [] com.zaxxer.hikari.pool.HikariPool - HikariPool-1 - Added connection conn0: url=jdbc:h2:mem:question_bank user=SA
+2026-09-07 17:02:48.704 INFO  [main] [] com.zaxxer.hikari.HikariDataSource - HikariPool-1 - Start completed.
+2026-09-07 17:02:48.877 INFO  [main] [] org.flywaydb.core.FlywayExecutor - Database: jdbc:h2:mem:question_bank (H2 2.3)
+2026-09-07 17:02:48.894 WARN  [main] [] o.f.core.internal.database.base.Database - Flyway upgrade recommended: H2 2.3.232 is newer than this version of Flyway and support has not been tested. The latest supported version of H2 is 2.2.224.
+2026-09-07 17:02:48.962 INFO  [main] [] o.f.c.i.s.JdbcTableSchemaHistory - Schema history table "public"."flyway_schema_history" does not exist yet
+2026-09-07 17:02:48.969 INFO  [main] [] o.f.core.internal.command.DbValidate - Successfully validated 4 migrations (execution time 00:00.041s)
+2026-09-07 17:02:48.988 INFO  [main] [] o.f.c.i.s.JdbcTableSchemaHistory - Creating Schema History table "public"."flyway_schema_history" ...
+2026-09-07 17:02:49.066 INFO  [main] [] o.f.core.internal.command.DbMigrate - Current version of schema "public": << Empty Schema >>
+2026-09-07 17:02:49.105 INFO  [main] [] o.f.core.internal.command.DbMigrate - Migrating schema "public" to version "1 - m0 schema"
+2026-09-07 17:02:49.203 INFO  [main] [] o.f.core.internal.command.DbMigrate - Migrating schema "public" to version "2 - m0 query indexes"
+2026-09-07 17:02:49.220 INFO  [main] [] o.f.core.internal.command.DbMigrate - Migrating schema "public" to version "3 - async import jobs"
+2026-09-07 17:02:49.239 INFO  [main] [] o.f.core.internal.command.DbMigrate - Migrating schema "public" to version "4 - outbox events"
+2026-09-07 17:02:49.259 INFO  [main] [] o.f.core.internal.command.DbMigrate - Successfully applied 4 migrations to schema "public", now at version v4 (execution time 00:00.096s)
+2026-09-07 17:02:49.609 INFO  [main] [] o.hibernate.jpa.internal.util.LogHelper - HHH000204: Processing PersistenceUnitInfo [name: default]
+2026-09-07 17:02:49.819 INFO  [main] [] org.hibernate.Version - HHH000412: Hibernate ORM core version 6.6.13.Final
+2026-09-07 17:02:49.941 INFO  [main] [] o.h.c.internal.RegionFactoryInitiator - HHH000026: Second-level cache disabled
+2026-09-07 17:02:50.792 INFO  [main] [] o.s.o.j.p.SpringPersistenceUnitInfo - No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-09-07 17:02:51.012 INFO  [main] [] org.hibernate.orm.connections.pooling - HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-1)']
+	Database driver: undefined/unknown
+	Database version: 2.3.232
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2026-09-07 17:02:53.886 INFO  [main] [] o.h.e.t.j.p.i.JtaPlatformInitiator - HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2026-09-07 17:02:53.951 INFO  [main] [] o.s.o.j.LocalContainerEntityManagerFactoryBean - Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-09-07 17:02:58.849 INFO  [main] [] o.s.d.j.r.query.QueryEnhancerFactory - Hibernate is in classpath; If applicable, HQL parser will be used.
+2026-09-07 17:03:01.152 INFO  [main] [] o.s.s.c.a.a.c.InitializeUserDetailsBeanManagerConfigurer$InitializeUserDetailsManagerConfigurer - Global AuthenticationManager configured with UserDetailsService bean with name unusedFormLoginUserDetailsService
+2026-09-07 17:03:02.394 INFO  [main] [] o.s.b.a.e.web.EndpointLinksResolver - Exposing 3 endpoints beneath base path '/actuator'
+2026-09-07 17:03:04.308 INFO  [main] [] o.s.b.t.m.w.SpringBootMockServletContext - Initializing Spring TestDispatcherServlet ''
+2026-09-07 17:03:04.309 INFO  [main] [] o.s.t.web.servlet.TestDispatcherServlet - Initializing Servlet ''
+2026-09-07 17:03:04.317 INFO  [main] [] o.s.t.web.servlet.TestDispatcherServlet - Completed initialization in 8 ms
+2026-09-07 17:03:04.585 INFO  [main] [] o.a.k.clients.consumer.ConsumerConfig - ConsumerConfig values: 
+	allow.auto.create.topics = true
+	auto.commit.interval.ms = 5000
+	auto.include.jmx.reporter = true
+	auto.offset.reset = earliest
+	bootstrap.servers = [127.0.0.1:9092]
+	check.crcs = true
+	client.dns.lookup = use_all_dns_ips
+	client.id = consumer-question-bank-1
+	client.rack = 
+	connections.max.idle.ms = 540000
+	default.api.timeout.ms = 60000
+	enable.auto.commit = false
+	enable.metrics.push = true
+	exclude.internal.topics = true
+	fetch.max.bytes = 52428800
+	fetch.max.wait.ms = 500
+	fetch.min.bytes = 1
+	group.id = question-bank
+	group.instance.id = null
+	group.protocol = classic
+	group.remote.assignor = null
+	heartbeat.interval.ms = 3000
+	interceptor.classes = []
+	internal.leave.group.on.close = true
+	internal.throw.on.fetch.stable.offset.unsupported = false
+	isolation.level = read_uncommitted
+	key.deserializer = class org.apache.kafka.common.serialization.StringDeserializer
+	max.partition.fetch.bytes = 1048576
+	max.poll.interval.ms = 60000
+	max.poll.records = 500
+	metadata.max.age.ms = 300000
+	metadata.recovery.strategy = none
+	metric.reporters = []
+	metrics.num.samples = 2
+	metrics.recording.level = INFO
+	metrics.sample.window.ms = 30000
+	partition.assignment.strategy = [class org.apache.kafka.clients.consumer.RangeAssignor, class org.apache.kafka.clients.consumer.CooperativeStickyAssignor]
+	receive.buffer.bytes = 65536
+	reconnect.backoff.max.ms = 1000
+	reconnect.backoff.ms = 50
+	request.timeout.ms = 30000
+	retry.backoff.max.ms = 1000
+	retry.backoff.ms = 100
+	sasl.client.callback.handler.class = null
+	sasl.jaas.config = null
+	sasl.kerberos.kinit.cmd = /usr/bin/kinit
+	sasl.kerberos.min.time.before.relogin = 60000
+	sasl.kerberos.service.name = null
+	sasl.kerberos.ticket.renew.jitter = 0.05
+	sasl.kerberos.ticket.renew.window.factor = 0.8
+	sasl.login.callback.handler.class = null
+	sasl.login.class = null
+	sasl.login.connect.timeout.ms = null
+	sasl.login.read.timeout.ms = null
+	sasl.login.refresh.buffer.seconds = 300
+	sasl.login.refresh.min.period.seconds = 60
+	sasl.login.refresh.window.factor = 0.8
+	sasl.login.refresh.window.jitter = 0.05
+	sasl.login.retry.backoff.max.ms = 10000
+	sasl.login.retry.backoff.ms = 100
+	sasl.mechanism = GSSAPI
+	sasl.oauthbearer.clock.skew.seconds = 30
+	sasl.oauthbearer.expected.audience = null
+	sasl.oauthbearer.expected.issuer = null
+	sasl.oauthbearer.jwks.endpoint.refresh.ms = 3600000
+	sasl.oauthbearer.jwks.endpoint.retry.backoff.max.ms = 10000
+	sasl.oauthbearer.jwks.endpoint.retry.backoff.ms = 100
+	sasl.oauthbearer.jwks.endpoint.url = null
+	sasl.oauthbearer.scope.claim.name = scope
+	sasl.oauthbearer.sub.claim.name = sub
+	sasl.oauthbearer.token.endpoint.url = null
+	security.protocol = PLAINTEXT
+	security.providers = null
+	send.buffer.bytes = 131072
+	session.timeout.ms = 45000
+	socket.connection.setup.timeout.max.ms = 30000
+	socket.connection.setup.timeout.ms = 10000
+	ssl.cipher.suites = null
+	ssl.enabled.protocols = [TLSv1.2, TLSv1.3]
+	ssl.endpoint.identification.algorithm = https
+	ssl.engine.factory.class = null
+	ssl.key.password = null
+	ssl.keymanager.algorithm = SunX509
+	ssl.keystore.certificate.chain = null
+	ssl.keystore.key = null
+	ssl.keystore.location = null
+	ssl.keystore.password = null
+	ssl.keystore.type = JKS
+	ssl.protocol = TLSv1.3
+	ssl.provider = null
+	ssl.secure.random.implementation = null
+	ssl.trustmanager.algorithm = PKIX
+	ssl.truststore.certificates = null
+	ssl.truststore.location = null
+	ssl.truststore.password = null
+	ssl.truststore.type = JKS
+	value.deserializer = class org.apache.kafka.common.serialization.StringDeserializer
+
+2026-09-07 17:03:04.702 INFO  [main] [] o.a.k.c.t.i.KafkaMetricsCollector - initializing Kafka metrics collector
+2026-09-07 17:03:05.082 INFO  [main] [] o.a.kafka.common.utils.AppInfoParser - Kafka version: 3.8.1
+2026-09-07 17:03:05.082 INFO  [main] [] o.a.kafka.common.utils.AppInfoParser - Kafka commitId: 70d6ff42debf7e17
+2026-09-07 17:03:05.082 INFO  [main] [] o.a.kafka.common.utils.AppInfoParser - Kafka startTimeMs: 1788771785078
+2026-09-07 17:03:05.109 INFO  [main] [] o.a.k.c.c.internals.LegacyKafkaConsumer - [Consumer clientId=consumer-question-bank-1, groupId=question-bank] Subscribed to topic(s): qb-events
+2026-09-07 17:03:05.144 INFO  [main] [] c.a.questionbank.KafkaDltIntegrationTest - Started KafkaDltIntegrationTest in 25.268 seconds (process running for 27.88)
+Mockito is currently self-attaching to enable the inline-mock-maker. This will no longer work in future releases of the JDK. Please add Mockito as an agent to your build what is described in Mockito's documentation: https://javadoc.io/doc/org.mockito/mockito-core/latest/org/mockito/Mockito.html#0.3
+2026-09-07 17:03:06.124 INFO  [org.springframework.kafka.KafkaListenerEndpointContainer#0-0-C-1] [] org.apache.kafka.clients.Metadata - [Consumer clientId=consumer-question-bank-1, groupId=question-bank] Cluster ID: QGE8oKypR3eU_FL8dh7DHg
+2026-09-07 17:03:06.127 INFO  [org.springframework.kafka.KafkaListenerEndpointContainer#0-0-C-1] [] o.a.k.c.c.internals.ConsumerCoordinator - [Consumer clientId=consumer-question-bank-1, groupId=question-bank] Discovered group coordinator localhost:9092 (id: 2147483646 rack: null)
+2026-09-07 17:03:06.135 INFO  [org.springframework.kafka.KafkaListenerEndpointContainer#0-0-C-1] [] o.a.k.c.c.internals.ConsumerCoordinator - [Consumer clientId=consumer-question-bank-1, groupId=question-bank] (Re-)joining group
+2026-09-07 17:03:06.182 INFO  [org.springframework.kafka.KafkaListenerEndpointContainer#0-0-C-1] [] o.a.k.c.c.internals.ConsumerCoordinator - [Consumer clientId=consumer-question-bank-1, groupId=question-bank] Request joining group due to: need to re-join with the given member-id: consumer-question-bank-1-34294a08-68f6-45cc-b4fb-033fa85fbb79
+2026-09-07 17:03:06.182 INFO  [org.springframework.kafka.KafkaListenerEndpointContainer#0-0-C-1] [] o.a.k.c.c.internals.ConsumerCoordinator - [Consumer clientId=consumer-question-bank-1, groupId=question-bank] (Re-)joining group
+Java HotSpot(TM) 64-Bit Server VM warning: Sharing is only supported for boot loader classes because bootstrap classpath has been appended
+WARNING: A Java agent has been loaded dynamically (C:\Users\Allen\.m2\repository\net\bytebuddy\byte-buddy-agent\1.15.11\byte-buddy-agent-1.15.11.jar)
+WARNING: If a serviceability tool is in use, please run with -XX:+EnableDynamicAgentLoading to hide this warning
+WARNING: If a serviceability tool is not in use, please run with -Djdk.instrument.traceUsage for more information
+WARNING: Dynamic loading of agents will be disallowed by default in a future release
+2026-09-07 17:03:06.757 INFO  [main] [] o.a.k.clients.producer.ProducerConfig - ProducerConfig values: 
+	acks = -1
+	auto.include.jmx.reporter = true
+	batch.size = 16384
+	bootstrap.servers = [127.0.0.1:9092]
+	buffer.memory = 33554432
+	client.dns.lookup = use_all_dns_ips
+	client.id = question-bank-m0-producer-1
+	compression.gzip.level = -1
+	compression.lz4.level = 9
+	compression.type = none
+	compression.zstd.level = 3
+	connections.max.idle.ms = 540000
+	delivery.timeout.ms = 120000
+	enable.idempotence = true
+	enable.metrics.push = true
+	interceptor.classes = []
+	key.serializer = class org.apache.kafka.common.serialization.StringSerializer
+	linger.ms = 0
+	max.block.ms = 60000
+	max.in.flight.requests.per.connection = 5
+	max.request.size = 1048576
+	metadata.max.age.ms = 300000
+	metadata.max.idle.ms = 300000
+	metadata.recovery.strategy = none
+	metric.reporters = []
+	metrics.num.samples = 2
+	metrics.recording.level = INFO
+	metrics.sample.window.ms = 30000
+	partitioner.adaptive.partitioning.enable = true
+	partitioner.availability.timeout.ms = 0
+	partitioner.class = null
+	partitioner.ignore.keys = false
+	receive.buffer.bytes = 32768
+	reconnect.backoff.max.ms = 1000
+	reconnect.backoff.ms = 50
+	request.timeout.ms = 30000
+	retries = 2147483647
+	retry.backoff.max.ms = 1000
+	retry.backoff.ms = 100
+	sasl.client.callback.handler.class = null
+	sasl.jaas.config = null
+	sasl.kerberos.kinit.cmd = /usr/bin/kinit
+	sasl.kerberos.min.time.before.relogin = 60000
+	sasl.kerberos.service.name = null
+	sasl.kerberos.ticket.renew.jitter = 0.05
+	sasl.kerberos.ticket.renew.window.factor = 0.8
+	sasl.login.callback.handler.class = null
+	sasl.login.class = null
+	sasl.login.connect.timeout.ms = null
+	sasl.login.read.timeout.ms = null
+	sasl.login.refresh.buffer.seconds = 300
+	sasl.login.refresh.min.period.seconds = 60
+	sasl.login.refresh.window.factor = 0.8
+	sasl.login.refresh.window.jitter = 0.05
+	sasl.login.retry.backoff.max.ms = 10000
+	sasl.login.retry.backoff.ms = 100
+	sasl.mechanism = GSSAPI
+	sasl.oauthbearer.clock.skew.seconds = 30
+	sasl.oauthbearer.expected.audience = null
+	sasl.oauthbearer.expected.issuer = null
+	sasl.oauthbearer.jwks.endpoint.refresh.ms = 3600000
+	sasl.oauthbearer.jwks.endpoint.retry.backoff.max.ms = 10000
+	sasl.oauthbearer.jwks.endpoint.retry.backoff.ms = 100
+	sasl.oauthbearer.jwks.endpoint.url = null
+	sasl.oauthbearer.scope.claim.name = scope
+	sasl.oauthbearer.sub.claim.name = sub
+	sasl.oauthbearer.token.endpoint.url = null
+	security.protocol = PLAINTEXT
+	security.providers = null
+	send.buffer.bytes = 131072
+	socket.connection.setup.timeout.max.ms = 30000
+	socket.connection.setup.timeout.ms = 10000
+	ssl.cipher.suites = null
+	ssl.enabled.protocols = [TLSv1.2, TLSv1.3]
+	ssl.endpoint.identification.algorithm = https
+	ssl.engine.factory.class = null
+	ssl.key.password = null
+	ssl.keymanager.algorithm = SunX509
+	ssl.keystore.certificate.chain = null
+	ssl.keystore.key = null
+	ssl.keystore.location = null
+	ssl.keystore.password = null
+	ssl.keystore.type = JKS
+	ssl.protocol = TLSv1.3
+	ssl.provider = null
+	ssl.secure.random.implementation = null
+	ssl.trustmanager.algorithm = PKIX
+	ssl.truststore.certificates = null
+	ssl.truststore.location = null
+	ssl.truststore.password = null
+	ssl.truststore.type = JKS
+	transaction.timeout.ms = 60000
+	transactional.id = null
+	value.serializer = class org.apache.kafka.common.serialization.StringSerializer
+
+2026-09-07 17:03:06.757 INFO  [main] [] o.a.k.c.t.i.KafkaMetricsCollector - initializing Kafka metrics collector
+2026-09-07 17:03:06.785 INFO  [main] [] o.a.kafka.clients.producer.KafkaProducer - [Producer clientId=question-bank-m0-producer-1] Instantiated an idempotent producer.
+2026-09-07 17:03:06.824 INFO  [main] [] o.a.kafka.common.utils.AppInfoParser - Kafka version: 3.8.1
+2026-09-07 17:03:06.824 INFO  [main] [] o.a.kafka.common.utils.AppInfoParser - Kafka commitId: 70d6ff42debf7e17
+2026-09-07 17:03:06.824 INFO  [main] [] o.a.kafka.common.utils.AppInfoParser - Kafka startTimeMs: 1788771786824
+2026-09-07 17:03:06.839 INFO  [kafka-producer-network-thread | question-bank-m0-producer-1] [] org.apache.kafka.clients.Metadata - [Producer clientId=question-bank-m0-producer-1] Cluster ID: QGE8oKypR3eU_FL8dh7DHg
+2026-09-07 17:03:06.839 INFO  [kafka-producer-network-thread | question-bank-m0-producer-1] [] o.a.k.c.p.internals.TransactionManager - [Producer clientId=question-bank-m0-producer-1] ProducerId set to 3 with epoch 0
+[evidence] 毒丸消息已投递到 qb-events，等待重试后进 DLT...
+2026-09-07 17:03:07.062 INFO  [awaitility-thread] [] o.a.k.clients.consumer.ConsumerConfig - ConsumerConfig values: 
+	allow.auto.create.topics = true
+	auto.commit.interval.ms = 5000
+	auto.include.jmx.reporter = true
+	auto.offset.reset = earliest
+	bootstrap.servers = [127.0.0.1:9092]
+	check.crcs = true
+	client.dns.lookup = use_all_dns_ips
+	client.id = consumer-dlt-verifier-432736489585400-2
+	client.rack = 
+	connections.max.idle.ms = 540000
+	default.api.timeout.ms = 60000
+	enable.auto.commit = true
+	enable.metrics.push = true
+	exclude.internal.topics = true
+	fetch.max.bytes = 52428800
+	fetch.max.wait.ms = 500
+	fetch.min.bytes = 1
+	group.id = dlt-verifier-432736489585400
+	group.instance.id = null
+	group.protocol = classic
+	group.remote.assignor = null
+	heartbeat.interval.ms = 3000
+	interceptor.classes = []
+	internal.leave.group.on.close = true
+	internal.throw.on.fetch.stable.offset.unsupported = false
+	isolation.level = read_uncommitted
+	key.deserializer = class org.apache.kafka.common.serialization.StringDeserializer
+	max.partition.fetch.bytes = 1048576
+	max.poll.interval.ms = 300000
+	max.poll.records = 500
+	metadata.max.age.ms = 300000
+	metadata.recovery.strategy = none
+	metric.reporters = []
+	metrics.num.samples = 2
+	metrics.recording.level = INFO
+	metrics.sample.window.ms = 30000
+	partition.assignment.strategy = [class org.apache.kafka.clients.consumer.RangeAssignor, class org.apache.kafka.clients.consumer.CooperativeStickyAssignor]
+	receive.buffer.bytes = 65536
+	reconnect.backoff.max.ms = 1000
+	reconnect.backoff.ms = 50
+	request.timeout.ms = 30000
+	retry.backoff.max.ms = 1000
+	retry.backoff.ms = 100
+	sasl.client.callback.handler.class = null
+	sasl.jaas.config = null
+	sasl.kerberos.kinit.cmd = /usr/bin/kinit
+	sasl.kerberos.min.time.before.relogin = 60000
+	sasl.kerberos.service.name = null
+	sasl.kerberos.ticket.renew.jitter = 0.05
+	sasl.kerberos.ticket.renew.window.factor = 0.8
+	sasl.login.callback.handler.class = null
+	sasl.login.class = null
+	sasl.login.connect.timeout.ms = null
+	sasl.login.read.timeout.ms = null
+	sasl.login.refresh.buffer.seconds = 300
+	sasl.login.refresh.min.period.seconds = 60
+	sasl.login.refresh.window.factor = 0.8
+	sasl.login.refresh.window.jitter = 0.05
+	sasl.login.retry.backoff.max.ms = 10000
+	sasl.login.retry.backoff.ms = 100
+	sasl.mechanism = GSSAPI
+	sasl.oauthbearer.clock.skew.seconds = 30
+	sasl.oauthbearer.expected.audience = null
+	sasl.oauthbearer.expected.issuer = null
+	sasl.oauthbearer.jwks.endpoint.refresh.ms = 3600000
+	sasl.oauthbearer.jwks.endpoint.retry.backoff.max.ms = 10000
+	sasl.oauthbearer.jwks.endpoint.retry.backoff.ms = 100
+	sasl.oauthbearer.jwks.endpoint.url = null
+	sasl.oauthbearer.scope.claim.name = scope
+	sasl.oauthbearer.sub.claim.name = sub
+	sasl.oauthbearer.token.endpoint.url = null
+	security.protocol = PLAINTEXT
+	security.providers = null
+	send.buffer.bytes = 131072
+	session.timeout.ms = 45000
+	socket.connection.setup.timeout.max.ms = 30000
+	socket.connection.setup.timeout.ms = 10000
+	ssl.cipher.suites = null
+	ssl.enabled.protocols = [TLSv1.2, TLSv1.3]
+	ssl.endpoint.identification.algorithm = https
+	ssl.engine.factory.class = null
+	ssl.key.password = null
+	ssl.keymanager.algorithm = SunX509
+	ssl.keystore.certificate.chain = null
+	ssl.keystore.key = null
+	ssl.keystore.location = null
+	ssl.keystore.password = null
+	ssl.keystore.type = JKS
+	ssl.protocol = TLSv1.3
+	ssl.provider = null
+	ssl.secure.random.implementation = null
+	ssl.trustmanager.algorithm = PKIX
+	ssl.truststore.certificates = null
+	ssl.truststore.location = null
+	ssl.truststore.password = null
+	ssl.truststore.type = JKS
+	value.deserializer = class org.apache.kafka.common.serialization.StringDeserializer
+
+2026-09-07 17:03:07.064 INFO  [awaitility-thread] [] o.a.k.c.t.i.KafkaMetricsCollector - initializing Kafka metrics collector
+2026-09-07 17:03:07.079 INFO  [awaitility-thread] [] o.a.kafka.common.utils.AppInfoParser - Kafka version: 3.8.1
+2026-09-07 17:03:07.080 INFO  [awaitility-thread] [] o.a.kafka.common.utils.AppInfoParser - Kafka commitId: 70d6ff42debf7e17
+2026-09-07 17:03:07.080 INFO  [awaitility-thread] [] o.a.kafka.common.utils.AppInfoParser - Kafka startTimeMs: 1788771787079
+2026-09-07 17:03:07.080 INFO  [awaitility-thread] [] o.a.k.c.c.internals.LegacyKafkaConsumer - [Consumer clientId=consumer-dlt-verifier-432736489585400-2, groupId=dlt-verifier-432736489585400] Subscribed to topic(s): qb-events.DLT
+2026-09-07 17:03:07.093 WARN  [awaitility-thread] [] org.apache.kafka.clients.NetworkClient - [Consumer clientId=consumer-dlt-verifier-432736489585400-2, groupId=dlt-verifier-432736489585400] Error while fetching metadata with correlation id 2 : {qb-events.DLT=UNKNOWN_TOPIC_OR_PARTITION}
+2026-09-07 17:03:07.093 INFO  [awaitility-thread] [] org.apache.kafka.clients.Metadata - [Consumer clientId=consumer-dlt-verifier-432736489585400-2, groupId=dlt-verifier-432736489585400] Cluster ID: QGE8oKypR3eU_FL8dh7DHg
+2026-09-07 17:03:07.094 INFO  [awaitility-thread] [] o.a.k.c.c.internals.ConsumerCoordinator - [Consumer clientId=consumer-dlt-verifier-432736489585400-2, groupId=dlt-verifier-432736489585400] Discovered group coordinator localhost:9092 (id: 2147483646 rack: null)
+2026-09-07 17:03:07.103 INFO  [awaitility-thread] [] o.a.k.c.c.internals.ConsumerCoordinator - [Consumer clientId=consumer-dlt-verifier-432736489585400-2, groupId=dlt-verifier-432736489585400] (Re-)joining group
+2026-09-07 17:03:07.114 INFO  [awaitility-thread] [] o.a.k.c.c.internals.ConsumerCoordinator - [Consumer clientId=consumer-dlt-verifier-432736489585400-2, groupId=dlt-verifier-432736489585400] Request joining group due to: need to re-join with the given member-id: consumer-dlt-verifier-432736489585400-2-111d0f84-e610-43f1-8df7-b323c38b2e4b
+2026-09-07 17:03:07.115 INFO  [awaitility-thread] [] o.a.k.c.c.internals.ConsumerCoordinator - [Consumer clientId=consumer-dlt-verifier-432736489585400-2, groupId=dlt-verifier-432736489585400] (Re-)joining group
+2026-09-07 17:03:09.189 INFO  [org.springframework.kafka.KafkaListenerEndpointContainer#0-0-C-1] [] o.a.k.c.c.internals.ConsumerCoordinator - [Consumer clientId=consumer-question-bank-1, groupId=question-bank] Successfully joined group with generation Generation{generationId=5, memberId='consumer-question-bank-1-34294a08-68f6-45cc-b4fb-033fa85fbb79', protocol='range'}
+2026-09-07 17:03:09.194 INFO  [org.springframework.kafka.KafkaListenerEndpointContainer#0-0-C-1] [] o.a.k.c.c.internals.ConsumerCoordinator - [Consumer clientId=consumer-question-bank-1, groupId=question-bank] Finished assignment for group at generation 5: {consumer-question-bank-1-34294a08-68f6-45cc-b4fb-033fa85fbb79=Assignment(partitions=[qb-events-0])}
+2026-09-07 17:03:09.207 INFO  [org.springframework.kafka.KafkaListenerEndpointContainer#0-0-C-1] [] o.a.k.c.c.internals.ConsumerCoordinator - [Consumer clientId=consumer-question-bank-1, groupId=question-bank] Successfully synced group in generation Generation{generationId=5, memberId='consumer-question-bank-1-34294a08-68f6-45cc-b4fb-033fa85fbb79', protocol='range'}
+2026-09-07 17:03:09.207 INFO  [org.springframework.kafka.KafkaListenerEndpointContainer#0-0-C-1] [] o.a.k.c.c.internals.ConsumerCoordinator - [Consumer clientId=consumer-question-bank-1, groupId=question-bank] Notifying assignor about the new Assignment(partitions=[qb-events-0])
+2026-09-07 17:03:09.212 INFO  [org.springframework.kafka.KafkaListenerEndpointContainer#0-0-C-1] [] o.a.k.c.c.i.ConsumerRebalanceListenerInvoker - [Consumer clientId=consumer-question-bank-1, groupId=question-bank] Adding newly assigned partitions: qb-events-0
+2026-09-07 17:03:09.220 INFO  [org.springframework.kafka.KafkaListenerEndpointContainer#0-0-C-1] [] o.a.k.c.consumer.internals.ConsumerUtils - Setting offset for partition qb-events-0 to the committed offset FetchPosition{offset=5, offsetEpoch=Optional.empty, currentLeader=LeaderAndEpoch{leader=Optional[localhost:9092 (id: 1 rack: null)], epoch=0}}
+2026-09-07 17:03:09.222 INFO  [org.springframework.kafka.KafkaListenerEndpointContainer#0-0-C-1] [] o.s.k.l.KafkaMessageListenerContainer - question-bank: partitions assigned: [qb-events-0]
+2026-09-07 17:03:09.496 INFO  [org.springframework.kafka.KafkaListenerEndpointContainer#0-0-C-1] [] o.a.k.c.c.internals.LegacyKafkaConsumer - [Consumer clientId=consumer-question-bank-1, groupId=question-bank] Seeking to offset 5 for partition qb-events-0
+2026-09-07 17:03:09.497 INFO  [org.springframework.kafka.KafkaListenerEndpointContainer#0-0-C-1] [] o.s.k.l.KafkaMessageListenerContainer - Record in retry and not yet recovered
+2026-09-07 17:03:09.969 INFO  [org.springframework.kafka.KafkaListenerEndpointContainer#0-0-C-1] [] o.a.k.c.c.internals.LegacyKafkaConsumer - [Consumer clientId=consumer-question-bank-1, groupId=question-bank] Seeking to offset 5 for partition qb-events-0
+2026-09-07 17:03:09.969 INFO  [org.springframework.kafka.KafkaListenerEndpointContainer#0-0-C-1] [] o.s.k.l.KafkaMessageListenerContainer - Record in retry and not yet recovered
+2026-09-07 17:03:10.119 INFO  [awaitility-thread] [] o.a.k.c.c.internals.ConsumerCoordinator - [Consumer clientId=consumer-dlt-verifier-432736489585400-2, groupId=dlt-verifier-432736489585400] Successfully joined group with generation Generation{generationId=1, memberId='consumer-dlt-verifier-432736489585400-2-111d0f84-e610-43f1-8df7-b323c38b2e4b', protocol='range'}
+2026-09-07 17:03:10.119 INFO  [awaitility-thread] [] o.a.k.c.c.internals.ConsumerCoordinator - [Consumer clientId=consumer-dlt-verifier-432736489585400-2, groupId=dlt-verifier-432736489585400] Finished assignment for group at generation 1: {consumer-dlt-verifier-432736489585400-2-111d0f84-e610-43f1-8df7-b323c38b2e4b=Assignment(partitions=[qb-events.DLT-0])}
+2026-09-07 17:03:10.127 INFO  [awaitility-thread] [] o.a.k.c.c.internals.ConsumerCoordinator - [Consumer clientId=consumer-dlt-verifier-432736489585400-2, groupId=dlt-verifier-432736489585400] Successfully synced group in generation Generation{generationId=1, memberId='consumer-dlt-verifier-432736489585400-2-111d0f84-e610-43f1-8df7-b323c38b2e4b', protocol='range'}
+2026-09-07 17:03:10.127 INFO  [awaitility-thread] [] o.a.k.c.c.internals.ConsumerCoordinator - [Consumer clientId=consumer-dlt-verifier-432736489585400-2, groupId=dlt-verifier-432736489585400] Notifying assignor about the new Assignment(partitions=[qb-events.DLT-0])
+2026-09-07 17:03:10.127 INFO  [awaitility-thread] [] o.a.k.c.c.i.ConsumerRebalanceListenerInvoker - [Consumer clientId=consumer-dlt-verifier-432736489585400-2, groupId=dlt-verifier-432736489585400] Adding newly assigned partitions: qb-events.DLT-0
+2026-09-07 17:03:10.129 INFO  [awaitility-thread] [] o.a.k.c.c.internals.ConsumerCoordinator - [Consumer clientId=consumer-dlt-verifier-432736489585400-2, groupId=dlt-verifier-432736489585400] Found no committed offset for partition qb-events.DLT-0
+2026-09-07 17:03:10.134 INFO  [awaitility-thread] [] o.a.k.c.c.internals.SubscriptionState - [Consumer clientId=consumer-dlt-verifier-432736489585400-2, groupId=dlt-verifier-432736489585400] Resetting offset for partition qb-events.DLT-0 to position FetchPosition{offset=0, offsetEpoch=Optional.empty, currentLeader=LeaderAndEpoch{leader=Optional[localhost:9092 (id: 1 rack: null)], epoch=0}}.
+2026-09-07 17:03:10.812 INFO  [awaitility-thread] [] o.a.k.c.c.i.ConsumerRebalanceListenerInvoker - [Consumer clientId=consumer-dlt-verifier-432736489585400-2, groupId=dlt-verifier-432736489585400] Revoke previously assigned partitions qb-events.DLT-0
+2026-09-07 17:03:10.812 INFO  [awaitility-thread] [] o.a.k.c.c.internals.ConsumerCoordinator - [Consumer clientId=consumer-dlt-verifier-432736489585400-2, groupId=dlt-verifier-432736489585400] Member consumer-dlt-verifier-432736489585400-2-111d0f84-e610-43f1-8df7-b323c38b2e4b sending LeaveGroup request to coordinator localhost:9092 (id: 2147483646 rack: null) due to the consumer is being closed
+2026-09-07 17:03:10.815 INFO  [awaitility-thread] [] o.a.k.c.c.internals.ConsumerCoordinator - [Consumer clientId=consumer-dlt-verifier-432736489585400-2, groupId=dlt-verifier-432736489585400] Resetting generation and member id due to: consumer pro-actively leaving the group
+2026-09-07 17:03:10.815 INFO  [awaitility-thread] [] o.a.k.c.c.internals.ConsumerCoordinator - [Consumer clientId=consumer-dlt-verifier-432736489585400-2, groupId=dlt-verifier-432736489585400] Request joining group due to: consumer pro-actively leaving the group
+2026-09-07 17:03:11.310 INFO  [awaitility-thread] [] org.apache.kafka.common.metrics.Metrics - Metrics scheduler closed
+2026-09-07 17:03:11.311 INFO  [awaitility-thread] [] org.apache.kafka.common.metrics.Metrics - Closing reporter org.apache.kafka.common.metrics.JmxReporter
+2026-09-07 17:03:11.311 INFO  [awaitility-thread] [] org.apache.kafka.common.metrics.Metrics - Closing reporter org.apache.kafka.common.telemetry.internals.ClientTelemetryReporter
+2026-09-07 17:03:11.311 INFO  [awaitility-thread] [] org.apache.kafka.common.metrics.Metrics - Metrics reporters closed
+2026-09-07 17:03:11.337 INFO  [awaitility-thread] [] o.a.kafka.common.utils.AppInfoParser - App info kafka.consumer for consumer-dlt-verifier-432736489585400-2 unregistered
+[evidence] 消息已进死信主题 qb-events.DLT，headers 含原始异常信息
+[evidence] consumed_event 无该消息记录：失败 ≠ 消费成功
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0, Time elapsed: 32.78 s -- in com.allen.questionbank.KafkaDltIntegrationTest
+[INFO] 
+[INFO] Results:
+[INFO] 
+[INFO] Tests run: 1, Failures: 0, Errors: 0, Skipped: 0
+[INFO] 
+[INFO] 
+[INFO] --- jacoco:0.8.12:report (report) @ question-bank-m0 ---
+[INFO] Loading execution data file C:\Project\QuestionBank\target\jacoco.exec
+[INFO] Analyzed bundle 'question-bank-m0' with 83 classes
+[INFO] ------------------------------------------------------------------------
+[INFO] BUILD SUCCESS
+[INFO] ------------------------------------------------------------------------
+[INFO] Total time:  45.977 s
+[INFO] Finished at: 2026-09-07T17:03:18+08:00
+[INFO] ------------------------------------------------------------------------

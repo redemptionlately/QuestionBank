@@ -1,0 +1,60 @@
+=== å‹æµ‹å¼€å§‹ 20260907-163151 ===
+JDK: java version "21.0.12" 2026-07-21 LTS
+mysql_version	isolation
+9.0.1	REPEATABLE-READ
+=== 1/6 æ‰“åŒ… ===
+jar: target/question-bank-m0-0.1.0-SNAPSHOT.jar
+=== 2/6 çŒå…¥ç§å­æ•°æ® ===
+Table	Op	Msg_type	Msg_text
+question_bank.paper_version	analyze	status	OK
+total_papers
+5000
+published_papers
+500
+=== 3/6 å¯åŠ¨åº”ç”¨ ===
+åº”ç”¨ PID=10409ï¼ˆGC æ—¥å¿—: output/gc_20260907-163151.logï¼‰
+å¥åº·æ£€æŸ¥é€šè¿‡ï¼ˆç¬¬ 4 æ¬¡ï¼‰
+=== 4/6 è·å– token ===
+token å·²ä¿å­˜
+=== JFR å½•åˆ¶å·²åœ¨ JVM å¯åŠ¨å‚æ•°ä¸­å¼€å¯ï¼ˆjcmd attach åœ¨æœ¬æœºä¼šè¢«æ‹’ç»è®¿é—®ï¼Œæ”¹ç”¨ StartFlightRecordingï¼‰===
+=== 5/6 åœºæ™¯ Aï¼šGET /api/papers/publishedï¼ˆè¯»è·¯å¾„ï¼Œå¼€ç¯ 100 RPSï¼‰===
+[loadgen] target=http://127.0.0.1:8080/api/papers/published method=GET rps=100 warmup=10s duration=30s open-loop
+[loadgen] warmup finished, start measuring
+
+=== Ñ¹²â½á¹û£¨¿ª»·£¬warmup ºóÍ³¼Æ£©===
+Ä¿±ê RPS        : 100
+Êµ²âÍÌÍÂ RPS    : 100.0
+Ñù±¾Êı          : 3001 (·¢ËÍ 4001)
+´íÎóÊı / ´íÎóÂÊ : 0 / 0.00%
+P50             : 3 ms
+P95             : 4 ms
+P99             : 5 ms
+P999            : 23 ms
+Max             : 25 ms
+Ô­Ê¼ JSON ÒÑĞ´Èë: output/load_published_20260907-163151.json
+
+=== 5/6 åœºæ™¯ Bï¼šPOST /api/auth/loginï¼ˆBCrypt å¯†é›†ï¼Œå¼€ç¯ 20 RPSï¼‰===
+[loadgen] target=http://127.0.0.1:8080/api/auth/login method=POST rps=20 warmup=5s duration=20s open-loop
+[loadgen] warmup finished, start measuring
+
+=== Ñ¹²â½á¹û£¨¿ª»·£¬warmup ºóÍ³¼Æ£©===
+Ä¿±ê RPS        : 20
+Êµ²âÍÌÍÂ RPS    : 16.1
+Ñù±¾Êı          : 322 (·¢ËÍ 400)
+´íÎóÊı / ´íÎóÂÊ : 0 / 0.00%
+P50             : 61 ms
+P95             : 65 ms
+P99             : 76 ms
+P999            : 83 ms
+Max             : 83 ms
+Ô­Ê¼ JSON ÒÑĞ´Èë: output/load_login_20260907-163151.json
+
+=== HikariCP / Tomcat æ± æŒ‡æ ‡ï¼ˆactuator éœ€è¦è®¤è¯ï¼Œå¸¦ token è®¿é—®ï¼‰===
+{"name":"hikaricp.connections","description":"Total connections","measurements":[{"statistic":"VALUE","value":10.0}],"availableTags":[{"tag":"pool","values":["HikariPool-1"]}]}
+
+{"requests":4406,"totalLatencyNanos":34465366300,"failures":0}
+=== ç­‰å¾… JFR è½ç›˜ ===
+JFR å·²ç”Ÿæˆ: output/load_20260907-163151.jfr (6114509 bytes)
+è¯æ®æ—¥å¿—: output/load_20260907-163151.log
+JFR æ–‡ä»¶: output/load_20260907-163151.jfr (å¯ç”¨ JDK Mission Control æˆ– jfr summary æŸ¥çœ‹)
+=== 6/6 åœæ­¢åº”ç”¨ ===

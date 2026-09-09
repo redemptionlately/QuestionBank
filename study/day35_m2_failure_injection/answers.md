@@ -1,0 +1,13 @@
+# Current
+- 打开并按当天 study.md 的“源码索引（MustRemember）”或“外部源码索引（MustRemember）”逐项定位文件、类/方法、SQL 对象和行号，独立写出对应代码或 SQL，并口述输入、输出与边界。
+
+- 停止 MySQL 验证 health/API/恢复
+- 保存证据
+- 写出超时、重试、熔断、降级、隔离舱的触发条件和不可重试错误。
+- 画出 `CLOSED -> OPEN -> HALF_OPEN` 熔断状态机。
+- 为数据库不可用场景写出健康、API、恢复和数据一致性的四层断言。
+
+# External
+
+- 模拟连接池耗尽
+- 写故障复盘

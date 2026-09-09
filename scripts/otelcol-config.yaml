@@ -1,0 +1,25 @@
+# otelcol-contrib 0.160.0 接收端配置（链路追踪证据专用）
+#
+# 用途：接收 cloud/ 四个 Spring Boot 服务的 OTLP/HTTP 导出（4318），
+#       debug exporter 把每个 span 的 Trace/Span/ParentSpan ID、名称、Kind、
+#       关键属性原样打印到 stdout —— 脚本把它 tee 到 output/tracing_collector.log，
+#       证据解析（python）直接对这份原始日志做正则抽取，保证"证据=原始日志"。
+#
+# 复跑入口：scripts/tracing-evidence.sh（自动以本配置拉起/关闭 collector）
+receivers:
+  otlp:
+    protocols:
+      http:
+        endpoint: 127.0.0.1:4318
+      grpc:
+        endpoint: 127.0.0.1:4319
+
+exporters:
+  debug:
+    verbosity: detailed
+
+service:
+  pipelines:
+    traces:
+      receivers: [otlp]
+      exporters: [debug]

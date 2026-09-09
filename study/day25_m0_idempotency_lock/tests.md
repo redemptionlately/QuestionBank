@@ -1,0 +1,12 @@
+# Current
+- 打开并按当天 study.md 的“源码索引（MustRemember）”或“外部源码索引（MustRemember）”逐项定位文件、类/方法、SQL 对象和行号，独立写出对应代码或 SQL，并口述输入、输出与边界。
+
+- 运行并发同 key
+- 验证 wrongCount
+- 不同 key 409
+- 写出 `SELECT FOR UPDATE`、同 key 重放、不同 key 冲突和行锁释放时机。
+
+# External
+
+- 去掉行锁对照
+- 设计跨实例幂等表

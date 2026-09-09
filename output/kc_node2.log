@@ -1,0 +1,2 @@
+Could not rename log file 'C:/Users/Allen/tools/kafka/kafka_2.13-4.0.0/logs/kafkaServer-gc.log' to 'C:/Users/Allen/tools/kafka/kafka_2.13-4.0.0/logs/kafkaServer-gc.log.8' (Permission denied).
+2026-09-07T10:11:36.408349300Z main ERROR Reconfiguration failed: No configuration found for '7a81197d' at 'null' in 'null'

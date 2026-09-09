@@ -1,0 +1,222 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <parent>
+        <groupId>com.allen</groupId>
+        <artifactId>question-bank-parent</artifactId>
+        <version>0.1.0-SNAPSHOT</version>
+    </parent>
+
+    <artifactId>question-bank-m0</artifactId>
+    <name>question-bank-m0</name>
+    <description>Question bank platform M0 vertical slice</description>
+
+    <dependencies>
+        <!-- 自研 starter：MyBatis 慢 SQL 监控的条件装配（自动配置机制演示） -->
+        <dependency>
+            <groupId>com.allen</groupId>
+            <artifactId>monitor-spring-boot-starter</artifactId>
+            <version>0.1.0-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-web</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-validation</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-aop</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-jpa</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-security</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-actuator</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.micrometer</groupId>
+            <artifactId>micrometer-registry-prometheus</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-redis</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.kafka</groupId>
+            <artifactId>spring-kafka</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.flywaydb</groupId>
+            <artifactId>flyway-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.flywaydb</groupId>
+            <artifactId>flyway-mysql</artifactId>
+        </dependency>
+        <!-- MyBatis：与 JPA 双栈共存。JPA 管实体写入与简单等值查询，
+             MyBatis 动态 SQL 接管"条件全部可选 + 分页 + 聚合"的复杂读查询 -->
+        <dependency>
+            <groupId>org.mybatis.spring.boot</groupId>
+            <artifactId>mybatis-spring-boot-starter</artifactId>
+            <version>3.0.4</version>
+        </dependency>
+        <!-- ArchUnit：把架构规则变成可执行测试——模块边界/注入风格/日志规范由 CI 守护，不靠 review 自觉 -->
+        <dependency>
+            <groupId>com.tngtech.archunit</groupId>
+            <artifactId>archunit-junit5</artifactId>
+            <version>1.3.0</version>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.springdoc</groupId>
+            <artifactId>springdoc-openapi-starter-webmvc-ui</artifactId>
+            <version>2.8.5</version>
+        </dependency>
+        <dependency>
+            <groupId>com.mysql</groupId>
+            <artifactId>mysql-connector-j</artifactId>
+            <scope>runtime</scope>
+        </dependency>
+
+        <dependency>
+            <groupId>com.h2database</groupId>
+            <artifactId>h2</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.security</groupId>
+            <artifactId>spring-security-test</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <!-- ShardingSphere-JDBC：分库分表证据测试专用（test scope，不进生产 classpath）。
+             单体主线仍走 JPA 单库；分片能力以独立 DataSource + 纯 JDBC 证据固化，见 ShardingEvidenceTest -->
+        <dependency>
+            <groupId>org.apache.shardingsphere</groupId>
+            <artifactId>shardingsphere-jdbc</artifactId>
+            <version>5.5.2</version>
+            <scope>test</scope>
+        </dependency>
+        <!-- 关键：SS 发行包自带但 Maven 依赖图不含 pool-hikari。
+             缺它则 HikariDataSourcePoolMetaData SPI 无法加载 → 同义词表为空 →
+             标准 props(url/username/password) 全部静默丢弃 → StorageUnit NPE（实测三连） -->
+        <dependency>
+            <groupId>org.apache.shardingsphere</groupId>
+            <artifactId>shardingsphere-infra-data-source-pool-hikari</artifactId>
+            <version>5.5.2</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+        <plugin>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-maven-plugin</artifactId>
+        </plugin>
+        <plugin>
+            <groupId>org.jacoco</groupId>
+            <artifactId>jacoco-maven-plugin</artifactId>
+            <version>0.8.12</version>
+            <executions>
+                <execution>
+                    <id>prepare-agent</id>
+                    <goals>
+                        <goal>prepare-agent</goal>
+                    </goals>
+                </execution>
+                <execution>
+                    <id>report</id>
+                    <phase>test</phase>
+                    <goals>
+                        <goal>report</goal>
+                    </goals>
+                </execution>
+                <execution>
+                    <id>jacoco-check</id>
+                    <phase>verify</phase>
+                    <goals>
+                        <goal>check</goal>
+                    </goals>
+                    <configuration>
+                        <rules>
+                            <rule>
+                                <element>BUNDLE</element>
+                                <limits>
+                                    <limit>
+                                        <counter>INSTRUCTION</counter>
+                                        <value>COVEREDRATIO</value>
+                                        <minimum>0.80</minimum>
+                                    </limit>
+                                    <limit>
+                                        <counter>BRANCH</counter>
+                                        <value>COVEREDRATIO</value>
+                                        <minimum>0.55</minimum>
+                                    </limit>
+                                    <limit>
+                                        <counter>LINE</counter>
+                                        <value>COVEREDRATIO</value>
+                                        <minimum>0.80</minimum>
+                                    </limit>
+                                </limits>
+                            </rule>
+                        </rules>
+                    </configuration>
+                </execution>
+            </executions>
+        </plugin>
+        <!-- 变异测试：手动触发 ./scripts/mvn.sh org.pitest:pitest-maven:mutationCoverage -->
+        <!-- 衡量的是"测试能杀死多少变异体"——覆盖率说代码被执行过，变异分数说断言真能挡住错误 -->
+        <plugin>
+            <groupId>org.pitest</groupId>
+            <artifactId>pitest-maven</artifactId>
+            <version>1.16.3</version>
+            <dependencies>
+                <dependency>
+                    <groupId>org.pitest</groupId>
+                    <artifactId>pitest-junit5-plugin</artifactId>
+                    <version>1.2.1</version>
+                </dependency>
+            </dependencies>
+            <configuration>
+                <!-- 范围限定 event.*：redis.* 的覆盖与杀死由 REDIS_EVIDENCE 门控的集成测试承担，
+                     PIT 只跑纯单元测试（拉 Spring 上下文会让每个变异体的验证代价不可接受） -->
+                <targetClasses>
+                    <param>com.allen.questionbank.event.*</param>
+                </targetClasses>
+                <targetTests>
+                    <param>com.allen.questionbank.OutboxTest</param>
+                    <param>com.allen.questionbank.OutboxRelayAndConsumerTest</param>
+                    <param>com.allen.questionbank.common.RateLimitFilterTest</param>
+                    <param>com.allen.questionbank.InfrastructureUnitTest</param>
+                </targetTests>
+                <outputFormats>
+                    <param>XML</param>
+                    <param>HTML</param>
+                </outputFormats>
+                <timestampedReports>false</timestampedReports>
+                <threads>4</threads>
+                <mutators>
+                    <mutator>DEFAULTS</mutator>
+                </mutators>
+            </configuration>
+        </plugin>
+    </plugins>
+    </build>
+</project>

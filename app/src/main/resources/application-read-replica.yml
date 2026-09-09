@@ -1,0 +1,9 @@
+spring:
+  flyway:
+    enabled: true
+app:
+  replication:
+    # 读写分离实验拓扑：本机 3307 主 / 3308 从（super_read_only），GTID 自动定位。
+    # 脚本 scripts/replication-setup.sh 一键复现；库与 3306 业务库完全隔离。
+    master-url: ${REPL_MASTER_URL:jdbc:mysql://127.0.0.1:3307/replica_demo?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC}
+    slave-url: ${REPL_SLAVE_URL:jdbc:mysql://127.0.0.1:3308/replica_demo?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC}

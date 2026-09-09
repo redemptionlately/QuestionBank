@@ -1,0 +1,51 @@
+===== jfr view hot-methods（执行采样 Top）=====
+
+                                          Java Methods that Executes the Most
+
+Method                                                                                                  Samples Percent
+------------------------------------------------------------------------------------------------------- ------- -------
+org.springframework.security.crypto.bcrypt.BCrypt.key(byte[], boolean, int)                               2,060  84.01%
+org.springframework.security.crypto.bcrypt.BCrypt.encipher(int[], int)                                       17   0.69%
+java.lang.AbstractStringBuilder.ensureCapacityInternal(int)                                                  16   0.65%
+java.time.format.DateTimeFormatterBuilder$CompositePrinterParser.format(...)                                  9   0.37%
+com.fasterxml.jackson.core.json.UTF8JsonGenerator._verifyValueWrite(String)                                   9   0.37%
+java.net.URL.<init>(URL, String, URLStreamHandler)                                                            7   0.29%
+java.util.HashMap.getNode(Object)                                                                             6   0.24%
+java.util.Arrays.binarySearch0(int[], int, int, int)                                                          6   0.24%
+org.springframework.util.ObjectUtils.nullSafeEquals(Object, Object)                                           5   0.20%
+java.util.concurrent.ConcurrentHashMap.get(Object)                                                            5   0.20%
+java.lang.StringLatin1.regionMatchesCI(byte[], int, byte[], int, int)                                         5   0.20%
+java.lang.String.hashCode()                                                                                   5   0.20%
+org.springframework.core.annotation.AnnotationsScanner.processClassHierarchy(...)                             4   0.16%
+java.util.concurrent.ConcurrentHashMap.computeIfAbsent(Object, Function)                                      4   0.16%
+com.fasterxml.jackson.databind.ser.BeanPropertyWriter.serializeAsField(...)                                   4   0.16%
+java.lang.String.charAt(int)                                                                                  4   0.16%
+java.lang.invoke.DirectMethodHandle.allocateInstance(Object)                                                  4   0.16%
+
+===== jfr view allocation-by-class（分配大户 Top）=====
+
+                                                  Allocation by Class
+
+Object Type                                                                                         Allocation Pressure
+--------------------------------------------------------------------------------------------------- -------------------
+byte[]                                                                                                           50.01%
+java.lang.StringBuilder                                                                                           7.03%
+java.lang.String                                                                                                  6.62%
+java.net.URL                                                                                                      3.35%
+java.lang.Object[]                                                                                                1.91%
+java.lang.Long                                                                                                    1.82%
+java.lang.Class[]                                                                                                 1.64%
+java.time.LocalTime                                                                                               1.55%
+java.time.format.DateTimePrintContext                                                                             1.24%
+
+===== jfr view gc-pauses =====
+
+GC Pauses
+---------
+
+Total Pause Time: 142 ms
+
+Number of Pauses: 22
+
+Minimum Pause Time: 0.0534 ms
+

@@ -1,0 +1,182 @@
+
+  .   ____          _            __ _ _
+ /\\ / ___'_ __ _ _(_)_ __  __ _ \ \ \ \
+( ( )\___ | '_ | '_| | '_ \/ _` | \ \ \ \
+ \\/  ___)| |_)| | | | | || (_| |  ) ) ) )
+  '  |____| .__|_| |_|_| |_\__, | / / / /
+ =========|_|==============|___/=/_/_/_/
+
+ :: Spring Boot ::                (v3.4.5)
+
+2026-09-08T22:23:17.582+08:00  INFO [bank-service,,] 104904 --- [bank-service] [           main] [                                                 ] com.allen.cloud.bank.BankApplication     : Starting BankApplication v0.1.0-SNAPSHOT using Java 21.0.12 with PID 104904 (C:\Project\QuestionBank\cloud\bank-service\target\bank-service-0.1.0-SNAPSHOT.jar started by Allen in C:\Project\QuestionBank)
+2026-09-08T22:23:17.586+08:00  INFO [bank-service,,] 104904 --- [bank-service] [           main] [                                                 ] com.allen.cloud.bank.BankApplication     : No active profile set, falling back to 1 default profile: "default"
+2026-09-08T22:23:18.640+08:00  INFO [bank-service,,] 104904 --- [bank-service] [           main] [                                                 ] .s.d.r.c.RepositoryConfigurationDelegate : Bootstrapping Spring Data JPA repositories in DEFAULT mode.
+2026-09-08T22:23:18.753+08:00  INFO [bank-service,,] 104904 --- [bank-service] [           main] [                                                 ] .s.d.r.c.RepositoryConfigurationDelegate : Finished Spring Data repository scanning in 105 ms. Found 5 JPA repository interfaces.
+2026-09-08T22:23:19.036+08:00  INFO [bank-service,,] 104904 --- [bank-service] [           main] [                                                 ] o.s.cloud.context.scope.GenericScope     : BeanFactory id=703ff9cf-e84f-3a30-a098-58d0a02e7bb9
+2026-09-08T22:23:20.253+08:00  INFO [bank-service,,] 104904 --- [bank-service] [           main] [                                                 ] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat initialized with port 8082 (http)
+2026-09-08T22:23:20.276+08:00  INFO [bank-service,,] 104904 --- [bank-service] [           main] [                                                 ] o.apache.catalina.core.StandardService   : Starting service [Tomcat]
+2026-09-08T22:23:20.276+08:00  INFO [bank-service,,] 104904 --- [bank-service] [           main] [                                                 ] o.apache.catalina.core.StandardEngine    : Starting Servlet engine: [Apache Tomcat/10.1.40]
+2026-09-08T22:23:20.333+08:00  INFO [bank-service,,] 104904 --- [bank-service] [           main] [                                                 ] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring embedded WebApplicationContext
+2026-09-08T22:23:20.335+08:00  INFO [bank-service,,] 104904 --- [bank-service] [           main] [                                                 ] w.s.c.ServletWebServerApplicationContext : Root WebApplicationContext: initialization completed in 2686 ms
+2026-09-08T22:23:22.442+08:00  INFO [bank-service,,] 104904 --- [bank-service] [           main] [                                                 ] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Starting...
+2026-09-08T22:23:22.749+08:00  INFO [bank-service,,] 104904 --- [bank-service] [           main] [                                                 ] com.zaxxer.hikari.pool.HikariPool        : HikariPool-1 - Added connection com.mysql.cj.jdbc.ConnectionImpl@4bceac99
+2026-09-08T22:23:22.751+08:00  INFO [bank-service,,] 104904 --- [bank-service] [           main] [                                                 ] com.zaxxer.hikari.HikariDataSource       : HikariPool-1 - Start completed.
+2026-09-08T22:23:22.827+08:00  INFO [bank-service,,] 104904 --- [bank-service] [           main] [                                                 ] org.flywaydb.core.FlywayExecutor         : Database: jdbc:mysql://127.0.0.1:3307/qb_bank?createDatabaseIfNotExist=true&characterEncoding=UTF-8&useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC (MySQL 9.0)
+2026-09-08T22:23:22.859+08:00  WARN [bank-service,,] 104904 --- [bank-service] [           main] [                                                 ] o.f.c.internal.database.base.Database    : Flyway upgrade recommended: MySQL 9.0 is newer than this version of Flyway and support has not been tested. The latest supported version of MySQL is 8.1.
+2026-09-08T22:23:22.930+08:00  INFO [bank-service,,] 104904 --- [bank-service] [           main] [                                                 ] o.f.core.internal.command.DbValidate     : Successfully validated 1 migration (execution time 00:00.051s)
+2026-09-08T22:23:22.954+08:00  INFO [bank-service,,] 104904 --- [bank-service] [           main] [                                                 ] o.f.core.internal.command.DbMigrate      : Current version of schema `qb_bank`: 1
+2026-09-08T22:23:22.960+08:00  INFO [bank-service,,] 104904 --- [bank-service] [           main] [                                                 ] o.f.core.internal.command.DbMigrate      : Schema `qb_bank` is up to date. No migration necessary.
+2026-09-08T22:23:23.145+08:00  INFO [bank-service,,] 104904 --- [bank-service] [           main] [                                                 ] o.hibernate.jpa.internal.util.LogHelper  : HHH000204: Processing PersistenceUnitInfo [name: default]
+2026-09-08T22:23:23.245+08:00  INFO [bank-service,,] 104904 --- [bank-service] [           main] [                                                 ] org.hibernate.Version                    : HHH000412: Hibernate ORM core version 6.6.13.Final
+2026-09-08T22:23:23.316+08:00  INFO [bank-service,,] 104904 --- [bank-service] [           main] [                                                 ] o.h.c.internal.RegionFactoryInitiator    : HHH000026: Second-level cache disabled
+2026-09-08T22:23:23.849+08:00  INFO [bank-service,,] 104904 --- [bank-service] [           main] [                                                 ] o.s.o.j.p.SpringPersistenceUnitInfo      : No LoadTimeWeaver setup: ignoring JPA class transformer
+2026-09-08T22:23:23.955+08:00  INFO [bank-service,,] 104904 --- [bank-service] [           main] [                                                 ] org.hibernate.orm.connections.pooling    : HHH10001005: Database info:
+	Database JDBC URL [Connecting through datasource 'HikariDataSource (HikariPool-1)']
+	Database driver: undefined/unknown
+	Database version: 9.0.1
+	Autocommit mode: undefined/unknown
+	Isolation level: undefined/unknown
+	Minimum pool size: undefined/unknown
+	Maximum pool size: undefined/unknown
+2026-09-08T22:23:25.200+08:00  INFO [bank-service,,] 104904 --- [bank-service] [           main] [                                                 ] o.h.e.t.j.p.i.JtaPlatformInitiator       : HHH000489: No JTA platform available (set 'hibernate.transaction.jta.platform' to enable JTA platform integration)
+2026-09-08T22:23:25.244+08:00  INFO [bank-service,,] 104904 --- [bank-service] [           main] [                                                 ] j.LocalContainerEntityManagerFactoryBean : Initialized JPA EntityManagerFactory for persistence unit 'default'
+2026-09-08T22:23:29.007+08:00  INFO [bank-service,,] 104904 --- [bank-service] [           main] [                                                 ] DiscoveryClientOptionalArgsConfiguration : Eureka HTTP Client uses RestTemplate.
+2026-09-08T22:23:29.110+08:00  WARN [bank-service,,] 104904 --- [bank-service] [           main] [                                                 ] iguration$LoadBalancerCaffeineWarnLogger : Spring Cloud LoadBalancer is currently working with the default cache. While this cache implementation is useful for development and tests, it's recommended to use Caffeine cache in production.You can switch to using Caffeine cache, by adding it and org.springframework.cache.caffeine.CaffeineCacheManager to the classpath.
+2026-09-08T22:23:29.162+08:00  INFO [bank-service,,] 104904 --- [bank-service] [           main] [                                                 ] o.s.b.a.e.web.EndpointLinksResolver      : Exposing 2 endpoints beneath base path '/actuator'
+2026-09-08T22:23:29.269+08:00  INFO [bank-service,,] 104904 --- [bank-service] [           main] [                                                 ] o.s.c.n.eureka.InstanceInfoFactory       : Setting initial instance status as: STARTING
+2026-09-08T22:23:29.299+08:00  INFO [bank-service,,] 104904 --- [bank-service] [           main] [                                                 ] com.netflix.discovery.DiscoveryClient    : Initializing Eureka in region us-east-1
+2026-09-08T22:23:29.303+08:00  INFO [bank-service,,] 104904 --- [bank-service] [           main] [                                                 ] c.n.d.s.r.aws.ConfigClusterResolver      : Resolving eureka endpoints via configuration
+2026-09-08T22:23:29.317+08:00  INFO [bank-service,,] 104904 --- [bank-service] [           main] [                                                 ] com.netflix.discovery.DiscoveryClient    : Disable delta property : false
+2026-09-08T22:23:29.317+08:00  INFO [bank-service,,] 104904 --- [bank-service] [           main] [                                                 ] com.netflix.discovery.DiscoveryClient    : Single vip registry refresh property : null
+2026-09-08T22:23:29.318+08:00  INFO [bank-service,,] 104904 --- [bank-service] [           main] [                                                 ] com.netflix.discovery.DiscoveryClient    : Force full registry fetch : false
+2026-09-08T22:23:29.318+08:00  INFO [bank-service,,] 104904 --- [bank-service] [           main] [                                                 ] com.netflix.discovery.DiscoveryClient    : Application is null : false
+2026-09-08T22:23:29.318+08:00  INFO [bank-service,,] 104904 --- [bank-service] [           main] [                                                 ] com.netflix.discovery.DiscoveryClient    : Registered Applications size is zero : true
+2026-09-08T22:23:29.318+08:00  INFO [bank-service,,] 104904 --- [bank-service] [           main] [                                                 ] com.netflix.discovery.DiscoveryClient    : Application version is -1: true
+2026-09-08T22:23:29.318+08:00  INFO [bank-service,,] 104904 --- [bank-service] [           main] [                                                 ] com.netflix.discovery.DiscoveryClient    : Getting all instance registry info from the eureka server
+2026-09-08T22:23:29.825+08:00  INFO [bank-service,,] 104904 --- [bank-service] [           main] [                                                 ] com.netflix.discovery.DiscoveryClient    : The response status is 200
+2026-09-08T22:23:29.826+08:00  INFO [bank-service,,] 104904 --- [bank-service] [           main] [                                                 ] com.netflix.discovery.DiscoveryClient    : Starting heartbeat executor: renew interval is: 5
+2026-09-08T22:23:29.828+08:00  INFO [bank-service,,] 104904 --- [bank-service] [           main] [                                                 ] c.n.discovery.InstanceInfoReplicator     : InstanceInfoReplicator onDemand update allowed rate per min is 4
+2026-09-08T22:23:29.829+08:00  INFO [bank-service,,] 104904 --- [bank-service] [           main] [                                                 ] com.netflix.discovery.DiscoveryClient    : Discovery Client initialized at timestamp 1788877409829 with initial instances count: 0
+2026-09-08T22:23:29.834+08:00  INFO [bank-service,,] 104904 --- [bank-service] [           main] [                                                 ] o.s.c.n.e.s.EurekaServiceRegistry        : Registering application BANK-SERVICE with eureka with status UP
+2026-09-08T22:23:29.836+08:00  INFO [bank-service,,] 104904 --- [bank-service] [           main] [                                                 ] com.netflix.discovery.DiscoveryClient    : Saw local status change event StatusChangeEvent [timestamp=1788877409836, current=UP, previous=STARTING]
+2026-09-08T22:23:29.838+08:00  INFO [bank-service,,] 104904 --- [bank-service] [foReplicator-%d] [                                                 ] com.netflix.discovery.DiscoveryClient    : DiscoveryClient_BANK-SERVICE/allen:bank-service:8082: registering service...
+2026-09-08T22:23:29.865+08:00  INFO [bank-service,,] 104904 --- [bank-service] [           main] [                                                 ] o.s.b.w.embedded.tomcat.TomcatWebServer  : Tomcat started on port 8082 (http) with context path '/'
+2026-09-08T22:23:29.867+08:00  INFO [bank-service,,] 104904 --- [bank-service] [           main] [                                                 ] .s.c.n.e.s.EurekaAutoServiceRegistration : Updating port to 8082
+2026-09-08T22:23:29.884+08:00  INFO [bank-service,,] 104904 --- [bank-service] [foReplicator-%d] [                                                 ] com.netflix.discovery.DiscoveryClient    : DiscoveryClient_BANK-SERVICE/allen:bank-service:8082 - registration status: 204
+2026-09-08T22:23:29.899+08:00  INFO [bank-service,,] 104904 --- [bank-service] [           main] [                                                 ] com.allen.cloud.bank.BankApplication     : Started BankApplication in 12.792 seconds (process running for 13.393)
+2026-09-08T22:23:30.215+08:00  INFO [bank-service,,] 104904 --- [bank-service] [nio-8082-exec-1] [                                                 ] o.a.c.c.C.[Tomcat].[localhost].[/]       : Initializing Spring DispatcherServlet 'dispatcherServlet'
+2026-09-08T22:23:30.215+08:00  INFO [bank-service,,] 104904 --- [bank-service] [nio-8082-exec-1] [                                                 ] o.s.web.servlet.DispatcherServlet        : Initializing Servlet 'dispatcherServlet'
+2026-09-08T22:23:30.217+08:00  INFO [bank-service,,] 104904 --- [bank-service] [nio-8082-exec-1] [                                                 ] o.s.web.servlet.DispatcherServlet        : Completed initialization in 2 ms
+2026-09-08T22:23:34.831+08:00  INFO [bank-service,,] 104904 --- [bank-service] [reshExecutor-%d] [                                                 ] com.netflix.discovery.DiscoveryClient    : Disable delta property : false
+2026-09-08T22:23:34.832+08:00  INFO [bank-service,,] 104904 --- [bank-service] [reshExecutor-%d] [                                                 ] com.netflix.discovery.DiscoveryClient    : Single vip registry refresh property : null
+2026-09-08T22:23:34.832+08:00  INFO [bank-service,,] 104904 --- [bank-service] [reshExecutor-%d] [                                                 ] com.netflix.discovery.DiscoveryClient    : Force full registry fetch : false
+2026-09-08T22:23:34.832+08:00  INFO [bank-service,,] 104904 --- [bank-service] [reshExecutor-%d] [                                                 ] com.netflix.discovery.DiscoveryClient    : Application is null : false
+2026-09-08T22:23:34.832+08:00  INFO [bank-service,,] 104904 --- [bank-service] [reshExecutor-%d] [                                                 ] com.netflix.discovery.DiscoveryClient    : Registered Applications size is zero : true
+2026-09-08T22:23:34.832+08:00  INFO [bank-service,,] 104904 --- [bank-service] [reshExecutor-%d] [                                                 ] com.netflix.discovery.DiscoveryClient    : Application version is -1: false
+2026-09-08T22:23:34.832+08:00  INFO [bank-service,,] 104904 --- [bank-service] [reshExecutor-%d] [                                                 ] com.netflix.discovery.DiscoveryClient    : Getting all instance registry info from the eureka server
+2026-09-08T22:23:34.865+08:00  INFO [bank-service,,] 104904 --- [bank-service] [reshExecutor-%d] [                                                 ] com.netflix.discovery.DiscoveryClient    : The response status is 200
+2026-09-08T22:23:59.392+08:00  INFO [bank-service,d73a707bf634b8e54adf41addea23d0e,b0049d9cbf23f4f7] 104904 --- [bank-service] [   scheduling-1] [d73a707bf634b8e54adf41addea23d0e-b0049d9cbf23f4f7] o.a.k.clients.producer.ProducerConfig    : ProducerConfig values: 
+	acks = -1
+	auto.include.jmx.reporter = true
+	batch.size = 16384
+	bootstrap.servers = [127.0.0.1:9092]
+	buffer.memory = 33554432
+	client.dns.lookup = use_all_dns_ips
+	client.id = bank-service-producer-1
+	compression.gzip.level = -1
+	compression.lz4.level = 9
+	compression.type = none
+	compression.zstd.level = 3
+	connections.max.idle.ms = 540000
+	delivery.timeout.ms = 120000
+	enable.idempotence = true
+	enable.metrics.push = true
+	interceptor.classes = []
+	key.serializer = class org.apache.kafka.common.serialization.StringSerializer
+	linger.ms = 0
+	max.block.ms = 60000
+	max.in.flight.requests.per.connection = 5
+	max.request.size = 1048576
+	metadata.max.age.ms = 300000
+	metadata.max.idle.ms = 300000
+	metadata.recovery.strategy = none
+	metric.reporters = []
+	metrics.num.samples = 2
+	metrics.recording.level = INFO
+	metrics.sample.window.ms = 30000
+	partitioner.adaptive.partitioning.enable = true
+	partitioner.availability.timeout.ms = 0
+	partitioner.class = null
+	partitioner.ignore.keys = false
+	receive.buffer.bytes = 32768
+	reconnect.backoff.max.ms = 1000
+	reconnect.backoff.ms = 50
+	request.timeout.ms = 30000
+	retries = 3
+	retry.backoff.max.ms = 1000
+	retry.backoff.ms = 100
+	sasl.client.callback.handler.class = null
+	sasl.jaas.config = null
+	sasl.kerberos.kinit.cmd = /usr/bin/kinit
+	sasl.kerberos.min.time.before.relogin = 60000
+	sasl.kerberos.service.name = null
+	sasl.kerberos.ticket.renew.jitter = 0.05
+	sasl.kerberos.ticket.renew.window.factor = 0.8
+	sasl.login.callback.handler.class = null
+	sasl.login.class = null
+	sasl.login.connect.timeout.ms = null
+	sasl.login.read.timeout.ms = null
+	sasl.login.refresh.buffer.seconds = 300
+	sasl.login.refresh.min.period.seconds = 60
+	sasl.login.refresh.window.factor = 0.8
+	sasl.login.refresh.window.jitter = 0.05
+	sasl.login.retry.backoff.max.ms = 10000
+	sasl.login.retry.backoff.ms = 100
+	sasl.mechanism = GSSAPI
+	sasl.oauthbearer.clock.skew.seconds = 30
+	sasl.oauthbearer.expected.audience = null
+	sasl.oauthbearer.expected.issuer = null
+	sasl.oauthbearer.jwks.endpoint.refresh.ms = 3600000
+	sasl.oauthbearer.jwks.endpoint.retry.backoff.max.ms = 10000
+	sasl.oauthbearer.jwks.endpoint.retry.backoff.ms = 100
+	sasl.oauthbearer.jwks.endpoint.url = null
+	sasl.oauthbearer.scope.claim.name = scope
+	sasl.oauthbearer.sub.claim.name = sub
+	sasl.oauthbearer.token.endpoint.url = null
+	security.protocol = PLAINTEXT
+	security.providers = null
+	send.buffer.bytes = 131072
+	socket.connection.setup.timeout.max.ms = 30000
+	socket.connection.setup.timeout.ms = 10000
+	ssl.cipher.suites = null
+	ssl.enabled.protocols = [TLSv1.2, TLSv1.3]
+	ssl.endpoint.identification.algorithm = https
+	ssl.engine.factory.class = null
+	ssl.key.password = null
+	ssl.keymanager.algorithm = SunX509
+	ssl.keystore.certificate.chain = null
+	ssl.keystore.key = null
+	ssl.keystore.location = null
+	ssl.keystore.password = null
+	ssl.keystore.type = JKS
+	ssl.protocol = TLSv1.3
+	ssl.provider = null
+	ssl.secure.random.implementation = null
+	ssl.trustmanager.algorithm = PKIX
+	ssl.truststore.certificates = null
+	ssl.truststore.location = null
+	ssl.truststore.password = null
+	ssl.truststore.type = JKS
+	transaction.timeout.ms = 60000
+	transactional.id = null
+	value.serializer = class org.apache.kafka.common.serialization.StringSerializer
+
+2026-09-08T22:23:59.473+08:00  INFO [bank-service,d73a707bf634b8e54adf41addea23d0e,b0049d9cbf23f4f7] 104904 --- [bank-service] [   scheduling-1] [d73a707bf634b8e54adf41addea23d0e-b0049d9cbf23f4f7] o.a.k.c.t.i.KafkaMetricsCollector        : initializing Kafka metrics collector
+2026-09-08T22:23:59.497+08:00  INFO [bank-service,d73a707bf634b8e54adf41addea23d0e,b0049d9cbf23f4f7] 104904 --- [bank-service] [   scheduling-1] [d73a707bf634b8e54adf41addea23d0e-b0049d9cbf23f4f7] o.a.k.clients.producer.KafkaProducer     : [Producer clientId=bank-service-producer-1] Instantiated an idempotent producer.
+2026-09-08T22:23:59.561+08:00  INFO [bank-service,d73a707bf634b8e54adf41addea23d0e,b0049d9cbf23f4f7] 104904 --- [bank-service] [   scheduling-1] [d73a707bf634b8e54adf41addea23d0e-b0049d9cbf23f4f7] o.a.kafka.common.utils.AppInfoParser     : Kafka version: 3.8.1
+2026-09-08T22:23:59.562+08:00  INFO [bank-service,d73a707bf634b8e54adf41addea23d0e,b0049d9cbf23f4f7] 104904 --- [bank-service] [   scheduling-1] [d73a707bf634b8e54adf41addea23d0e-b0049d9cbf23f4f7] o.a.kafka.common.utils.AppInfoParser     : Kafka commitId: 70d6ff42debf7e17
+2026-09-08T22:23:59.562+08:00  INFO [bank-service,d73a707bf634b8e54adf41addea23d0e,b0049d9cbf23f4f7] 104904 --- [bank-service] [   scheduling-1] [d73a707bf634b8e54adf41addea23d0e-b0049d9cbf23f4f7] o.a.kafka.common.utils.AppInfoParser     : Kafka startTimeMs: 1788877439559
+2026-09-08T22:23:59.960+08:00  INFO [bank-service,,] 104904 --- [bank-service] [vice-producer-1] [                                                 ] org.apache.kafka.clients.Metadata        : [Producer clientId=bank-service-producer-1] Cluster ID: QGE8oKypR3eU_FL8dh7DHg
+2026-09-08T22:23:59.962+08:00  INFO [bank-service,,] 104904 --- [bank-service] [vice-producer-1] [                                                 ] o.a.k.c.p.internals.TransactionManager   : [Producer clientId=bank-service-producer-1] ProducerId set to 3002 with epoch 0
+2026-09-08T22:24:00.006+08:00  INFO [bank-service,d73a707bf634b8e54adf41addea23d0e,b0049d9cbf23f4f7] 104904 --- [bank-service] [   scheduling-1] [d73a707bf634b8e54adf41addea23d0e-b0049d9cbf23f4f7] com.allen.cloud.bank.OutboxRelay         : [outbox] 已投递 eventKey=paper-published:10:10 type=PAPER_PUBLISHED
+2026-09-08T22:24:08.394+08:00  INFO [bank-service,db43c9e7bca798903c5d9dd2f651ad46,c020f59bab54d8f8] 104904 --- [bank-service] [io-8082-exec-10] [db43c9e7bca798903c5d9dd2f651ad46-c020f59bab54d8f8] com.allen.cloud.bank.BankController      : [snapshot] paperId=10 items=3

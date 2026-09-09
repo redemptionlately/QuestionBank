@@ -1,0 +1,38 @@
+2026-09-07T09:53:49.700336400Z main ERROR Reconfiguration failed: No configuration found for '7a81197d' at 'null' in 'null'
+17:54:51.573 [broker-1-lifecycle-manager-event-handler] ERROR kafka.server.BrokerLifecycleManager - [BrokerLifecycleManager id=1] Shutting down because we were unable to register with the controller quorum.
+17:54:51.575 [main] ERROR kafka.server.BrokerServer - [BrokerServer id=1] Received a fatal error while waiting for the controller to acknowledge that we are caught up
+java.util.concurrent.CancellationException: null
+	at java.base/java.util.concurrent.CompletableFuture.cancel(CompletableFuture.java:2510) ~[?:?]
+	at kafka.server.BrokerLifecycleManager$ShutdownEvent.run(BrokerLifecycleManager.scala:638) ~[kafka_2.13-4.0.0.jar:?]
+	at org.apache.kafka.queue.KafkaEventQueue$EventHandler.run(KafkaEventQueue.java:191) ~[kafka-server-common-4.0.0.jar:?]
+	at java.base/java.lang.Thread.run(Thread.java:1583) ~[?:?]
+17:54:51.589 [main] ERROR kafka.server.BrokerServer - [BrokerServer id=1] Fatal error during broker startup. Prepare to shutdown
+java.lang.RuntimeException: Received a fatal error while waiting for the controller to acknowledge that we are caught up
+	at org.apache.kafka.server.util.FutureUtils.waitWithLogging(FutureUtils.java:73) ~[kafka-server-common-4.0.0.jar:?]
+	at kafka.server.BrokerServer.startup(BrokerServer.scala:564) ~[kafka_2.13-4.0.0.jar:?]
+	at kafka.server.KafkaRaftServer.$anonfun$startup$2(KafkaRaftServer.scala:96) ~[kafka_2.13-4.0.0.jar:?]
+	at kafka.server.KafkaRaftServer.$anonfun$startup$2$adapted(KafkaRaftServer.scala:96) ~[kafka_2.13-4.0.0.jar:?]
+	at scala.Option.foreach(Option.scala:437) [scala-library-2.13.15.jar:?]
+	at kafka.server.KafkaRaftServer.startup(KafkaRaftServer.scala:96) [kafka_2.13-4.0.0.jar:?]
+	at kafka.Kafka$.main(Kafka.scala:97) [kafka_2.13-4.0.0.jar:?]
+	at kafka.Kafka.main(Kafka.scala) [kafka_2.13-4.0.0.jar:?]
+Caused by: java.util.concurrent.CancellationException
+	at java.base/java.util.concurrent.CompletableFuture.cancel(CompletableFuture.java:2510) ~[?:?]
+	at kafka.server.BrokerLifecycleManager$ShutdownEvent.run(BrokerLifecycleManager.scala:638) ~[kafka_2.13-4.0.0.jar:?]
+	at org.apache.kafka.queue.KafkaEventQueue$EventHandler.run(KafkaEventQueue.java:191) ~[kafka-server-common-4.0.0.jar:?]
+	at java.base/java.lang.Thread.run(Thread.java:1583) ~[?:?]
+17:54:51.945 [main] ERROR kafka.Kafka$ - Exiting Kafka due to fatal exception during startup.
+java.lang.RuntimeException: Received a fatal error while waiting for the controller to acknowledge that we are caught up
+	at org.apache.kafka.server.util.FutureUtils.waitWithLogging(FutureUtils.java:73) ~[kafka-server-common-4.0.0.jar:?]
+	at kafka.server.BrokerServer.startup(BrokerServer.scala:564) ~[kafka_2.13-4.0.0.jar:?]
+	at kafka.server.KafkaRaftServer.$anonfun$startup$2(KafkaRaftServer.scala:96) ~[kafka_2.13-4.0.0.jar:?]
+	at kafka.server.KafkaRaftServer.$anonfun$startup$2$adapted(KafkaRaftServer.scala:96) ~[kafka_2.13-4.0.0.jar:?]
+	at scala.Option.foreach(Option.scala:437) ~[scala-library-2.13.15.jar:?]
+	at kafka.server.KafkaRaftServer.startup(KafkaRaftServer.scala:96) ~[kafka_2.13-4.0.0.jar:?]
+	at kafka.Kafka$.main(Kafka.scala:97) [kafka_2.13-4.0.0.jar:?]
+	at kafka.Kafka.main(Kafka.scala) [kafka_2.13-4.0.0.jar:?]
+Caused by: java.util.concurrent.CancellationException
+	at java.base/java.util.concurrent.CompletableFuture.cancel(CompletableFuture.java:2510) ~[?:?]
+	at kafka.server.BrokerLifecycleManager$ShutdownEvent.run(BrokerLifecycleManager.scala:638) ~[kafka_2.13-4.0.0.jar:?]
+	at org.apache.kafka.queue.KafkaEventQueue$EventHandler.run(KafkaEventQueue.java:191) ~[kafka-server-common-4.0.0.jar:?]
+	at java.base/java.lang.Thread.run(Thread.java:1583) ~[?:?]

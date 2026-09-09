@@ -1,0 +1,18 @@
+spring:
+  data:
+    redis:
+      host: ${REDIS_HOST:127.0.0.1}
+      port: ${REDIS_PORT:6379}
+      connect-timeout: 2s
+      timeout: 2s
+app:
+  cache:
+    backend: redis
+    ttl: PT30S
+  lock:
+    backend: redis
+  token-ttl: PT1H
+  rate-limit:
+    backend: redis
+    capacity: 100000
+    window: PT1M

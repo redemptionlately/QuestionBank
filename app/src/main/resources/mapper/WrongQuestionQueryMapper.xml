@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.allen.questionbank.practice.WrongQuestionQueryMapper">
+
+    <!--
+      二级缓存（namespace 级，跨 SqlSession 生效）：
+      - readOnly=false：命中时返回序列化拷贝，调用方改对象不会污染缓存（代价是多一次深拷贝）。
+      - flushInterval=60s：wrong_question 的写入在 JPA 侧（判分路径），MyBatis 感知不到；
+        所以用 60 秒 TTL 做刻意选择的弱一致窗口——错题本聚合对实时性不敏感，可接受。
+      - size=512 / LRU：单学生维度聚合结果集很小，512 个 namespace 条目绰绰有余。
+    -->
+    <cache size="512" eviction="LRU" flushInterval="60000" readOnly="false"/>
+
+    <resultMap id="rowMap" type="com.allen.questionbank.practice.WrongQuestionQueryMapper$WrongQuestionRow">
+        <id property="questionVersionId" column="question_version_id"/>
+        <result property="wrongCount" column="wrong_count"/>
+        <result property="lastWrongAt" column="last_wrong_at"/>
+    </resultMap>
+
+    <!-- 动态筛选片段：studentId 必填是资源归属校验的 SQL 层兜底；两个可选条件只在传了参数时拼进 WHERE -->
+    <sql id="filters">
+        WHERE student_id = #{studentId}
+        <if test="wrongCountMin != null">AND wrong_count &gt;= #{wrongCountMin}</if>
+        <if test="wrongSince != null">AND last_wrong_at &gt;= #{wrongSince}</if>
+    </sql>
+
+    <select id="search" resultMap="rowMap">
+        SELECT question_version_id, wrong_count, last_wrong_at
+        FROM wrong_question
+        <include refid="filters"/>
+        ORDER BY last_wrong_at DESC, question_version_id DESC
+        LIMIT #{limit} OFFSET #{offset}
+    </select>
+
+    <select id="summarize" resultType="com.allen.questionbank.practice.WrongQuestionQueryMapper$WrongQuestionSummary">
+        SELECT COUNT(*) AS totalQuestions,
+               COALESCE(SUM(wrong_count), 0) AS totalWrongCount,
+               COALESCE(MAX(wrong_count), 0) AS maxWrongCount
+        FROM wrong_question
+        <include refid="filters"/>
+    </select>
+</mapper>

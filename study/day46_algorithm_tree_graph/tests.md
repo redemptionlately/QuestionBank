@@ -1,0 +1,13 @@
+# Current
+- 打开并按当天 study.md 的“源码索引（MustRemember）”或“外部源码索引（MustRemember）”逐项定位文件、类/方法、SQL 对象和行号，独立写出对应代码或 SQL，并口述输入、输出与边界。
+
+- 完成树/图题
+- 测断开/环/重复边
+- 写出 DFS、BFS、堆、并查集、拓扑排序、Dijkstra 的状态和复杂度。
+- 写出邻接表 BFS，并说明 visited 放入队列前还是取出队列后的差异。
+- 比较无权 BFS、Dijkstra 和拓扑排序的前置条件与复杂度。
+
+# External
+
+- 递归改显式栈
+- 复习旧题
