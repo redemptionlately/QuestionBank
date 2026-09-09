@@ -15,16 +15,21 @@ Windows Git Bash 下 `mvnw` 无法启动，构建一律走 `./scripts/mvn.sh`（
 - Persistent async import jobs: `RECEIVED -> PROCESSING -> SUCCEEDED/FAILED`, `202 Accepted` plus `Location`,
   and after-commit worker scheduling.
 
-Real PDF extraction, Redis-backed shared cache, MinIO, message brokers, lease recovery, Prometheus registry,
-distributed tracing and Agent/Harness remain later increments; their study documents are not implementation evidence.
-The local cache is a single-process baseline, the rate limiter is a fixed-window single-process filter,
-and `/api/metrics` exposes in-memory counters that reset when the process restarts.
+Current state (all evidence-verified; the full capability matrix with rerun commands lives in
+`docs/JAVA_BACKEND_COVERAGE.md`, unfinished items are listed there under「仍未接入或未验证」):
+Redis shared cache / distributed lock / token-bucket rate limiting (switchable backends via
+`app.cache.backend` / `app.lock.backend` / `app.rate-limit.backend`, local fallback preserved),
+Kafka outbox + DLT + 3-broker HA, MySQL read/write splitting, ShardingSphere sharding,
+Prometheus registry (`/actuator/prometheus`), Spring Cloud split (Eureka/Gateway/Feign/Resilience4j, `cloud/`),
+Micrometer Tracing + OTLP, K8s kind deploy, custom Spring Boot starter, ArchUnit guards, PIT mutation testing.
+Real PDF extraction, MinIO, lease recovery and Elasticsearch remain later increments.
+The custom `/api/metrics` endpoint still exposes in-memory counters that reset when the process restarts.
 
 ## Run
 
 ```bash
 # 前提：本地 MySQL 9 已在 127.0.0.1:3306 运行，库 question_bank 已建
-./scripts/mvn.sh -B clean verify          # 编译 + 31 个测试 + 覆盖率门禁
+./scripts/mvn.sh -B clean verify          # 编译 + 112 个测试（全证据环境）+ 覆盖率门禁
 ./scripts/mvn.sh spring-boot:run          # 需要 DB_URL/DB_USERNAME/DB_PASSWORD 环境变量
 docker compose up -d mysql redis app      # 容器化路径（本机未装 Docker，未经实跑验证）
 ```
@@ -73,8 +78,8 @@ Run the focused test suite and package build:
 
 ```bash
 MYSQL_EVIDENCE=true ./scripts/mysql-evidence.sh   # 真实 MySQL：EXPLAIN / 隔离级别 / 行锁
-REDIS_EVIDENCE=true MYSQL_EVIDENCE=true \
-  ./scripts/mvn.sh -B clean verify                # 含 Redis 缓存与真实库用例，共 31 个测试
+REDIS_EVIDENCE=true MYSQL_EVIDENCE=true KAFKA_EVIDENCE=true \
+  MYSQL_SHARDING_EVIDENCE=true ./scripts/mvn.sh -B clean verify   # 全量门禁，共 112 个测试
 ./scripts/loadtest.sh                             # 开环压测 + JFR，需要 MySQL 与空闲 8080 端口
 ```
 
