@@ -27,10 +27,12 @@ jobs:
           cache: maven
 
       # PIT 只跑纯单元测试（7 个 targetTests 类），不需要 mysql/redis/kafka 服务容器；
-      # 证据门控测试在 test 阶段按环境变量缺失自动跳过
+      # 证据门控测试在 test 阶段按环境变量缺失自动跳过。
+      # -am 必须带：干净 CI 的 ~/.m2 没有 monitor-spring-boot-starter SNAPSHOT，
+      # -pl app 单模块会因缺依赖直接挂（本地能跑只是因为 .m2 有 install 残留）——首跑实锤
       - name: 运行 PIT 变异测试
         run: |
-          ./mvnw -B -pl app test org.pitest:pitest-maven:mutationCoverage 2>&1 | tee pit.log
+          ./mvnw -B -pl app -am test org.pitest:pitest-maven:mutationCoverage 2>&1 | tee pit.log
           grep -aq "BUILD SUCCESS" pit.log
 
       # 双口径守门：pom 的 mutationThreshold=45 守 killed/total 底线；
