@@ -78,4 +78,22 @@ class ExpiringCacheSingleflightTest {
             throw new AssertionError("命中时不应执行 loader");
         }).equals("v1"));
     }
+
+    @Test
+    void expiredEntriesAreInvisibleToPlainGet() throws Exception {
+        ExpiringCache<String, String> cache = new ExpiringCache<>(Duration.ofMillis(100));
+        cache.getOrLoad("k", () -> "v");
+        assertEquals("v", cache.get("k"));
+        Thread.sleep(250); // 确保跨过 TTL（150ms 余量，避开调度抖动）
+        assertNull(cache.get("k"), "过期条目必须立刻不可见——get 路径自己的过期判断是缓存正确性的最后防线");
+    }
+
+    @Test
+    void sweepNeverDiscardsFreshEntries() {
+        ExpiringCache<String, String> cache = new ExpiringCache<>(Duration.ofMinutes(1));
+        cache.getOrLoad("fresh", () -> "v1");
+        cache.getOrLoad("trigger", () -> "v2"); // 第二次 miss 触发全表清扫，此时 fresh 仍新鲜
+        assertEquals("v1", cache.get("fresh"), "清扫只摘过期项，新鲜条目不得误伤");
+        assertEquals("v2", cache.get("trigger"));
+    }
 }

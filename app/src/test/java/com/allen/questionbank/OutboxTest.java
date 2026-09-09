@@ -74,7 +74,8 @@ class OutboxTest {
 
         publisher.enqueue("paper", 7L, "PAPER_PUBLISHED", Map.of("paperId", 7));
 
-        verify(jdbc, never()).update(anyString(), any(Object[].class));
+        // 去重命中必须完全零写入：不用 anyString() 匹配器（varargs 匹配不可靠），直接断言零交互
+        verifyNoInteractions(jdbc);
     }
 
     @Test
@@ -140,5 +141,22 @@ class OutboxTest {
 
         assertTrue(repository.existsByAggregateTypeAndAggregateIdAndEventType("paper", 7L, "PAPER_PUBLISHED"));
         assertFalse(repository.existsByAggregateTypeAndAggregateIdAndEventType("paper", 7L, "PAPER_RETRACTED"));
+    }
+
+    @Test
+    void publisherRejectsBlankSerializedPayloadEvenWhenNotNull() throws Exception {
+        OutboxEventRepository repository = mock(OutboxEventRepository.class);
+        JdbcTemplate jdbc = mock(JdbcTemplate.class);
+        ObjectMapper objectMapper = Mockito.mock(ObjectMapper.class);
+        // 非 null 但全空白：与"结果为空(null)"是两条独立的拒绝路径，blank 检查失效时坏事件会裸奔进 Kafka
+        when(objectMapper.writeValueAsString(any())).thenReturn("   ");
+        OutboxPublisher publisher = new OutboxPublisher(repository, objectMapper, jdbc);
+
+        IllegalStateException thrown = assertThrows(IllegalStateException.class,
+                () -> publisher.enqueue("paper", 7L, "PAPER_PUBLISHED", Map.of("paperId", 7)),
+                "空白 payload 必须被拒，不能落库");
+        assertTrue(thrown.getMessage().contains("结果为空(blank)"),
+                "blank 与 null 是两条独立校验，必须分别可辨: " + thrown.getMessage());
+        verifyNoInteractions(jdbc);
     }
 }

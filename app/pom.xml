@@ -134,6 +134,34 @@
             <groupId>org.jacoco</groupId>
             <artifactId>jacoco-maven-plugin</artifactId>
             <version>0.8.12</version>
+            <configuration>
+                <!-- rules 放在 plugin 级：verify 的 jacoco-check execution 与 CLI 手动
+                     `jacoco:check`（本地免 package 验证门禁）共用同一份规则 -->
+                <rules>
+                    <rule>
+                        <element>BUNDLE</element>
+                        <limits>
+                            <limit>
+                                <counter>INSTRUCTION</counter>
+                                <value>COVEREDRATIO</value>
+                                <minimum>0.80</minimum>
+                            </limit>
+                            <limit>
+                                <counter>BRANCH</counter>
+                                <value>COVEREDRATIO</value>
+                                <!-- 0.65：2026-09-09 锁定实测水位（CI 等效三证据口径 68.3%，
+                                     全量四证据口径 67.1%），比原 0.55 提 10pp；余量 3pp 防环境浮动 -->
+                                <minimum>0.65</minimum>
+                            </limit>
+                            <limit>
+                                <counter>LINE</counter>
+                                <value>COVEREDRATIO</value>
+                                <minimum>0.80</minimum>
+                            </limit>
+                        </limits>
+                    </rule>
+                </rules>
+            </configuration>
             <executions>
                 <execution>
                     <id>prepare-agent</id>
@@ -154,30 +182,6 @@
                     <goals>
                         <goal>check</goal>
                     </goals>
-                    <configuration>
-                        <rules>
-                            <rule>
-                                <element>BUNDLE</element>
-                                <limits>
-                                    <limit>
-                                        <counter>INSTRUCTION</counter>
-                                        <value>COVEREDRATIO</value>
-                                        <minimum>0.80</minimum>
-                                    </limit>
-                                    <limit>
-                                        <counter>BRANCH</counter>
-                                        <value>COVEREDRATIO</value>
-                                        <minimum>0.55</minimum>
-                                    </limit>
-                                    <limit>
-                                        <counter>LINE</counter>
-                                        <value>COVEREDRATIO</value>
-                                        <minimum>0.80</minimum>
-                                    </limit>
-                                </limits>
-                            </rule>
-                        </rules>
-                    </configuration>
                 </execution>
             </executions>
         </plugin>
@@ -195,16 +199,23 @@
                 </dependency>
             </dependencies>
             <configuration>
-                <!-- 范围限定 event.*：redis.* 的覆盖与杀死由 REDIS_EVIDENCE 门控的集成测试承担，
+                <!-- 范围限定纯单元测试可达的包：event.*（Outbox/Relay）、common.*（ExpiringCache 单飞、
+                     InfrastructureConfig 池路由、RateLimitFilter）、importjob.*（RetrySweeper 退避状态机）。
+                     redis.* 等的覆盖与杀死由 REDIS_EVIDENCE 门控的集成测试承担，
                      PIT 只跑纯单元测试（拉 Spring 上下文会让每个变异体的验证代价不可接受） -->
                 <targetClasses>
                     <param>com.allen.questionbank.event.*</param>
+                    <param>com.allen.questionbank.common.*</param>
+                    <param>com.allen.questionbank.importjob.*</param>
                 </targetClasses>
                 <targetTests>
                     <param>com.allen.questionbank.OutboxTest</param>
                     <param>com.allen.questionbank.OutboxRelayAndConsumerTest</param>
                     <param>com.allen.questionbank.common.RateLimitFilterTest</param>
+                    <param>com.allen.questionbank.common.ExpiringCacheSingleflightTest</param>
+                    <param>com.allen.questionbank.common.InfrastructureExecutorRoutingTest</param>
                     <param>com.allen.questionbank.InfrastructureUnitTest</param>
+                    <param>com.allen.questionbank.importjob.ImportJobRetrySweeperTest</param>
                 </targetTests>
                 <outputFormats>
                     <param>XML</param>
