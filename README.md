@@ -29,7 +29,7 @@ The custom `/api/metrics` endpoint still exposes in-memory counters that reset w
 
 ```bash
 # 前提：本地 MySQL 9 已在 127.0.0.1:3306 运行，库 question_bank 已建
-./scripts/mvn.sh -B clean verify          # 编译 + 112 个测试（全证据环境）+ 覆盖率门禁
+./scripts/mvn.sh -B clean verify          # 编译 + 119 个测试（CI 等效口径实测）+ 覆盖率门禁
 ./scripts/mvn.sh spring-boot:run          # 需要 DB_URL/DB_USERNAME/DB_PASSWORD 环境变量
 docker compose up -d mysql redis app      # 容器化路径（本机未装 Docker，未经实跑验证）
 ```
@@ -79,7 +79,7 @@ Run the focused test suite and package build:
 ```bash
 MYSQL_EVIDENCE=true ./scripts/mysql-evidence.sh   # 真实 MySQL：EXPLAIN / 隔离级别 / 行锁
 REDIS_EVIDENCE=true MYSQL_EVIDENCE=true KAFKA_EVIDENCE=true \
-  MYSQL_SHARDING_EVIDENCE=true ./scripts/mvn.sh -B clean verify   # 全量门禁，共 112 个测试
+  MYSQL_SHARDING_EVIDENCE=true ./scripts/mvn.sh -B clean verify   # 全量门禁（CI 等效口径 119 个测试，另含 8 个 sharding 真机用例）
 ./scripts/loadtest.sh                             # 开环压测 + JFR，需要 MySQL 与空闲 8080 端口
 ```
 
