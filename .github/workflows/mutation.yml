@@ -1,0 +1,51 @@
+name: Mutation
+
+on:
+  # 代码/构建/工作流文件变更时跑（纯文档提交不触发）
+  push:
+    paths:
+      - ".github/workflows/mutation.yml"
+      - "app/pom.xml"
+      - "app/src/main/**"
+      - "app/src/test/**"
+  # 每周一 02:00 UTC（北京 10:00）定时兜底，防止断言静默腐化
+  schedule:
+    - cron: "0 2 * * 1"
+  workflow_dispatch:
+
+jobs:
+  pit:
+    name: PIT 变异测试（event/common/importjob 三包，强度门禁 85%）
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-java@v4
+        with:
+          java-version: "21"
+          distribution: "temurin"
+          cache: maven
+
+      # PIT 只跑纯单元测试（7 个 targetTests 类），不需要 mysql/redis/kafka 服务容器；
+      # 证据门控测试在 test 阶段按环境变量缺失自动跳过
+      - name: 运行 PIT 变异测试
+        run: |
+          ./mvnw -B -pl app test org.pitest:pitest-maven:mutationCoverage 2>&1 | tee pit.log
+          grep -aq "BUILD SUCCESS" pit.log
+
+      # 双口径守门：pom 的 mutationThreshold=45 守 killed/total 底线；
+      # 这里对 "Test strength"（killed/有覆盖变异）做 ≥85 硬断言——
+      # 它才是"断言能不能挡住错误"的真指标（2026-09-09 实测 90%）
+      - name: 变异强度硬断言（Test strength ≥ 85）
+        run: |
+          STRENGTH=$(grep -aoE "Test strength [0-9]+%" pit.log | grep -oE "[0-9]+" | head -1)
+          echo "Test strength = ${STRENGTH}%"
+          [ -n "$STRENGTH" ] || { echo "未解析到 Test strength 行"; exit 1; }
+          [ "$STRENGTH" -ge 85 ] || { echo "变异强度 ${STRENGTH}% 低于 85% 门禁"; exit 1; }
+
+      - name: 上传变异报告
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: pit-reports
+          path: app/target/pit-reports/

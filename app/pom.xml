@@ -226,6 +226,11 @@
                 <mutators>
                     <mutator>DEFAULTS</mutator>
                 </mutators>
+                <!-- 底线门禁：mutationThreshold 口径 = killed/总变异（实测实锤：174 中杀 85 = 49%，
+                     pitest 不排除 NO_COVERAGE——80 个无覆盖变异来自只有集成测试覆盖的类，PIT 只跑
+                     纯单元）。45 守大面积回归底线；测试强度（killed/有覆盖 = 90%）由 CI 的
+                     mutation.yml 用 awk 对 "Test strength" 行做 ≥85 硬断言，两条线各管各的 -->
+                <mutationThreshold>45</mutationThreshold>
             </configuration>
         </plugin>
     </plugins>
