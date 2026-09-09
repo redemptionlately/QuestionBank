@@ -1,0 +1,1 @@
+{"url": "http://127.0.0.1:18080/api/auth/login", "rps": 53.1, "ok": 827, "fail": 4, "p50_ms": 125.0, "p95_ms": 1117.4, "p99_ms": 1640.5, "duration_s": 15.56, "concurrency": 16}
