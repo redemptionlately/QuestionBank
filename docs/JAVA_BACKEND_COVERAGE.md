@@ -3,7 +3,7 @@
 > 原则：**源码存在 ≠ 掌握**。下面每一条都标注了可以复跑的命令与落在 `output/` 的原始证据文件。
 > 没有证据的一律写进「未接入 / 未验证」，不写进简历。
 
-## 已实现并测试（app 116 + monitor-starter 3 = 119 个测试，CI 等效三证据口径实测 0 失败；sharding 8 + 读写分离 3 真机用例按环境变量门控附加；GitHub Actions 云端每轮全绿）
+## 已实现并测试（app 116 + monitor-starter 3 = 119 个测试注册总数；2026-09-09 全量四证据 clean verify 实测 **0 失败、3 跳过**（读写分离真机用例由 READ_REPLICA_EVIDENCE 单独门控；sharding 6 个门控用例已含在总数内）；GitHub Actions 云端每轮全绿）
 
 > CI 证据：<https://github.com/redemptionlately/QuestionBank/actions/runs/34314694737>（2026-09-08，三个 job 全绿：
 > ubuntu-latest 上 mysql:9.0 / redis:7 / apache/kafka:4.0.0 三个服务容器真实运行，
@@ -48,7 +48,7 @@
 | 分布式 · Redis | `REDIS_EVIDENCE=true ./scripts/mvn.sh test -Dtest=RedisCacheIntegrationTest` | surefire 输出 | 命中/未命中计数、发布后提交再淘汰、Redis 宕机降级到 DB |
 | 分布式 · 锁 | `REDIS_EVIDENCE=true ./scripts/mvn.sh test -Dtest='RedisLock*,RedisGuarded*'` | surefire 输出 | 互斥、误删防护、TTL 自动释放、fencing 单调递增；加锁并发 4 路 = 1 成功 + 3 拒绝；**故意绕过锁后数据库行锁 + 幂等键仍给出一致结果（4 路得分全为 0）** |
 | 分布式 · 限流 | 同上 | 同上 | 令牌桶容量 5 放行 5；耗尽后按时间补充；共享限流容量 3 → 放行 3 + 429×3 |
-| 测试 · 覆盖率 | `REDIS_EVIDENCE=true MYSQL_EVIDENCE=true KAFKA_EVIDENCE=true MYSQL_SHARDING_EVIDENCE=true ./scripts/mvn.sh -B clean verify`（本地全量门禁）；CI 全证据环境见「运维 · CI/CD」行 | `target/site/jacoco/index.html`、`output/ci_equiv_check_20260909.log` | 本地三证据口径 **119 个测试 0 失败**（app 116 + monitor-starter 3；sharding 8 + 读写分离 3 用例按门控跳过，四证据口径另含 sharding 真机用例）。**分支门禁 2026-09-09 起提至 0.65**（此前 0.55），锁定实测水位：CI 等效三证据口径分支 69.0%（run 34338417397 云端通过）、全量四证据口径 67.1%；Jacoco 实测指令 86.8% / 分支 69.0% / 行 91.3%。门禁是 fail-the-build 硬门禁——**本地与 CI 都曾真实触发过失败并靠补测试而非调阈值修复**（CI 那次：证据测试被跳过稀释至 74% 直接挂构建） |
+| 测试 · 覆盖率 | `REDIS_EVIDENCE=true MYSQL_EVIDENCE=true KAFKA_EVIDENCE=true MYSQL_SHARDING_EVIDENCE=true ./scripts/mvn.sh -B clean verify`（本地全量门禁）；CI 全证据环境见「运维 · CI/CD」行 | `target/site/jacoco/index.html`、`output/full_verify_4ev_20260909.log` | **2026-09-09 全量四证据 clean verify 实测：119 个测试 0 失败、3 跳过（读写分离真机用例）、All coverage checks met**（2m26s，jar 锁解除后本机首次完整复跑）。Jacoco 实测指令 86.7% / 分支 68.7% / 行 91.2%（四证据口径）；三证据口径 69.0%（run 34338417397 云端同过）。**分支门禁 2026-09-09 起提至 0.65**（此前 0.55），余量 ~3pp 防环境浮动。门禁是 fail-the-build 硬门禁——**本地与 CI 都曾真实触发过失败并靠补测试而非调阈值修复**（CI 那次：证据测试被跳过稀释至 74% 直接挂构建） |
 | 测试 · 变异强度 | `./scripts/mvn.sh -B -pl app test org.pitest:pitest-maven:mutationCoverage` | `output/pit_expanded_v3_20260909.log`、`target/pit-reports/` | **2026-09-09 起范围扩至三包**（event.* / common.* / importjob.*，targetTests 7 个纯单元测试类）：174 个变异体杀死 85，**测试强度 90%**（覆盖到的变异中 90% 被断言杀死，与原 event.* 独跑 91% 持平）；event.* 原 30 变异体 70% 杀死率。变异测试驱动补强 4 处断言缺口 + 修复 2 个真缺陷（OutboxPublisher 校验异常坍缩——已重构；verify(jdbc,never()) 的 varargs 匹配盲区 + 429 延迟基线污染本轮修复）。存活 9 个全部裁定等价/近等价并记录：OutboxEvent `length()>480` 截断不动点（480 字符截断后不变）、ExpiringCache fast-path（双检兜底行为等价）、RetrySweeper 空列表循环、RateLimitFilter sweep 内存卫生族（modulus/==0/removeIf 谓词——compute 自换窗，清扫仅延迟回收）、nanoTime 加法（聚合无时钟对照面）、构造器 OR 短路不可达分支 |
 | 并发 · GC 行为 | `./scripts/loadtest.sh`（已内置 `-Xlog:gc*`）+ `./scripts/gc-report.sh output/gc_*.log` | `output/gc_report_*.log` | 153s 压测窗口：23 次停顿共 147ms，G1 吞吐 99.90%；Young 15 次 / Mixed 0 / **Full 0**；停顿 P50 6.3ms / P95 12.2ms / MAX 17.2ms（目标 200ms）；Young 均次回收 190M。应用 P99 5ms 与 GC MAX 17ms 对照，说明延迟不受 GC 支配 |
 | 并发 · GC 调优对照 | `./scripts/gc-compare-zgc.sh`（ZGC 分代，同负载 @100RPS） | `output/gc_report_zgc_*.log` | 同一负载下 ZGC 停顿 P50 **0.011ms** / MAX **0.027ms**（G1 为 6.3/17.2ms，低约 3 个数量级），累计停顿 0.29ms vs 147ms；**但应用 P99 两者同为 10ms**——瓶颈不在 GC 时换收集器不改善延迟，选型要按延迟目标与吞吐/内存开销权衡，不是无脑上 ZGC |

@@ -1,0 +1,14 @@
+﻿
+
+ProcessId : 110520
+cmd       : "C:\Program Files\Common Files\Oracle\Java\javapath\java.exe" -jar 
+            C:\Project\QuestionBank\app\target\question-bank-m0-0.1.0-SNAPSHOT.
+            jar --server.port=8080
+
+ProcessId : 105876
+cmd       : "C:\Program Files\Java\jdk-21.0.12\bin\java.exe" -jar C:\Project\Qu
+            estionBank\app\target\question-bank-m0-0.1.0-SNAPSHOT.jar --server.
+            port=8080
+
+
+
