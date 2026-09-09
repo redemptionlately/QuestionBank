@@ -28,12 +28,26 @@ jobs:
 
       # PIT 只跑纯单元测试（7 个 targetTests 类），不需要 mysql/redis/kafka 服务容器；
       # 证据门控测试在 test 阶段按环境变量缺失自动跳过。
-      # -am 必须带：干净 CI 的 ~/.m2 没有 monitor-spring-boot-starter SNAPSHOT，
-      # -pl app 单模块会因缺依赖直接挂（本地能跑只是因为 .m2 有 install 残留）——首跑实锤
-      - name: 运行 PIT 变异测试
+      #
+      # 必须两步走——2026-09-09 云端两轮实锤，别合并回 `-pl app -am` 单条：
+      # ① CLI 直接调 goal 会生成 default-cli execution，Maven 对 reactor 里【每个模块】都执行它。
+      #    `-pl app -am` 会把 monitor-spring-boot-starter 拉进 reactor，而该模块没声明 pitest 插件
+      #    → Maven 解析到 1.30.0（不是 app/pom.xml 声明的 1.16.3）且不带 pitest-junit5-plugin
+      #    → "Please check you have correctly installed the pitest plugin for your project's test library"
+      #    （本地复现：output/pit_am_repro_20260909.log；云端 run 34345585631）
+      # ② 预装那一步也不能写成 `-pl app -am install`：jacoco-check 绑在 verify，
+      #    -DskipTests 会让覆盖率归零直接挂。只装 monitor-starter（+ 父 POM）即可满足 app 的 SNAPSHOT 依赖。
+      - name: 预装 reactor 内部依赖（monitor-starter SNAPSHOT）
+        run: ./mvnw -B -pl monitor-starter -am install -DskipTests
+
+      - name: 运行 PIT 变异测试（reactor 只留 app 一个模块）
         run: |
-          ./mvnw -B -pl app -am test org.pitest:pitest-maven:mutationCoverage 2>&1 | tee pit.log
+          ./mvnw -B -pl app test org.pitest:pitest-maven:mutationCoverage 2>&1 | tee pit.log
           grep -aq "BUILD SUCCESS" pit.log
+          # 版本防漂移：goal 一旦又被扩散到未声明插件的模块，版本会漂到 latest（1.30.0），
+          # 这里把 POM 声明的 1.16.3 钉死成硬断言
+          grep -aq "pitest:1.16.3:mutationCoverage" pit.log || {
+            echo "PIT 插件版本漂移：未见到 pitest:1.16.3:mutationCoverage"; exit 1; }
 
       # 双口径守门：pom 的 mutationThreshold=45 守 killed/total 底线；
       # 这里对 "Test strength"（killed/有覆盖变异）做 ≥85 硬断言——
