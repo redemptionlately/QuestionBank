@@ -76,8 +76,12 @@ echo "########## 2. 打包 jar ##########"
 ./scripts/mvn.sh -B -DskipTests package -q 2>&1 | tail -5
 JAR="$ROOT/app/target/question-bank-m0-0.1.0-SNAPSHOT.jar"
 [ -f "$JAR" ] || { echo "打包失败：$JAR 不存在"; exit 1; }
-cp -f "$JAR" "$ROOT/deploy/question-bank-app.jar"
-JAR_WIN="$(cygpath -w "$ROOT/deploy/question-bank-app.jar")"
+# jar 拷贝到 output/ 而不是 deploy/：deploy/question-bank-app.jar 可能正被长驻主进程运行，
+# 运行中 jar 被同路径覆盖时 Windows 上旧句柄按缓存 zip 索引读新文件 → 类数据错位，
+# 懒加载类（如 logback ThrowableProxy）加载失败且错误日志崩溃（2026-09-10 事故，已沉淀教训）
+mkdir -p "$ROOT/output/jars"
+JAR_WIN="$(cygpath -w "$ROOT/output/jars/multi-instance.jar")"
+cp -f "$JAR" "$ROOT/output/jars/multi-instance.jar"
 echo "jar 就绪: $JAR_WIN"
 
 # ---------- 工具函数 ----------

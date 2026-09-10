@@ -1,0 +1,4 @@
+覆盖后 旧句柄读取本身即失败: BadZipFile: Bad magic number for file header
+覆盖前 logback-classic 从旧句柄读出: 内层 zip 合法 = True
+覆盖后 logback-classic 从旧句柄读出: 内层 zip 合法 = False
+结论: 复现成功——旧句柄按缓存索引读到错位字节

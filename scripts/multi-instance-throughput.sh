@@ -77,8 +77,11 @@ echo "########## 打包 ##########"
 ./scripts/mvn.sh -B -DskipTests package -q 2>&1 | tail -3
 JAR="$ROOT/app/target/question-bank-m0-0.1.0-SNAPSHOT.jar"
 [ -f "$JAR" ] || { echo "打包失败"; exit 1; }
-cp -f "$JAR" "$ROOT/deploy/question-bank-app.jar"
-JAR_WIN="$(cygpath -w "$ROOT/deploy/question-bank-app.jar")"
+# jar 拷贝到 output/ 而不是 deploy/：deploy/question-bank-app.jar 可能正被长驻主进程运行，
+# 运行中 jar 被同路径覆盖时 Windows 上旧句柄按缓存 zip 索引读新文件 → 类数据错位（2026-09-10 事故教训）
+mkdir -p "$ROOT/output/jars"
+JAR_WIN="$(cygpath -w "$ROOT/output/jars/multi-instance.jar")"
+cp -f "$JAR" "$ROOT/output/jars/multi-instance.jar"
 
 start_instance() { # $1=端口（容量放开，避免限流器成为压测对象——测的是扩容不是限流）
   "$JAVA" -jar "$JAR_WIN" \

@@ -59,32 +59,67 @@ class MysqlRealDbIntegrationTest {
     @Autowired JdbcTemplate jdbcTemplate;
     @Autowired DataSource dataSource;
     @Autowired WrongQuestionQueryMapper wrongQuestionQuery;
+    @Autowired org.springframework.security.crypto.password.PasswordEncoder passwordEncoder;
 
     private static final String SEED_BANK = "SEED-BANK";
+    // 测试自建账号：不依赖种子账号（admin/student 的密码是可变的用户数据），
+    // 用注入的真实 PasswordEncoder 生成 BCrypt；@AfterEach 一并清理。2026-09-10 教训：
+    // 测试曾硬编码 admin/admin123，用户改密码后 3306 单测 401。
+    private static final String EV_ADMIN = "evidence-admin";
+    private static final String EV_STUDENT = "evidence-student";
+    private static final String EV_PASSWORD = "evidence-password-2026";
 
     @AfterEach
     void cleanupSeededRows() {
+        // 顺序敏感：user_account 被 paper_version(created_by)/question_bank(owner_id)/
+        // practice_session/wrong_question(student_id) 等 FK 引用，必须先清引用数据、最后删账号。
+        // 不清理会在真实业务库留下残留（2026-09-10 教训：密码哈希 'x' 触发 BCrypt WARN；
+        // 反向错误：先删账号撞 fk_paper_version_creator）。
+        for (String u : new String[] {"wq-mybatis-evidence", EV_ADMIN, EV_STUDENT}) {
+            jdbcTemplate.update("DELETE FROM wrong_question WHERE student_id IN "
+                    + "(SELECT id FROM user_account WHERE username = ?)", u);
+            jdbcTemplate.update("DELETE FROM submission_item WHERE session_id IN "
+                    + "(SELECT id FROM practice_session WHERE student_id IN "
+                    + "(SELECT id FROM user_account WHERE username = ?))", u);
+            jdbcTemplate.update("DELETE FROM practice_session WHERE student_id IN "
+                    + "(SELECT id FROM user_account WHERE username = ?)", u);
+            // question_mastery 是 gitignored WIP 表（V5 迁移，本地存在、CI 无），
+            // 守卫免表不存在时整个清理链挂掉（2026-09-10）
+            Integer masteryTable = jdbcTemplate.queryForObject(
+                    "SELECT COUNT(*) FROM information_schema.tables "
+                            + "WHERE table_schema = DATABASE() AND table_name = 'question_mastery'", Integer.class);
+            if (masteryTable != null && masteryTable > 0) {
+                jdbcTemplate.update("DELETE FROM question_mastery WHERE student_id IN "
+                        + "(SELECT id FROM user_account WHERE username = ?)", u);
+            }
+        }
+
         List<Long> paperIds = jdbcTemplate.queryForList(
                 "SELECT id FROM paper_version WHERE title LIKE 'SEED%'", Long.class);
         if (paperIds.isEmpty()) {
             jdbcTemplate.update("DELETE FROM question_bank WHERE name = ?", SEED_BANK);
-            return;
+        } else {
+            String in = paperIds.stream().map(String::valueOf).collect(Collectors.joining(","));
+            jdbcTemplate.update("DELETE FROM wrong_question WHERE question_version_id IN "
+                    + "(SELECT id FROM question_version WHERE paper_version_id IN (" + in + "))");
+            jdbcTemplate.update("DELETE FROM submission_item WHERE session_id IN "
+                    + "(SELECT id FROM practice_session WHERE paper_version_id IN (" + in + "))");
+            jdbcTemplate.update("DELETE FROM practice_session WHERE paper_version_id IN (" + in + ")");
+            jdbcTemplate.update("DELETE FROM question_version WHERE paper_version_id IN (" + in + ")");
+            jdbcTemplate.update("DELETE FROM paper_version WHERE id IN (" + in + ")");
+            jdbcTemplate.update("DELETE FROM question_bank WHERE name = ?", SEED_BANK);
         }
-        String in = paperIds.stream().map(String::valueOf).collect(Collectors.joining(","));
-        jdbcTemplate.update("DELETE FROM wrong_question WHERE question_version_id IN "
-                + "(SELECT id FROM question_version WHERE paper_version_id IN (" + in + "))");
-        jdbcTemplate.update("DELETE FROM submission_item WHERE session_id IN "
-                + "(SELECT id FROM practice_session WHERE paper_version_id IN (" + in + "))");
-        jdbcTemplate.update("DELETE FROM practice_session WHERE paper_version_id IN (" + in + ")");
-        jdbcTemplate.update("DELETE FROM question_version WHERE paper_version_id IN (" + in + ")");
-        jdbcTemplate.update("DELETE FROM paper_version WHERE id IN (" + in + ")");
-        jdbcTemplate.update("DELETE FROM question_bank WHERE name = ?", SEED_BANK);
+
+        // 最后删账号：此时 paper/bank/practice/wrong 引用均已清空
+        for (String u : new String[] {"wq-mybatis-evidence", EV_ADMIN, EV_STUDENT}) {
+            jdbcTemplate.update("DELETE FROM user_account WHERE username = ?", u);
+        }
     }
 
     @Test
     void realMysqlRunsFullPublishAndIdempotentSubmitFlow() throws Exception {
-        String admin = login("admin", "admin123");
-        String student = login("student", "student123");
+        String admin = login(createEvidenceUser(EV_ADMIN, "ADMIN"), EV_PASSWORD);
+        String student = login(createEvidenceUser(EV_STUDENT, "STUDENT"), EV_PASSWORD);
 
         JsonNode bank = json(mvc.perform(post("/api/admin/banks")
                         .header("Authorization", bearer(admin)).contentType(APPLICATION_JSON)
@@ -448,6 +483,17 @@ class MysqlRealDbIntegrationTest {
                         .content("{\"username\":\"" + username + "\",\"password\":\"" + password + "\"}"))
                 .andExpect(status().isOk()).andReturn());
         return response.get("token").asText();
+    }
+
+    /** 幂等创建测试专属账号（true BCrypt 哈希），返回用户名。不依赖种子账号的可变密码。 */
+    private String createEvidenceUser(String username, String role) {
+        boolean exists = Boolean.TRUE.equals(jdbcTemplate.queryForObject(
+                "SELECT COUNT(*) > 0 FROM user_account WHERE username = ?", Boolean.class, username));
+        if (!exists) {
+            jdbcTemplate.update("INSERT INTO user_account (username, password_hash, role) VALUES (?, ?, ?)",
+                    username, passwordEncoder.encode(EV_PASSWORD), role);
+        }
+        return username;
     }
 
     private JsonNode json(MvcResult result) throws Exception {
