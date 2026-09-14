@@ -17,14 +17,52 @@ output/replication_setup_*.log
 # 链路追踪排障期手动拉起进程的 DEBUG 日志（中间产物，结论已固化进证据脚本与解析器）
 output/dbg_*.log
 
-# 前端独立工程（与后端分离开发，不纳入后端 Git 提交）
+# 前端独立工程（与后端分离开发，不纳入后端 Git 提交；只改工作区文件）
 frontend/
+# 前端旧版备份
+frontend/.legacy-backup/
 
 # 本机数据库连接参数（含密码，绝不入库）
 scripts/.env.local
 
-# 前端旧版备份
-frontend/.legacy-backup/
-
 # 登录态 token（演示凭据也不入库）
 output/e2e_student_token.txt
+
+# QB 增量隔离开发（永不提交；后端新功能只允许加在 extra/ 包内，配套迁移随手加 ignore）
+app/src/main/java/com/allen/questionbank/extra/
+app/src/main/resources/db/migration/V5__subject_book_mastery.sql
+app/src/main/resources/db/migration/V6__ingest_extensions.sql
+app/src/main/resources/db/migration/V7__category_tree.sql
+
+# 合成书 PDF（扫描件合并产物，体积大，运行时按需重建）
+data/
+
+# ---- 运行期 / 诊断 / 验证产物：一律不入库 ----
+output/
+*.log
+*.jfr
+*.hprof
+
+# ---- 构建产物 ----
+*.jar
+*.war
+node_modules/
+dist/
+
+# ---- 临时脚本 / 探针 / 抓取中间产物 ----
+*.tmp
+*.bak
+*.swp
+__pycache__/
+*.pyc
+
+# ---- 本机一次性 helper / 抓取基线（个人路径硬编码，不入库）----
+scripts/start-all.sh
+/study/_baseline_app.md
+/study/_baseline_buildtest.md
+/study/_baseline_periphery.md
+/package.json
+
+# ---- 系统 / 编辑器 ----
+.DS_Store
+Thumbs.db
