@@ -40,10 +40,84 @@ const log = (s) => { lines.push(s); console.log(s); };
     await page.fill('#lgUser', 'admin');
     await page.fill('#lgPass', 'admin123');
     await page.click('#loginBtn');
+    /* 等登录请求完成并落到工作台（hash 跳转完成后才可靠） */
+    await page.waitForFunction(() => location.hash === '#/dashboard', { timeout: 12000 });
     await page.waitForSelector('.sidebar .nav-item', { timeout: 8000 });
-    await page.waitForSelector('.user-chip', { timeout: 4000 });
   });
   await page.screenshot({ path: path.join(OUT, 'ui_admin_home.png') });
+
+  await step('admin compose: bank → paper → publish (page-level)', async () => {
+    await page.evaluate(() => document.querySelector('.nav-item[data-path="/admin"]').click());
+    try {
+      await page.waitForSelector('#bankForm', { timeout: 8000 });
+    } catch (e) {
+      let diag = 'diag-evaluate-failed: ' + e.message.split('\n')[0];
+      try {
+        diag = JSON.stringify(await page.evaluate(() => ({
+          hash: location.hash,
+          navCount: document.querySelectorAll('.nav-item').length,
+          outletHead: document.getElementById('outlet').innerHTML.replace(/\s+/g, ' ').slice(0, 300),
+          hasBankForm: !!document.querySelector('#bankForm'),
+        })));
+      } catch (e2) { diag += ' / ' + e2.message.split('\n')[0]; }
+      fs.appendFileSync(path.join(OUT, 'ui_diag.txt'), new Date().toISOString() + ' ' + diag + '\n');
+      throw e;
+    }
+
+    /* 建题库 */
+    await page.fill('#bankName', '冒烟题库');
+    await page.evaluate(() => document.querySelector('#bankForm button[type=submit]').click());
+    await page.waitForFunction(() => document.querySelector('#bankChips .badge'), { timeout: 6000 });
+
+    /* 第 1 题（默认单选，编辑器已预置）：直接设 value，collectQuestions 时读取 */
+    await page.evaluate(() => {
+      const q1 = document.querySelector('#questionEditors .q-editor');
+      q1.querySelector('[data-role=prompt]').value = '冒烟题1：1+1=?';
+      const opts = q1.querySelectorAll('.opt-edit');
+      opts[0].querySelector('[data-role=optText]').value = '3';
+      opts[1].querySelector('[data-role=optText]').value = '4';
+      opts[0].querySelector('[data-role=optCorrect]').checked = true;
+    });
+
+    /* 第 2 题：判断 */
+    await page.evaluate(() => document.querySelector('#addQBtn').click());
+    await page.evaluate(() => {
+      const q2 = document.querySelectorAll('#questionEditors .q-editor')[1];
+      q2.querySelector('[data-role=type]').value = 'TRUE_FALSE';
+      q2.querySelector('[data-role=prompt]').value = '冒烟题2：天空是绿色的';
+      const opts = q2.querySelectorAll('.opt-edit');
+      opts[0].querySelector('[data-role=optText]').value = '对';
+      opts[1].querySelector('[data-role=optText]').value = '错';
+      opts[1].querySelector('[data-role=optCorrect]').checked = true;
+    });
+
+    await page.fill('#paperTitle', '冒烟卷');
+    await page.evaluate(() => document.querySelector('#savePaperBtn').click());
+    try {
+      await page.waitForSelector('.draft-row', { timeout: 8000 });
+    } catch (e) {
+      const toasts = await page.evaluate(() =>
+        [...document.querySelectorAll('.toast')].map(t => t.textContent.trim()).join(' || ') || 'no toast');
+      fs.appendFileSync(path.join(OUT, 'ui_diag.txt'),
+        new Date().toISOString() + ' save-paper toasts: ' + toasts + '\n');
+      throw e;
+    }
+
+    /* 发布草稿 → 徽章变已发布（admin.js 用 badge-ok 表达，无 .published class） */
+    await page.evaluate(() => document.querySelector('.draft-row [data-publish]').click());
+    await page.waitForFunction(
+      () => document.querySelector('.draft-row .badge-ok'),
+      { timeout: 8000 }
+    );
+
+    /* 已发布 tab 能看到冒烟卷 */
+    await page.evaluate(() => document.querySelector('#adminSeg [data-tab=published]').click());
+    await page.waitForFunction(
+      () => document.querySelector('#tabPublished .table')?.textContent?.includes('冒烟卷'),
+      { timeout: 8000 }
+    );
+  });
+  await page.screenshot({ path: path.join(OUT, 'ui_admin_published.png') });
 
   await step('admin sees bank menu, opens papers', async () => {
     const texts = await page.$$eval('.nav-item', els => els.map(e => e.textContent));
@@ -71,8 +145,9 @@ const log = (s) => { lines.push(s); console.log(s); };
     await page.fill('#lgUser', 'student');
     await page.fill('#lgPass', 'student123');
     await page.click('#loginBtn');
-    await page.waitForSelector('.nav-item[data-path="/papers"]', { timeout: 8000 });
-    await page.click('.nav-item[data-path="/papers"]');
+    /* 等登录请求完成、hash 落到工作台后再导航 */
+    await page.waitForFunction(() => location.hash === '#/dashboard', { timeout: 12000 });
+    await page.evaluate(() => document.querySelector('.nav-item[data-path="/papers"]').click());
     await page.waitForSelector('.paper-card', { timeout: 8000 });
     /* 点第一张试卷卡片上的"开始练习"按钮 */
     await page.click('.paper-card [data-act="open"]');
@@ -135,6 +210,7 @@ const log = (s) => { lines.push(s); console.log(s); };
     const after = await page.evaluate(() => document.documentElement.dataset.theme);
     if (before === after) throw new Error(`theme unchanged: ${before}`);
   });
+  await page.screenshot({ path: path.join(OUT, 'ui_dark_theme.png') });
 
   log(`console errors: ${consoleErrors.length ? consoleErrors.join(' | ') : 'NONE'}`);
   fs.writeFileSync(path.join(OUT, 'ui_smoke.log'), lines.join('\n') + '\n');
