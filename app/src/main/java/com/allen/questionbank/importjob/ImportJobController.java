@@ -12,7 +12,9 @@ import java.net.URI;
 
 @RestController
 @RequestMapping("/api/import-jobs")
-@PreAuthorize("hasRole('STUDENT')")
+/* /jobs 是 ADMIN 专属导航项（app.js NAV roles:['ADMIN']），这里却按 STUDENT 放行 —— 角色写反，
+ * 管理员点"作业"页必然 403。改为 ADMIN 主导 + STUDENT 兼容。 */
+@PreAuthorize("hasAnyRole('ADMIN','STUDENT')")
 public class ImportJobController {
     private final ImportJobService service;
     public ImportJobController(ImportJobService service) { this.service = service; }

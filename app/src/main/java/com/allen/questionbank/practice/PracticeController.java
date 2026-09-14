@@ -14,7 +14,10 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api")
-@PreAuthorize("hasRole('STUDENT')")
+/* 学习者接口对 ADMIN 也开放：管理员在界面上能进答题页/错题本（exam.js/wrong.js 无角色门控），
+ * 旧的 hasRole('STUDENT') 会让 admin 在 POST /api/practices 上直接 403 —— 整个答题页废掉。
+ * 与其余 learner-facing 控制器（Mastery/Subject/Category/Quality…）保持 hasAnyRole 一致。 */
+@PreAuthorize("hasAnyRole('ADMIN','STUDENT')")
 public class PracticeController {
     private final PracticeService service;
     /**

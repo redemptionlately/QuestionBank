@@ -15,6 +15,8 @@ public class QuestionVersion {
     @Column(name = "answer_json", nullable = false, columnDefinition = "TEXT") private String answerJson;
     @Column(nullable = false) private int score;
     @Column(columnDefinition = "TEXT") private String explanation;
+    /** 知识点标签（V6 入库扩展，可空兼容老数据；原生 SQL 回填，不走构造器）。 */
+    @Column(name = "knowledge_point", length = 200) private String knowledgePoint;
 
     protected QuestionVersion() {}
     public QuestionVersion(Long paperVersionId, int questionNo, String prompt, QuestionType type,
@@ -32,4 +34,6 @@ public class QuestionVersion {
     public String getAnswerJson() { return answerJson; }
     public int getScore() { return score; }
     public String getExplanation() { return explanation; }
+    public String getKnowledgePoint() { return knowledgePoint; }
+    public void setKnowledgePoint(String knowledgePoint) { this.knowledgePoint = knowledgePoint; }
 }

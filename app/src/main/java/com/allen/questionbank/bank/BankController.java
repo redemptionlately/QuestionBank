@@ -2,6 +2,8 @@ package com.allen.questionbank.bank;
 
 import com.allen.questionbank.auth.ApiTokenFilter;
 import com.allen.questionbank.auth.CurrentUser;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.*;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -14,8 +16,12 @@ import java.util.List;
 @RequestMapping("/api")
 public class BankController {
     private final BankService service;
+    private final ObjectMapper objectMapper;
 
-    public BankController(BankService service) { this.service = service; }
+    public BankController(BankService service, ObjectMapper objectMapper) {
+        this.service = service;
+        this.objectMapper = objectMapper;
+    }
 
     @PostMapping("/admin/banks")
     @PreAuthorize("hasRole('ADMIN')")
@@ -47,8 +53,18 @@ public class BankController {
         PaperVersion paper = service.requirePublished(paperId);
         List<QuestionResponse> items = service.questions(paperId).stream()
                 .map(q -> new QuestionResponse(q.getId(), q.getQuestionNo(), q.getPrompt(), q.getQuestionType(),
-                        q.getOptionsJson(), q.getScore(), q.getExplanation())).toList();
+                        q.getOptionsJson(), parseAnswers(q.getAnswerJson()), q.getScore(), q.getExplanation())).toList();
         return new PaperDetailResponse(toPaper(paper), items);
+    }
+
+    /** answerJson（JSON 字符串数组）→ 文本列表；解析失败则回空列表（老数据兼容，不抛错）。 */
+    private List<String> parseAnswers(String answerJson) {
+        if (answerJson == null || answerJson.isBlank()) return List.of();
+        try {
+            return objectMapper.readValue(answerJson, new TypeReference<List<String>>() {});
+        } catch (Exception e) {
+            return List.of();
+        }
     }
 
     private static PaperResponse toPaper(PaperVersion paper) {
@@ -57,9 +73,9 @@ public class BankController {
 
     public record CreateBankRequest(@NotBlank @Size(max = 160) String name, @Size(max = 500) String description) {}
     public record CreatePaperRequest(@NotBlank @Size(max = 200) String title, @NotEmpty List<@Valid QuestionInput> questions) {}
-    public record QuestionInput(@NotBlank String prompt, @NotNull QuestionType type, @NotEmpty List<@NotBlank String> options,
+    public record QuestionInput(@NotBlank String prompt, @NotNull QuestionType type, @NotNull List<@NotBlank String> options,
                                 @NotEmpty List<@NotBlank String> correctAnswers, @Min(1) int score, String explanation) {}
     public record BankResponse(Long id, String name, String description) {}
     public record PaperDetailResponse(PaperResponse paper, List<QuestionResponse> questions) {}
-    public record QuestionResponse(Long id, int questionNo, String prompt, QuestionType type, String optionsJson, int score, String explanation) {}
+    public record QuestionResponse(Long id, int questionNo, String prompt, QuestionType type, String optionsJson, List<String> correctAnswers, int score, String explanation) {}
 }

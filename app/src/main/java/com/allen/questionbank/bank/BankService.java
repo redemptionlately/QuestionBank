@@ -128,9 +128,13 @@ public class BankService {
 
     private void validateQuestion(BankController.QuestionInput input) {
         if (input == null || input.prompt() == null || input.prompt().isBlank() || input.type() == null
-                || input.options() == null || input.options().isEmpty() || input.correctAnswers() == null
+                || input.options() == null || input.correctAnswers() == null
                 || input.correctAnswers().isEmpty() || input.score() <= 0) throw bad("题目字段不合法");
-        if (!input.options().containsAll(input.correctAnswers())) throw bad("标准答案必须来自选项");
+        boolean choice = input.type() == QuestionType.SINGLE || input.type() == QuestionType.MULTIPLE
+                || input.type() == QuestionType.TRUE_FALSE;
+        // 非选择题（填空/简答）：无选项，答案为自由文本；选择题保持原有约束
+        if (choice && input.options().isEmpty()) throw bad("选择题选项不能为空");
+        if (choice && !input.options().containsAll(input.correctAnswers())) throw bad("标准答案必须来自选项");
         if (input.options().stream().distinct().count() != input.options().size()) throw bad("选项不能重复");
         if (input.correctAnswers().stream().distinct().count() != input.correctAnswers().size()) throw bad("标准答案不能重复");
         if (input.type() == QuestionType.SINGLE && input.correctAnswers().size() != 1) throw bad("单选题只能有一个答案");

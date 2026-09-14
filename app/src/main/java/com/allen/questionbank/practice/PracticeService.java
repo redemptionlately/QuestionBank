@@ -45,7 +45,7 @@ public class PracticeService {
         PracticeSession session = requireSession(user, sessionId);
         if (session.getStatus() != PracticeStatus.IN_PROGRESS) throw conflict("练习已提交，答案不可修改");
         QuestionVersion question = requireQuestion(session, questionId);
-        String normalized = normalize(answer);
+        String normalized = normalize(answer, question);
         validateChoices(question, answer);
         SubmissionItem item = submissions.findBySessionIdAndQuestionVersionId(sessionId, questionId)
                 .map(existing -> { existing.replaceAnswer(normalized); return existing; })
@@ -70,7 +70,7 @@ public class PracticeService {
         for (QuestionVersion question : paperQuestions) {
             SubmissionItem item = submissions.findBySessionIdAndQuestionVersionId(sessionId, question.getId())
                     .orElseGet(() -> new SubmissionItem(sessionId, question.getId(), "[]"));
-            boolean correct = canonical(item.getAnswerJson()).equals(canonical(question.getAnswerJson()));
+            boolean correct = answersEqual(question, item.getAnswerJson(), question.getAnswerJson());
             int score = correct ? question.getScore() : 0;
             item.grade(score, correct);
             submissions.save(item);
@@ -134,24 +134,60 @@ public class PracticeService {
         try {
             List<String> options = new ArrayList<>();
             objectMapper.readTree(question.getOptionsJson()).forEach(value -> options.add(value.asText()));
+            // 非选择题（无选项）：自由作答，只校验数组形态，不校验归属
+            if (options.isEmpty()) return;
             for (JsonNode value : answer) if (!options.contains(value.asText())) throw bad("答案包含不属于题目的选项");
         } catch (JsonProcessingException exception) { throw bad("题目选项格式损坏"); }
     }
 
-    private String normalize(JsonNode node) {
-        try { return canonical(objectMapper.writeValueAsString(node)); }
-        catch (JsonProcessingException exception) { throw bad("答案格式不合法"); }
+    private String normalize(JsonNode node, QuestionVersion question) {
+        try {
+            // 填空题空序敏感：保序压缩；其余沿用排序归一
+            if (question.getQuestionType() == com.allen.questionbank.bank.QuestionType.FILL_BLANK) {
+                return ordered(objectMapper.writeValueAsString(node));
+            }
+            return canonical(objectMapper.writeValueAsString(node));
+        } catch (JsonProcessingException exception) { throw bad("答案格式不合法"); }
+    }
+
+    /** 文本归一：去首尾空白、压缩内部空白（判分宽容空格差异，不影响选择题）。 */
+    private String normVal(JsonNode value) {
+        if (value.isTextual()) {
+            String s = value.asText().strip().replaceAll("\\s+", " ");
+            try { return objectMapper.writeValueAsString(s); }
+            catch (JsonProcessingException exception) { return value.toString(); }
+        }
+        return value.toString();
     }
 
     private String canonical(String json) {
         try {
             JsonNode node = objectMapper.readTree(json);
-            if (!node.isArray()) return node.toString();
+            if (!node.isArray()) return normVal(node);
             List<String> values = new ArrayList<>();
-            node.forEach(value -> values.add(value.toString()));
+            node.forEach(value -> values.add(normVal(value)));
             values.sort(Comparator.naturalOrder());
             return values.toString();
         } catch (JsonProcessingException exception) { throw bad("答案格式不合法"); }
+    }
+
+    /** 保序压缩（填空题）：与 canonical 同一文本归一，但不排序。 */
+    private String ordered(String json) {
+        try {
+            JsonNode node = objectMapper.readTree(json);
+            if (!node.isArray()) return normVal(node);
+            List<String> values = new ArrayList<>();
+            node.forEach(value -> values.add(normVal(value)));
+            return values.toString();
+        } catch (JsonProcessingException exception) { throw bad("答案格式不合法"); }
+    }
+
+    /** 判分相等：填空题保序比对，其余排序归一比对。 */
+    private boolean answersEqual(QuestionVersion question, String itemJson, String questionJson) {
+        if (question.getQuestionType() == com.allen.questionbank.bank.QuestionType.FILL_BLANK) {
+            return ordered(itemJson).equals(ordered(questionJson));
+        }
+        return canonical(itemJson).equals(canonical(questionJson));
     }
 
     private String write(SubmitResult result) {
