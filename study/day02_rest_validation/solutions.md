@@ -1,13 +1,14 @@
 # Day02 REST Validation · 题目与标准解答（Solutions）
 
-> 依据：`study.md` + 真实源码 `BankController.java`、`GlobalExceptionHandler.java`、`ErrorResponse.java`。
+> 依据：`study.md` + 真实源码 [BankController.java](../../app/src/main/java/com/allen/questionbank/bank/BankController.java)、[GlobalExceptionHandler.java](../../app/src/main/java/com/allen/questionbank/common/GlobalExceptionHandler.java)、[ErrorResponse.java](../../app/src/main/java/com/allen/questionbank/common/ErrorResponse.java)。
 
 ## Current
 
 ### Q1. 按源码索引逐项定位文件、类/方法，独立写出代码并口述输入、输出与边界。
-固定动作（同 Day01）：定位 → 关源码默写 → 口述“输入/输出/失败边界/副作用”。本日锚点：
-- `BankController` 第 20-32 行 POST 接口、第 58-65 行 record DTO；
-- `GlobalExceptionHandler` 第 24-39 行校验异常/坏 JSON 到错误响应的映射；
+固定动作（同 Day01）：定位 → 关源码默写 → 口述“输入/输出/失败边界/副作用”。本日锚点（主代码在 `app/src/main/java/com/allen/questionbank/`）：
+- [bank/BankController.java](../../app/src/main/java/com/allen/questionbank/bank/BankController.java)：createBank 第 20-25 行、createDraft 第 27-32 行两个 POST 接口，第 58-64 行 5 个 record DTO；
+- [common/GlobalExceptionHandler.java:19-20](../../app/src/main/java/com/allen/questionbank/common/GlobalExceptionHandler.java)：6 个 @ExceptionHandler（ApiException :23、MethodArgumentNotValid :28、ConstraintViolation :35、缺头/坏 JSON :40、AccessDenied :45、兜底 Exception :50），统一出口 response() 在 :59-63；
+- [common/ErrorResponse.java:5](../../app/src/main/java/com/allen/questionbank/common/ErrorResponse.java)：`record ErrorResponse(String code, String message, String requestId, Instant timestamp)`；
 - Spring MVC 主链：`DispatcherServlet → HandlerMapping → HandlerAdapter → 参数解析器 → Controller → HttpMessageConverter`。
 
 ---
@@ -91,16 +92,17 @@ public record CreateBankRequest(@NotBlank @Size(max = 160) String name,
 | `questions` 为空数组/null | `@NotEmpty` | 同上 | 同上 | 400 + `VALIDATION_ERROR` |
 | 元素 `prompt` 空白 | 嵌套 `@Valid` + `@NotBlank` | 同上 | 同上 | 400 + `VALIDATION_ERROR` |
 
-真实处理器（`GlobalExceptionHandler`）：
+真实处理器（[common/GlobalExceptionHandler.java:28-33](../../app/src/main/java/com/allen/questionbank/common/GlobalExceptionHandler.java)）：
 ```java
 @ExceptionHandler(MethodArgumentNotValidException.class)
-ResponseEntity<ErrorResponse> handleValidation(MethodArgumentNotValidException e) {
+ResponseEntity<ErrorResponse> handleValidation(MethodArgumentNotValidException e, HttpServletRequest request) {
     String message = e.getBindingResult().getFieldErrors().stream()
         .findFirst().map(err -> err.getField() + ": " + err.getDefaultMessage())
         .orElse("请求参数不合法");
-    return response(HttpStatus.BAD_REQUEST, "VALIDATION_ERROR", message);
+    return response(HttpStatus.BAD_REQUEST, "VALIDATION_ERROR", message, request);
 }
 ```
+另外 `ConstraintViolationException`（:35-38，如路径/请求参数上的约束）同样收敛到 400 `VALIDATION_ERROR`。
 MockMvc 断言示例：
 ```java
 mvc.perform(post("/api/admin/banks").header("Authorization", bearer(admin))
@@ -116,12 +118,14 @@ mvc.perform(post("/api/admin/banks").header("Authorization", bearer(admin))
 
 **解答**：
 - **未知路径**：Spring MVC 找不到 Handler 会抛 `NoHandlerFoundException`/走 `/error`，应统一返回 404 + 稳定 code（如 `NOT_FOUND`），不要返回默认白页。
-- **内部异常兜底**：`GlobalExceptionHandler` 最宽泛的处理器**只返回固定文案**，绝不把异常 message、SQL、堆栈写进响应：
+- **内部异常兜底**：[GlobalExceptionHandler.java:50-57](../../app/src/main/java/com/allen/questionbank/common/GlobalExceptionHandler.java) 最宽泛的处理器**只返回固定文案**，但带堆栈落 error 日志（含 method/URI/requestId），绝不把异常 message、SQL、堆栈写进响应：
 ```java
 @ExceptionHandler(Exception.class)
-ResponseEntity<ErrorResponse> handleUnexpected(Exception e) {
+ResponseEntity<ErrorResponse> handleUnexpected(Exception e, HttpServletRequest request) {
     // 详细堆栈只进日志，响应体只给固定信息，避免泄露表名/SQL/实现细节
-    return response(HttpStatus.INTERNAL_SERVER_ERROR, "INTERNAL_ERROR", "服务内部错误");
+    log.error("未处理异常 {} {} (requestId={})", request.getMethod(), request.getRequestURI(),
+            request.getAttribute("requestId"), e);
+    return response(HttpStatus.INTERNAL_SERVER_ERROR, "INTERNAL_ERROR", "服务内部错误", request);
 }
 ```
 - 业务层“资源不存在”显式抛 `ApiException(404, NOT_FOUND, "题库不存在")`，与未知路由的 404 区分开。
@@ -134,14 +138,17 @@ ResponseEntity<ErrorResponse> handleUnexpected(Exception e) {
 ```java
 public record ErrorResponse(String code, String message, String requestId, Instant timestamp) {}
 ```
-生成方式（全局处理器统一出口）：
+生成方式（全局处理器统一出口，[GlobalExceptionHandler.java:59-63](../../app/src/main/java/com/allen/questionbank/common/GlobalExceptionHandler.java)）：
 ```java
-private ResponseEntity<ErrorResponse> response(HttpStatus status, String code, String message) {
-    return ResponseEntity.status(status).body(
-        new ErrorResponse(code, message, UUID.randomUUID().toString(), Instant.now()));
+private ResponseEntity<ErrorResponse> response(HttpStatus status, String code, String message,
+                                               HttpServletRequest request) {
+    // requestId 优先取 RequestIdFilter 写入请求属性/MDC 的同一个值，缺失才兜底随机 UUID
+    Object id = request.getAttribute("requestId");
+    String requestId = id instanceof String value ? value : UUID.randomUUID().toString();
+    return ResponseEntity.status(status).body(new ErrorResponse(code, message, requestId, Instant.now()));
 }
 ```
-字段职责：`code` 给客户端程序做分支（稳定枚举，不随文案改动）；`message` 给人看；`requestId` 用于和服务端日志关联排障；`timestamp` 标记发生时刻。Security 层的 401/403 也复用同一结构（见 `SecurityConfig.writeError`）。
+字段职责：`code` 给客户端程序做分支（稳定枚举，不随文案改动）；`message` 给人看；`requestId` 用于和服务端日志（logback pattern 中的 `[%X{requestId:-}]`）关联排障；`timestamp` 标记发生时刻。安全层的 AccessDeniedException 由 :45-48 统一收敛为 403 `FORBIDDEN`，认证入口的 401 在 SecurityConfig 过滤链写出同形错误体。
 
 ---
 

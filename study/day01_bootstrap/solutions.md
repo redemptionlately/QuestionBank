@@ -1,6 +1,6 @@
 # Day01 Bootstrap · 题目与标准解答（Solutions）
 
-> 题目来源：`tests.md`；解答依据：当天 `study.md` + 项目真实源码（`src/main/java`、`pom.xml`）。
+> 题目来源：`tests.md`；解答依据：当天 `study.md` + 项目真实源码（`src/main/java`、[pom.xml](../../app/pom.xml)）。
 
 ---
 
@@ -10,16 +10,16 @@
 
 **解答（执行方法）**：这是每天的固定动作，按“定位 → 默写 → 口述 I/O 边界”三步走：
 
-1. **定位**：根据 study.md 给出的相对路径（如 `../../src/main/java/com/allen/questionbank/bank/BankService.java`）在 IDEA 中用 `Ctrl+Shift+N` 打开文件，跳到指定行号（`Ctrl+G`）。
+1. **定位**：根据 study.md 给出的相对路径（如 [../../app/src/main/java/com/allen/questionbank/bank/BankService.java](../../app/src/main/java/com/allen/questionbank/bank/BankService.java)）在 IDEA 中用 `Ctrl+Shift+N` 打开文件，跳到指定行号（`Ctrl+G`）。
 2. **默写**：关掉源码，新建空白文件独立写出，不能只写方法签名。
 3. **口述边界**：对每个方法说清四件事——输入是什么（谁调用、参数约束）、输出是什么（返回值/DTO）、失败边界（抛什么异常、对应什么 HTTP 状态码）、副作用（是否写库、是否改缓存）。
 
-本项目 Day01 必须能定位的锚点：
-- 启动类 `QuestionBankApplication.java`（`@SpringBootApplication` + `@EnableAsync` + `SpringApplication.run`）
-- 实体 `bank/QuestionBank.java`、仓储 `bank/QuestionBankRepository.java`
-- 业务 `bank/BankService.java`（构造器注入、校验、`save`）
-- 接口 `bank/BankController.java`（路由、`@PreAuthorize`、DTO record）
-- `pom.xml` 的 parent 与 dependencies
+本项目 Day01 必须能定位的锚点（主代码在 `app/src/main/java/com/allen/questionbank/` 下，根包 `com.allen.questionbank`）：
+- 启动类 [QuestionBankApplication.java:7-13](../../app/src/main/java/com/allen/questionbank/QuestionBankApplication.java)（`@SpringBootApplication`（:7）+ `@EnableAsync`（:8）+ `SpringApplication.run`（:11）；注意 `@EnableScheduling` 不在启动类，而在 [common/InfrastructureConfig.java:13](../../app/src/main/java/com/allen/questionbank/common/InfrastructureConfig.java)）
+- 实体 [bank/QuestionBank.java:6-33](../../app/src/main/java/com/allen/questionbank/bank/QuestionBank.java)、仓储 [bank/QuestionBankRepository.java:5](../../app/src/main/java/com/allen/questionbank/bank/QuestionBankRepository.java)（空体 JpaRepository）
+- 业务 [bank/BankService.java:19-20](../../app/src/main/java/com/allen/questionbank/bank/BankService.java)（构造器注入 6 个依赖：三个 Repository/ObjectMapper/`PublishedPaperCache`（:25）/`ObjectProvider<OutboxPublisher>`（:26，Kafka 关闭时可缺省）；createBank 在 :38-42）
+- 接口 [bank/BankController.java:15-17](../../app/src/main/java/com/allen/questionbank/bank/BankController.java)（`@RestController @RequestMapping("/api")`、`@PreAuthorize`、5 个端点，DTO record 在 :74-80）
+- [app/pom.xml](../../app/pom.xml)：parent 在 :7-11，artifactId=`question-bank-m0`（:13），dependencies 在 :17-125
 
 ---
 
@@ -27,7 +27,7 @@
 
 **解答**：以下是**项目真实代码**（省略 package，import 由 IDE 自动补全）。
 
-**Entity —— `bank/QuestionBank.java`**
+**Entity —— [bank/QuestionBank.java](../../app/src/main/java/com/allen/questionbank/bank/QuestionBank.java)**
 ```java
 @Entity
 @Table(name = "question_bank")
@@ -61,32 +61,34 @@ public class QuestionBank {
 }
 ```
 
-**Repository —— `bank/QuestionBankRepository.java`**
+**Repository —— [bank/QuestionBankRepository.java](../../app/src/main/java/com/allen/questionbank/bank/QuestionBankRepository.java)**
 ```java
 public interface QuestionBankRepository extends JpaRepository<QuestionBank, Long> {}
 ```
 继承后自动拥有 `save / findById / findAll / count / delete` 等方法，泛型第二个参数是主键类型 `Long`。
 
-**Service —— `bank/BankService.java`（创建片段）**
+**Service —— [bank/BankService.java](../../app/src/main/java/com/allen/questionbank/bank/BankService.java)（创建片段，真实代码 :19-42）**
 ```java
 @Service
 public class BankService {
     private final QuestionBankRepository banks;
-    // 构造器注入：依赖成为对象不变量，final 保证不再被替换
+    // 其余 5 个 final 依赖：PaperVersionRepository、QuestionVersionRepository、
+    // ObjectMapper、PublishedPaperCache、ObjectProvider<OutboxPublisher>
+    // 构造器注入：依赖成为对象不变量，final 保证不再被替换（真实构造器 :29-36，共 6 个依赖）
     public BankService(QuestionBankRepository banks, /* 其余依赖略 */) {
         this.banks = banks;
     }
 
-    @Transactional   // 写方法开启事务，未捕获的 RuntimeException 会回滚
+    @Transactional   // 写方法开启事务（:38），未捕获的 RuntimeException 会回滚
     public QuestionBank createBank(ApiTokenFilter.AuthPrincipal user, String name, String description) {
-        if (user == null || name == null || name.isBlank())
-            throw new ApiException(HttpStatus.BAD_REQUEST, "INVALID_INPUT", "题库名称不能为空");
+        if (user == null || name == null || name.isBlank()) throw bad("题库名称不能为空");
         return banks.save(new QuestionBank(user.userId(), name.trim(), description));
     }
+    // bad() 是类内异常工厂（:145）：new ApiException(HttpStatus.BAD_REQUEST, "INVALID_INPUT", message)
 }
 ```
 
-**Controller —— `bank/BankController.java`（创建片段）**
+**Controller —— [bank/BankController.java](../../app/src/main/java/com/allen/questionbank/bank/BankController.java)（创建片段）**
 ```java
 @RestController
 @RequestMapping("/api")
@@ -116,24 +118,26 @@ public class BankController {
 
 | 命令 | 输入 | 输出 | 副作用 |
 |---|---|---|---|
-| `mvn test` | `pom.xml`、`src/main`、`src/test` | 控制台结果 `Tests run: X...`；`target/surefire-reports/` 报告；编译 class 到 `target/classes`、`target/test-classes` | 执行全部单元/集成测试；测试失败立即中断，退出码非 0；**不打 JAR** |
+| `mvn test` | [pom.xml](../../app/pom.xml)、`src/main`、`src/test` | 控制台结果 `Tests run: X...`；`target/surefire-reports/` 报告；编译 class 到 `target/classes`、`target/test-classes` | 执行全部单元/集成测试；测试失败立即中断，退出码非 0；**不打 JAR** |
 | `mvn package` | 同上 | `target/question-bank-m0-0.1.0-SNAPSHOT.jar`（spring-boot 插件打成可执行 fat JAR） | 先跑完整 test 生命周期（失败则不打包），再编译+打包；写满 `target/` |
-| `mvn spring-boot:run` | `pom.xml` + 主源码 | 启动内嵌 Tomcat，控制台打印 Spring Banner 与启动日志，对外提供 HTTP 服务 | 编译主代码（**不跑测试**）；启动一个前台 JVM 进程并监听端口；`Ctrl+C` 停止；不产出 JAR |
+| `mvn spring-boot:run` | [pom.xml](../../app/pom.xml) + 主源码 | 启动内嵌 Tomcat，控制台打印 Spring Banner 与启动日志，对外提供 HTTP 服务 | 编译主代码（**不跑测试**）；启动一个前台 JVM 进程并监听端口；`Ctrl+C` 停止；不产出 JAR |
 
 生命周期顺序记忆：`compile → test-compile → test → package → install → deploy`；`spring-boot:run` 是插件目标（goal），不属于上述生命周期链。
 
 ---
 
-### Q4. 指出 pom.xml 中运行时依赖和测试依赖，解释 runtime 与 test scope 的区别。
+### Q4. 指出 [pom.xml](../../app/pom.xml) 中运行时依赖和测试依赖，解释 runtime 与 test scope 的区别。
 
-**本项目 `pom.xml` 真实依赖分类**：
+**本项目 [app/pom.xml](../../app/pom.xml) 真实依赖分类（dependencies 在 :17-125，版本未写者由 spring-boot-dependencies BOM 管理）**：
 
-- **runtime（运行时依赖，1 个）**：`com.mysql:mysql-connector-j`（`<scope>runtime</scope>`）。代码编译期不直接 import 驱动类，只在运行时由 JDBC 自动装配加载。
-- **test（测试依赖，3 个）**：
-  - `com.h2database:h2`（测试用内存数据库）
-  - `org.springframework.boot:spring-boot-starter-test`（JUnit5、MockMvc、AssertJ 等）
-  - `org.springframework.security:spring-security-test`
-- **无 scope 标注（默认 compile）**：`starter-web`、`starter-validation`、`starter-data-jpa`、`starter-security`、`starter-actuator`、`flyway-core`、`flyway-mysql`——编译/测试/运行都需要，并打进最终 JAR。
+- **runtime（运行时依赖，1 个，:87-91）**：`com.mysql:mysql-connector-j`。代码编译期不直接 import 驱动类，只在运行时由 JDBC 自动装配加载。
+- **test（测试依赖，6 个）**：
+  - `com.h2database:h2`（:93-97，test profile 内存库，MODE=MySQL）
+  - `org.springframework.boot:spring-boot-starter-test`（:98-102，JUnit5、MockMvc、AssertJ 等）
+  - `org.springframework.security:spring-security-test`（:103-107）
+  - `com.tngtech.archunit:archunit-junit5:1.3.0`（:76-81，ArchitectureTest 架构约束测试）
+  - `org.apache.shardingsphere:shardingsphere-jdbc:5.5.2`（:110-115）与 `shardingsphere-infra-data-source-pool-hikari:5.5.2`（:119-124）——**仅 ShardingEvidenceTest 分库分表证据测试使用，不进生产 classpath**
+- **无 scope 标注（默认 compile，共 14 个）**：自研 `com.allen:monitor-spring-boot-starter`（:19-23，慢 SQL 监控 Starter）、`starter-web`、`starter-validation`、`starter-aop`（支撑 ServiceLatencyAspect）、`starter-data-jpa`、`starter-security`、`starter-actuator`、`micrometer-registry-prometheus`、`starter-data-redis`（缓存/锁/限流）、`spring-kafka`（Outbox）、`flyway-core`、`flyway-mysql`、`mybatis-spring-boot-starter:3.0.4`（:70-74，与 JPA 双栈）、`springdoc-openapi-starter-webmvc-ui:2.8.5`（:82-86）——编译/测试/运行都需要，并打进最终 JAR。
 
 **scope 区别**：
 
@@ -159,12 +163,10 @@ mvnw.cmd -B test        # Windows；或本机装了 Maven 用 mvn -B test
 - `0`：BUILD SUCCESS，全部测试通过；
 - `1`：存在编译错误、断言失败（Failure）或异常错误（Error），BUILD FAILURE。
 
-**本项目测试数量（来自 `src/test/java/com/allen/questionbank/`，事实统计）**：
-- `InfrastructureUnitTest`：1 个方法 `cacheLoadsOnceUntilEvicted`
-- `RateLimitFilterTest`：1 个方法 `rejectsRequestsBeyondFixedWindowCapacity`（固定窗口限流 429 + Retry-After + RATE_LIMITED）
-- `M0OpsIntegrationTest`：1 个方法 `metricsEndpointExposesAtomicCountersForAuthenticatedUser`（`/api/metrics` 计数指标 + 未登录 401）
-- `M0FlowIntegrationTest`：8 个方法（幂等提交、角色与校验、三种题型判分、坏请求 400、草稿事务回滚、同 key 并发、查询索引、异步导入任务）
-- **合计 11 个测试方法**；成功时末尾应出现 `Tests run: 11, Failures: 0, Errors: 0, Skipped: 0`。
+**本项目测试数量（来自 `app/src/test/java/com/allen/questionbank/`，2026-09-09 实测基线）**：
+- 共 **27 个测试类、119 个 `@Test` 方法**；默认 `mvn test`（不设任何环境变量）实测 **90 通过 / 0 失败 / 29 跳过**，汇总行为 `Tests run: 119, Failures: 0, Errors: 0, Skipped: 29`。
+- 29 个跳过全部是 `@EnabledIfEnvironmentVariable` 环境门禁（Assumption 不满足，不是失败），分布：`REDIS_EVIDENCE` 11 个（RedisCacheIntegrationTest 3、RedisGuardedSubmitIntegrationTest 2、RedisLockAndRateLimitIntegrationTest 6）、`MYSQL_EVIDENCE` 7 个（MysqlRealDbIntegrationTest）、`MYSQL_SHARDING_EVIDENCE` 6 个（ShardingEvidenceTest）、`KAFKA_EVIDENCE` 2 个、`READ_REPLICA_EVIDENCE` 3 个。
+- 默认运行的代表性类：`ArchitectureTest` 5（ArchUnit 架构约束）、`M0FlowIntegrationTest` 8（发布+幂等提交主流程、角色校验、三题型判分、坏请求 400、草稿回滚、同 key 并发、索引、异步导入）、`OutboxTest` 9、`WrongQuestionQueryMapperTest` 8、jvm 包 4 类共 17（AQS/类加载/JMM/并发证据）等。
 
 **首个失败原因定位顺序**：
 1. 控制台第一个 `[ERROR]` 块，记录失败的“类名#方法名”；
@@ -424,16 +426,16 @@ public class WildcardDemo {
 
 **操作与结论**：例如注释掉 `spring-boot-starter-web` 后执行 `mvn -B compile`：
 - 缺失类型/注解：`@RestController、@RequestMapping、@PostMapping、@RequestBody`（包 `org.springframework.web.bind.annotation`）、`ResponseEntity` 等全部无法解析，编译报 `cannot find symbol`；运行期还会缺失内嵌 Tomcat，应用无法启动 HTTP 服务。
-- 恢复位置：`pom.xml` 的 `<dependencies>` 内重新加回该 starter，刷新 Maven（IDEA 右上角 Reload / `mvn -U compile`）即可。
+- 恢复位置：[pom.xml](../../app/pom.xml) 的 `<dependencies>` 内重新加回该 starter，刷新 Maven（IDEA 右上角 Reload / `mvn -U compile`）即可。
 - 规律：starter 是“一组依赖的聚合”，删 starter = 同时删掉它传递引入的所有包；根据报错的包名反查属于哪个 starter。
 
 ### E2. 用 `--spring.profiles.active=test` 启动，确认实际使用 H2 而非 MySQL。
 
 **结论与验证点**：
-- 测试侧 `src/test/resources/application-test.yml` 配置 `jdbc:h2:mem:question_bank;MODE=MySQL`，驱动 `org.h2.Driver`；集成测试类上的 `@ActiveProfiles("test")` 等价于激活该 profile。
+- 测试侧 [app/src/test/resources/application-test.yml:3-6](../../app/src/test/resources/application-test.yml) 配置 `jdbc:h2:mem:question_bank;MODE=MySQL;DB_CLOSE_DELAY=-1;DATABASE_TO_LOWER=TRUE`，驱动 `org.h2.Driver`；集成测试类上的 `@ActiveProfiles("test")` 等价于激活该 profile（该 profile 还把限流容量放宽到 10000、关闭 ImportJob 重试清扫）。
 - 命令行激活：`mvn spring-boot:run -Dspring-boot.run.arguments=--spring.profiles.active=test`（或 jar 启动 `java -jar xxx.jar --spring.profiles.active=test`）。
 - 确认方式：启动日志中 `HikariCP` 打印的 `jdbcUrl` 为 `jdbc:h2:mem:...` 即说明走 H2；H2 是内存库，进程结束数据消失，且不依赖 docker-compose 的 MySQL 3307 端口。
 
 ### E3. 解释为什么 `target/` 不应提交到 Git。
 
-`target/` 是 Maven 的**构建产物目录**（class、JAR、surefire 报告均由源码随时重新生成），提交它会：① 产生大量无意义 diff 和仓库膨胀；② 不同机器/ JDK 生成的 class 不一致引发冲突；③ 旧 JAR 被误部署。正确做法是在 `.gitignore` 中加入 `/target/`，仓库只保留 `pom.xml` 与 `src/` 这些“源”，产物需要时由 CI 重新构建。
+`target/` 是 Maven 的**构建产物目录**（class、JAR、surefire 报告均由源码随时重新生成），提交它会：① 产生大量无意义 diff 和仓库膨胀；② 不同机器/ JDK 生成的 class 不一致引发冲突；③ 旧 JAR 被误部署。正确做法是在 `.gitignore` 中加入 `/target/`，仓库只保留 [pom.xml](../../app/pom.xml) 与 `src/` 这些“源”，产物需要时由 CI 重新构建。

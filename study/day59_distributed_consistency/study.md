@@ -5,6 +5,7 @@
 - 事务消息、Outbox、Saga 和 TCC 分别用不同方式表达跨服务一致性；每种方案都要说明补偿、重试、悬挂和空回滚边界。
 - 分库分表的分片键决定路由、热点、跨分片查询和扩容成本；全局唯一键、分页、事务和数据迁移必须一起设计。
 - CAP 讨论网络分区下的一致性与可用性取舍；BASE 强调最终一致，但必须给出收敛条件和用户可见状态。
+- 项目源码索引（MustRemember）：`redis/RedisLockService.java:30-104`（setIfAbsent 抢锁、FENCING_KEY INCR、RELEASE_LUA 比对 token 删除、AutoCloseable LockHandle；无 watchdog 续租，固定 TTL）、`practice/RedisGuardedPracticeSubmitter.java:25-48`（practice-submit:{sessionId}、TTL 10s、事务外加锁/finally 释放、409 SUBMIT_IN_PROGRESS）、`practice/PracticeService.java:56-90`（submit：幂等+判分+FOR UPDATE）、`importjob/ImportJobRetrySweeper.java:26-63`（MAX_ATTEMPTS=3、30/60/120/600 指数退避、跨 bean 调 @Async worker）、`event/` 8 类（Outbox 全链路）；分片证据：`test/.../sharding/ShardingEvidenceTest.java`（6 证据、@Order、门控 MYSQL_SHARDING_EVIDENCE）、`test/resources/sharding-evidence.yaml`（2 库×2 表、student_id INLINE、SNOWFLAKE、binding/广播）、`scripts/sharding-evidence.sh`（一键跑证据，ShardingSphere 依赖仅 test scope）。
 - 外部源码索引（MustRemember）：[Snowflake paper](https://blog.twitter.com/engineering/en_us/a/2010/announcing-snowflake)、[Redis distributed locks](https://redis.io/docs/latest/develop/clients/patterns/distributed-locks/)、[Saga pattern](https://microservices.io/patterns/data/saga.html)
 
 # MustUnderstand

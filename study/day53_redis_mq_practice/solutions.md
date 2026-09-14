@@ -1,34 +1,32 @@
 # Day53 Redis & MQ Practice · 题目与标准解答（Solutions）
 
-> 缓存与消息可靠性实践；对照本项目单实例 ExpiringCache 与持久化 @Async 任务。
+> 缓存与消息可靠性实践；对照本项目真实实现：双实现 PublishedPaperCache（本地 ExpiringCache 默认 / RedisPublishedPaperCache 条件装配）、Redis Lua 令牌桶限流、Redis 分布式锁，以及 event 包 8 类构成的 Kafka Outbox（topic=qb-events、group=question-bank、死信 qb-events.DLT、consumed_event 幂等表）。
 
 ## Current
 
 ### Q1. 写出带 TTL 的 cache-aside 读写代码和 Lua 令牌桶原子边界。
 ```java
 // 读：GET → miss → DB → SET(EX)
-String key = "published";
+String key = "qb:cache:published";
 String raw = redis.opsForValue().get(key);
 if (raw != null) return decode(raw);
-List<PaperView> v = repo.loadPublished();
-redis.opsForValue().set(key, encode(v), Duration.ofMinutes(2));   // TTL
+List<PaperResponse> v = repo.loadPublished();
+redis.opsForValue().set(key, encode(v), jitteredTtl(baseTtl));   // TTL + 随机抖动防雪崩
 return v;
-// 写：先提交 DB，再删缓存（afterCommit）
+// 写：先提交 DB，再删缓存（afterCommit 回调里 DEL，无活跃事务才直接删）
 redis.delete(key);
 ```
-Lua 令牌桶（读-算-写-设 TTL 在一个脚本内原子执行）：
+本项目对应实现是 `cache/RedisPublishedPaperCache`（app.cache.backend=redis 时装配，默认是 LocalPublishedPaperCache 委托 ExpiringCache）：fast 读 → per-key singleflight（keyLocks.computeIfAbsent，防击穿）→ 双检 → 回源写入带随机抖动的 TTL（默认 PT2M）；Redis 读/反序列化异常计入 failures 并降级回库，不外溢。写路径在 BankService 发布事务的 TransactionSynchronization.afterCommit 里 evict（提交前不删，避免并发读把旧值重新填回）。
+Lua 令牌桶（读-算-写在一个脚本内原子执行；本项目 RedisTokenBucketRateLimiter 用 capacity*1000 的“毫令牌”整数存储，避免浮点漂移）：
 ```lua
-local tokens = tonumber(redis.call('HGET', KEYS[1], 'tokens') or ARGV[2])
-local last = tonumber(redis.call('HGET', KEYS[1], 'ts') or 0)
-local now = tonumber(ARGV[3])
-tokens = math.min(ARGV[2], tokens + (now-last)*ARGV[1])
-local allow = tokens >= 1 and 1 or 0
-if allow==1 then tokens = tokens-1 end
-redis.call('HMSET', KEYS[1], 'tokens', tokens, 'ts', now)
-redis.call('EXPIRE', KEYS[1], ARGV[4])
+local stored = tonumber(redis.call('GET', KEYS[1]) or '0')   -- 项目用整数毫令牌
+local now = tonumber(ARGV[1])
+-- 按距上次的 elapsed 补充令牌，封顶 capacity；扣 1 个令牌；写回并设 PEXPIRE
+local allow = (stored >= 1000) and 1 or 0
+if allow == 1 then redis.call('SET', KEYS[1], stored - 1000, 'PX', ARGV[2]) end
 return allow
 ```
-**原子边界**：Lua 只保证 Redis 单实例执行脚本期间不被其他命令打断；它**不构成 Redis 与 MySQL 之间的全局事务**，主从切换/网络超时仍可能产生可见性差异，缓存锁不是绝对互斥。
+**原子边界**：Lua 只保证 Redis 单实例执行脚本期间不被其他命令打断；它**不构成 Redis 与 MySQL 之间的全局事务**，主从切换/网络超时仍可能产生可见性差异，缓存锁不是绝对互斥。项目 RedisRateLimitFilter 因此显式选择 fail-open（Redis 故障放行而非全站拒绝），这个取舍必须能口头说明。
 
 ---
 
@@ -45,37 +43,50 @@ producer(acks=all, 副本持久化确认) → topic → partition(按 key 分区
   consumer group 维护 offset：处理成功再提交(commit)；失败重试 → 死信 topic
 ```
 - **ack 过早**（处理完之前就确认）→ 崩溃丢消息；**ack 过晚**（at-least-once）→ 重新投递、重复消费；
-- 消费者必须用**事件 id / 业务唯一键**去重，保证重复投递效果与一次相同。
+- 消费者必须用**事件 id / 业务唯一键**去重，保证重复投递效果与一次相同。本项目 Kafka 路径：OutboxRelay 用 `kafkaTemplate.send(topic, eventKey, envelope).get()` 同步等 ack（topic 默认 qb-events），PaperPublishedEventConsumer 以 eventKey 在 consumed_event 表做消费幂等（existsByEventKey 命中即跳过），畸形 JSON/缺 eventKey 直接 skip 不崩，合法但持续失败的毒丸抛异常交容器错误处理器（重试 2 次、间隔 200ms），最终由 DeadLetterPublishingRecoverer 投到原 topic+".DLT"（即 qb-events.DLT，分区与 key 保持不变）。
 
 ---
 
 ### Q3. 写出 Outbox 表字段、业务事务与 publisher 状态转换。
+本项目真实表（[V4__outbox_events.sql](../../app/src/main/resources/db/migration/V4__outbox_events.sql)，与下面通用模型对照看）：
 ```sql
+-- 发件箱：状态 PENDING / SENT / FAILED（不是 NEW）
 CREATE TABLE outbox_event (
   id BIGINT AUTO_INCREMENT PRIMARY KEY,
-  aggregate_id BIGINT NOT NULL,
-  event_type VARCHAR(100) NOT NULL,
-  payload JSON NOT NULL,
-  idempotency_key VARCHAR(128) NOT NULL UNIQUE,
-  status VARCHAR(20) NOT NULL,          -- NEW / SENT
-  created_at TIMESTAMP(6) NOT NULL DEFAULT CURRENT_TIMESTAMP(6),
-  sent_at TIMESTAMP(6) NULL,
-  retry_count INT NOT NULL DEFAULT 0
+  aggregate_type VARCHAR(60)  NOT NULL,         -- 如 'paper'
+  aggregate_id   BIGINT       NOT NULL,         -- 如 paperId
+  event_type     VARCHAR(60)  NOT NULL,         -- 如 PAPER_PUBLISHED
+  payload_json   TEXT         NOT NULL,
+  status         VARCHAR(20)  NOT NULL DEFAULT 'PENDING',
+  retry_count    INT          NOT NULL DEFAULT 0,
+  last_error     VARCHAR(500) NULL,
+  created_at     TIMESTAMP    NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  sent_at        TIMESTAMP    NULL,
+  UNIQUE KEY uk_outbox_dedup (aggregate_type, aggregate_id, event_type), -- 同聚合同事件只入队一次
+  KEY idx_outbox_pending (status, created_at)                            -- Relay 拉取 PENDING
+);
+-- 消费端幂等表（至少一次投递下去重）
+CREATE TABLE consumed_event (
+  id BIGINT AUTO_INCREMENT PRIMARY KEY,
+  event_key VARCHAR(190) NOT NULL,              -- OutboxEvent.eventKey() 拼出的确定性键
+  consumed_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  UNIQUE KEY uk_consumed_event_key (event_key)
 );
 ```
-- **业务事务**：写业务表 + 插一条 status=NEW 的 outbox（同一本地事务，原子）；
-- **publisher**：轮询/订阅 NEW 事件投递 MQ，成功后置 SENT（或删除）；崩溃导致重复投递时，消费端按 idempotency_key 幂等；
-- 状态转换 NEW→SENT 单向，失败 retry_count++ 退避重试。Outbox 只消除“DB 提交但消息没发”的窗口，不自动解决顺序、毒消息。
+- **业务事务**：BankService.publish 在同一 @Transactional 内写业务表并调 `OutboxPublisher.enqueue`（JdbcTemplate INSERT outbox_event，序列化失败整体回滚，blank payload 拒绝，uk_outbox_dedup 兜底重复）；整套组件仅 app.kafka.enabled=true 时装配，关闭时 ObjectProvider 注入为 no-op；
+- **publisher/relay**：`OutboxRelay.relayPendingEvents` 按 `${app.outbox.poll-interval-ms:1000}` 定时拉 PENDING（顺序 created_at ASC），`send(topic, eventKey, 信封JSON).get()` 同步等 ack，成功 markSent（PENDING→SENT、写 sent_at）；失败 requeue（retry_count++、last_error 截断 500），retry_count 达到 `${app.outbox.max-attempts:5}` 置 FAILED 不再自动重试；
+- 状态转换 PENDING→SENT 正常路径，PENDING→（失败）PENDING 重试、累计达上限→FAILED；Outbox 只消除“DB 提交但消息没发”的窗口，不自动解决顺序、毒消息——毒消息由消费端抛出后走重试→qb-events.DLT。
+- **对应测试**：OutboxTest（9，纯单元：状态机/截断/去重/序列化失败回滚）、OutboxRelayAndConsumerTest（5：投递成功、重试上限、消费幂等、畸形消息跳过、毒丸交 DLT）默认构建即跑；KafkaOutboxIntegrationTest、KafkaDltIntegrationTest 为真 Kafka 全链路，门控 KAFKA_EVIDENCE 默认跳过。
 
 ---
 
 ## External
 
 ### E1. 缓存失效/消息重复/消费者崩溃/毒消息处理路径。
-- 缓存失效：DB commit 后 DEL；并发回源旧值用 afterCommit/版本化 key；穿透空值缓存、击穿 single-flight、雪崩随机 TTL；
-- 消息重复：消费端幂等（唯一键去重表）；
-- 消费者崩溃：未 ack 的消息重新投递（Rabbit 重回队列、Kafka 不提交 offset），处理必须可重放；
-- 毒消息（永远处理失败）：限次重试后进死信，人工介入，避免无限循环阻塞分区/队列。
+- 缓存失效：DB commit 后 DEL（本项目严格放在 afterCommit 回调）；并发回源旧值用 singleflight/版本化 key；穿透空值缓存、击穿 per-key 锁（RedisPublishedPaperCache.keyLocks）、雪崩随机 TTL（jitteredTtl）；Redis 整体不可用时捕获异常降级回数据库（RedisCacheIntegrationTest 三用例分别固化命中、提交后才失效、宕机降级，门控 REDIS_EVIDENCE）；
+- 消息重复：消费端幂等（本项目 consumed_event 表 + uk_consumed_event_key，existsByEventKey 命中即跳过）；
+- 消费者崩溃：未 ack/offset 未提交的消息重新投递，处理必须可重放（本项目消费方法 @Transactional，落幂等记录与业务处理同事务）；
+- 毒消息（永远处理失败）：容器层重试 2 次后进死信 qb-events.DLT，人工介入，避免无限循环阻塞分区；畸形 JSON/缺 key 则直接 skip，不算毒丸。
 
 ### E2. 比较 Redis Stream / RabbitMQ queue / Kafka partition。
 | 维度 | Redis Stream | RabbitMQ | Kafka |

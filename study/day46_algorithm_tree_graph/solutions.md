@@ -5,7 +5,7 @@
 ## Current
 
 ### Q1. 按当天索引定位并口述 I/O 边界（方法论题）。
-先明确图是有向/无向、是否有重复边、是否连通、边权是否非负，再决定用 BFS / Dijkstra / 拓扑；树递归必须有空节点终止条件。
+先明确图是有向/无向、是否有重复边、是否连通、边权是否非负，再决定用 BFS / Dijkstra / 拓扑；树递归必须有空节点终止条件。本日为纯算法主题，app 内无图算法实现；领域模型只有聚合内层级关系（paper_version→question_version、practice_session→submission_item，均为 JPA 一对多关联，不靠 DFS/BFS 遍历），"入队前标记 visited 保证只处理一次"的去重思想与项目幂等键（uk_submission_question、consumed_event）工程同源。
 
 ---
 

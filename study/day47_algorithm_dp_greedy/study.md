@@ -15,5 +15,6 @@
 # MustUnderstand
 
 - 遍历方向决定元素是否重复使用；“样例通过”不能证明贪心正确，反例或交换论证才是正确性依据
+- 本日为纯算法内容，app 无 DP/贪心源码；业务状态机（ImportJob 四态+退避重试、PaperVersion DRAFT/PUBLISHED）可用同样的"状态/转移/边界"方法拆解
 - 外部源码索引（MustUnderstand）：[CP-Algorithms DP intro](https://cp-algorithms.com/dynamic_programming/intro-to-dp.html) 的状态压缩与复杂度；[Greedy algorithms](https://cp-algorithms.com/greedy/intro-to-greedy.html) 的证明方法
 - 题面索引：[动态规划/回溯/贪心 INDEX](../../../AI_Infra/Phases_book/algorithm/6_动态规划_回溯_贪心与位运算/INDEX.md)；官方：[DP](https://cp-algorithms.com/dynamic_programming/intro-to-dp.html)

@@ -75,7 +75,7 @@ class Demo {
 ```
 - 反射异常：`NoSuchFieldException/IllegalAccessException/InvocationTargetException`（目标方法抛的异常包在其中，需 getCause 取真实异常）；
 - 反射绕过编译期检查，有性能开销、破坏封装，Java 模块系统（JPMS）下还受 `opens` 限制；Spring 的组件扫描、`@Valid`、`@Entity` 都依赖运行时注解元数据。
-- **DTO/Entity 分离**：Entity 含持久化状态/懒加载/代理，不能直接当响应；对外用不可变 record DTO（本项目 CreatePaperRequest/SubmitResult 都是 record），在 Service 层转换，避免泄露内部 schema 与事务外懒加载异常。
+- **DTO/Entity 分离**：Entity 含持久化状态/懒加载/代理，不能直接当响应；对外用不可变 record DTO（本项目 `BankController.CreatePaperRequest/QuestionInput`、`PracticeService.SubmitResult/GradedAnswer`、`common/ErrorResponse`、`bank/PaperResponse` 都是 record，而 `PaperVersion/PracticeSession` 等是带状态迁移方法的 @Entity 类），在 Service 层转换，避免泄露内部 schema 与事务外懒加载异常。
 
 ---
 

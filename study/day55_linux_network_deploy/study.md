@@ -6,6 +6,7 @@
 - Linux 排障从 `ss/lsof` 看端口和连接、`top/free/iostat` 看资源、`ps/jstack/jcmd` 看进程与线程、`curl` 看 HTTP、`journalctl` 看服务日志开始。
 - Docker 镜像是不可变分层，容器是运行实例；健康检查、非 root 用户、只读文件系统、资源限制和信号转发影响服务可靠性。
 - Kubernetes Deployment 通过 ReplicaSet 滚动发布，readiness 决定接流量，liveness 决定重启；配置和 Secret 不应写入镜像。
+- 项目部署源码索引（MustRemember）：根 `Dockerfile`（两阶段 maven:3.9-eclipse-temurin-21 → eclipse-temurin:21-jre-noble、appuser 非 root、补装 curl、readiness HEALTHCHECK start-period 40s、exec ENTRYPOINT）、根 `docker-compose.yml`（仅 app/mysql:8.4/redis:7.4-alpine 三服务，宿主端口 8080/3307/6380，external 命名卷，无 Kafka/cloud/otelcol）、`deploy/k8s/app.yaml`（Deployment+Service+HPA，env 内联 DB_URL、secretKeyRef 取 mysql-secret，readiness 30s/阈值24、liveness 60s，HPA 1-3/CPU70%，无 ConfigMap）、`deploy/k8s/mysql.yaml`（Secret mysql-secret、mysql:9.0、emptyDir、mysqladmin ping 探针）、`common/RequestIdFilter.java`（MDC key=requestId、响应头 X-Request-Id）、`resources/logback-spring.xml:6`（pattern 含 [%X{requestId:-}]）、`ops/DatabaseLatencyHealthIndicator.java`（SELECT 1、500ms 阈值）、Flyway `V1~V4`（只加不删的前向兼容迁移）。
 - 外部源码索引（MustRemember）：[HTTP RFC 9110](https://www.rfc-editor.org/rfc/rfc9110)、[TLS 1.3 RFC 8446](https://www.rfc-editor.org/rfc/rfc8446)、[Docker best practices](https://docs.docker.com/develop/develop-images/dockerfile_best-practices/)、[Kubernetes probes](https://kubernetes.io/docs/concepts/configuration/liveness-readiness-startup-probes/)
 
 # MustUnderstand

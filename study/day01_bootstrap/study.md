@@ -1,8 +1,9 @@
 # MustRemember
 
-- 启动类的完整骨架是：
+- 启动类的完整骨架是（真实代码 QuestionBankApplication.java:7-13，另带 `@EnableAsync`；`@EnableScheduling` 在 InfrastructureConfig 上，不在启动类）：
   ```java
   @SpringBootApplication
+  @EnableAsync
   public class QuestionBankApplication {
       public static void main(String[] args) {
           SpringApplication.run(QuestionBankApplication.class, args);
@@ -61,7 +62,7 @@
   public interface QuestionBankRepository
           extends JpaRepository<QuestionBank, Long> {}
 
-  // BankService.java：业务校验、实体创建、异常语义
+  // BankService.java：业务校验、实体创建、异常语义（真实构造器共 6 个依赖，此处只留 banks 演示）
   @Service
   public class BankService {
       private final QuestionBankRepository banks;
@@ -73,7 +74,8 @@
       @Transactional
       public QuestionBank createBank(ApiTokenFilter.AuthPrincipal user, String name, String description) {
           if (user == null || name == null || name.isBlank()) {
-              throw new IllegalArgumentException("user/name invalid");
+              // 真实代码走类内工厂 bad()：new ApiException(HttpStatus.BAD_REQUEST, "INVALID_INPUT", msg)
+              throw new ApiException(HttpStatus.BAD_REQUEST, "INVALID_INPUT", "user/name invalid");
           }
           return banks.save(new QuestionBank(user.userId(), name.trim(), description));
       }
@@ -103,13 +105,13 @@
   }
   ```
 - 完整请求数据流是：JSON 请求 -> Controller 参数绑定/校验 -> Service 当前用户与业务规则 -> Repository `save/findById` -> 数据库 -> Service 返回实体 -> Controller 转成 DTO -> JSON 响应；找不到数据、越权和非法状态不能伪装成成功响应
-- 源码索引（MustRemember）：[QuestionBankApplication.java](../../src/main/java/com/allen/questionbank/QuestionBankApplication.java) 第 7-12 行的启动类；[QuestionBank.java](../../src/main/java/com/allen/questionbank/bank/QuestionBank.java) 第 6-33 行的 Entity、字段、JPA 无参构造器和业务构造器；[QuestionBankRepository.java](../../src/main/java/com/allen/questionbank/bank/QuestionBankRepository.java) 第 1-5 行的 `JpaRepository` 声明；[BankService.java](../../src/main/java/com/allen/questionbank/bank/BankService.java) 第 14-33 行的构造器注入、校验、实体创建和 `save`
-- 源码索引（MustRemember）：[BankController.java](../../src/main/java/com/allen/questionbank/bank/BankController.java) 第 13-25 行的路由、权限和创建入口；[BankController.java](../../src/main/java/com/allen/questionbank/bank/BankController.java) 第 58-65 行的 DTO 和响应投影；[pom.xml](../../pom.xml) 第 7-12 行的 parent；[pom.xml](../../pom.xml) 第 24-83 行的 dependencies 和插件
+- 源码索引（MustRemember）：[QuestionBankApplication.java](../../app/src/main/java/com/allen/questionbank/QuestionBankApplication.java) 第 7-13 行的启动类（:7 `@SpringBootApplication`、:8 `@EnableAsync`、:10-12 main）；[QuestionBank.java](../../app/src/main/java/com/allen/questionbank/bank/QuestionBank.java) 第 6-33 行的 Entity、字段、JPA 无参构造器（:22）和业务构造器（:23-25）；[QuestionBankRepository.java](../../app/src/main/java/com/allen/questionbank/bank/QuestionBankRepository.java) 第 1-5 行的空体 `JpaRepository` 声明；[BankService.java](../../app/src/main/java/com/allen/questionbank/bank/BankService.java) 第 19-42 行的类声明、6 依赖构造器（:29-36）、校验、实体创建和 `save`
+- 源码索引（MustRemember）：[BankController.java](../../app/src/main/java/com/allen/questionbank/bank/BankController.java) 第 13-25 行的路由、权限和创建入口；[BankController.java](../../app/src/main/java/com/allen/questionbank/bank/BankController.java) 第 58-64 行的 5 个 DTO record 和响应投影；[app/pom.xml](../../app/pom.xml) 第 7-11 行的 parent、第 13 行 artifactId=question-bank-m0；[app/pom.xml](../../app/pom.xml) 第 17-125 行的 dependencies（runtime 1 个、test 6 个、compile 14 个）与第 127-232 行的构建插件（jacoco 0.80/0.65/0.80、pitest）
 
 # MustUnderstand
 
 - 构造器注入使依赖成为对象不变量；Controller 处理 HTTP，Service 维护业务不变量，Repository 负责持久化查询
 - `ArrayList` 的随机访问是 O(1)，`HashMap` 通过 hash 分桶，`ConcurrentHashMap` 保证并发容器操作但不自动保证复合业务操作原子性
-- 源码索引（MustUnderstand）：[QuestionBankApplication.java](../../src/main/java/com/allen/questionbank/QuestionBankApplication.java) 第 7-12 行的 `SpringApplication.run` 到 ApplicationContext；[BankController.java](../../src/main/java/com/allen/questionbank/bank/BankController.java) 第 20-25 行的 HTTP 输入、认证主体、Service 调用和 DTO 输出；[BankService.java](../../src/main/java/com/allen/questionbank/bank/BankService.java) 第 29-33 行的事务、业务校验和持久化入口；[BankService.java](../../src/main/java/com/allen/questionbank/bank/BankService.java) 第 102-105 行的异常语义；[pom.xml](../../pom.xml) 第 24-74 行的 starter、runtime 与 test scope 依赖边界
+- 源码索引（MustUnderstand）：[QuestionBankApplication.java](../../app/src/main/java/com/allen/questionbank/QuestionBankApplication.java) 第 7-13 行的 `SpringApplication.run` 到 ApplicationContext；[BankController.java](../../app/src/main/java/com/allen/questionbank/bank/BankController.java) 第 20-25 行的 HTTP 输入、认证主体、Service 调用和 DTO 输出；[BankService.java](../../app/src/main/java/com/allen/questionbank/bank/BankService.java) 第 38-42 行的事务、业务校验和持久化入口；[BankService.java](../../app/src/main/java/com/allen/questionbank/bank/BankService.java) 第 145-148 行的 bad/notFound/conflict/forbidden 异常工厂；[app/pom.xml](../../app/pom.xml) 第 17-125 行的 starter、runtime 与 test scope 依赖边界（ArchUnit 与 ShardingSphere 均为 test scope，不进生产 classpath）
 - 外部源码索引（MustRemember）：[java.util.function](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/function/package-summary.html) 的四类函数式接口；[Stream API](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/stream/Stream.html) 的 `map/filter/flatMap/collect`
 - 外部源码索引（MustUnderstand）：[Optional API](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/Optional.html) 的缺失语义和异常边界

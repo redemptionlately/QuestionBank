@@ -1,49 +1,48 @@
 # Day18 JPA Entity · 题目与标准解答（Solutions）
 
-> 依据：`study.md` + 真实 `PracticeSession`、`PracticeSessionRepository`。
+> 依据：`study.md` + 真实 `PracticeSession`、`PracticeSessionRepository`、`PracticeService`、`WrongQuestionQueryMapper`（app 模块，包 `com.allen.questionbank.practice`）。
 
 ## Current
 
 ### Q1. 按源码索引定位并默写、口述 I/O 边界。
-锚点：`PracticeSession` 6-19 行实体字段/注解、19 行 `@Version`、35-38 行状态方法；Repository 11-16 行派生查询与锁定查询；`PracticeService` 102-112 行归属检查。
+锚点：[PracticeSession.java:6-39](../../app/src/main/java/com/allen/questionbank/practice/PracticeSession.java)（实体字段/注解 :9-19、:19 `@Version`、幂等列 submission_key/submission_result_json :15-16、状态方法 submit(key,score,json) :35-38）；[PracticeSessionRepository.java:11-17](../../app/src/main/java/com/allen/questionbank/practice/PracticeSessionRepository.java)（派生查询 :12、`@Lock(PESSIMISTIC_WRITE)` 锁定查询 :14-16）；[PracticeService.java:120-124](../../app/src/main/java/com/allen/questionbank/practice/PracticeService.java) 的 requireSession 归属检查（错题本读路径 wrongBook 在 :105-115）。
 
 ---
 
 ### Q2. 观察 save/flush/commit 时的 SQL。
 开启 SQL 日志后观察顺序：
 - `save(new Entity)` 只是让实体进入持久化上下文（managed），**不一定立即发 SQL**；
-- `flush`（事务提交前或查询触发）时脏检查生成 `INSERT/UPDATE`：自增 id 的新实体通常在 flush 时发 INSERT 并回填 id；
-- managed 实体在事务内直接 setter 修改，无需再次 save，flush 时自动 `UPDATE`；
+- `flush`（事务提交前或查询触发）时脏检查生成 `INSERT/UPDATE`：`@GeneratedValue(IDENTITY)` 的新实体（PracticeSession:9）通常在 flush 时发 INSERT 并回填 id；
+- managed 实体在事务内直接 setter 修改（如 `session.submit(...)`，PracticeSession:35-38），无需再次 save，flush 时自动 `UPDATE`；
 - `commit` 提交事务，数据库才正式落库；回滚则此前 SQL 全部撤销。
-口诀：save=纳入管理，flush=同步到库（未提交），commit=提交生效。
+口诀：save=纳入管理，flush=同步到库（未提交），commit=提交生效。本项目 `spring.jpa.open-in-view: false`（[application.yml:12](../../app/src/main/resources/application.yml)），请求层没有隐式长 Session，事务边界全部显式落在 Service 方法上。
 
 ---
 
 ### Q3. 解释标量外键选择。
-本项目实体之间**不建 `@ManyToOne` 对象关联，而是存外键 ID（标量）**，如 `PracticeSession.paperVersionId: Long`。理由：
+本项目实体之间**不建 `@ManyToOne` 对象关联，而是存外键 ID（标量）**，如 `PracticeSession.paperVersionId: Long`（PracticeSession:12）。理由：
 - 聚合边界清晰：practice 不级联操控 bank 的实体，避免级联保存/删除失控；
-- 避免懒加载在事务外序列化实体触发 `LazyInitializationException`；
-- 归属校验由 Service 显式查询完成（`requireSession/requireQuestion`），授权逻辑可见、可控；
-- 聚合之间通过 ID 引用是 DDD 推荐做法，跨聚合不持有对象引用。
+- 避免懒加载在事务外序列化实体触发 `LazyInitializationException`（配合 open-in-view=false）；
+- 归属校验由 Service 显式查询完成（requireSession，PracticeService:120-124：查不到 404、studentId 不匹配 403），授权逻辑可见、可控；
+- 聚合之间通过 ID 引用是 DDD 推荐做法，跨聚合不持有对象引用；这也是 ArchUnit 规则 crossDomainRepositoryAccessIsForbidden 强制的边界（业务域之间只能走对方 Service）。
 
 ---
 
 ### Q4. 分别写出派生查询、JPQL、原生 SQL，并说明 LAZY 事务外访问结果。
 
 ```java
-// ① 派生查询：方法名即查询语义（findBy + 字段 + OrderBy...）
+// ① 派生查询：方法名即查询语义（findBy + 字段 + OrderBy...）——本项目真实代码 PracticeSessionRepository:12
 List<PracticeSession> findByStudentIdOrderByCreatedAtDesc(Long studentId);
 
-// ② JPQL：面向实体和属性（类名/字段名），可跨方言
-@Query("select p from PracticeSession p where p.studentId = :id order by p.createdAt desc")
-List<PracticeSession> jpql(@Param("id") Long id);
+// ② JPQL：面向实体和属性（类名/字段名），可跨方言——本项目真实代码 :14-16（悲观锁查询）
+@Lock(LockModeType.PESSIMISTIC_WRITE)
+@Query("select p from PracticeSession p where p.id = :id")
+Optional<PracticeSession> findByIdForUpdate(@Param("id") Long id);   // 提交路径 SELECT ... FOR UPDATE
 
-// ③ 原生 SQL：面向表和列，数据库方言相关
-@Query(value = "select * from practice_session where student_id = :id order by created_at desc",
-       nativeQuery = true)
-List<PracticeSession> nativeSql(@Param("id") Long id);
+// ③ 原生 SQL：面向表和列，数据库方言相关——本项目原生 SQL 出现在 OutboxPublisher（event 包），
+//    用 JdbcTemplate + SQL 文本块直接 INSERT outbox_event（OutboxPublisher.java:31 起 INSERT_SQL）
 ```
-`FetchType.LAZY`：关联只在**会话打开且首次访问 getter** 时才发 SQL 加载；持久化上下文关闭（事务结束、实体脱离会话 detached）后再访问未初始化关联 → 抛 `org.hibernate.LazyInitializationException`。本项目用标量 ID 从源头规避。
+`FetchType.LAZY`：关联只在**会话打开且首次访问 getter** 时才发 SQL 加载；持久化上下文关闭（事务结束、实体脱离会话 detached）后再访问未初始化关联 → 抛 `org.hibernate.LazyInitializationException`。本项目用标量 ID 从源头规避，全项目没有 `@ManyToOne/@OneToMany` 对象关联。
 
 ---
 
@@ -52,16 +51,20 @@ List<PracticeSession> nativeSql(@Param("id") Long id);
 **四种实体状态**：
 | 状态 | 含义 | 典型操作 |
 |---|---|---|
-| transient（瞬时/新建） | 刚 new，未被持久化上下文管理，无 id | `new PracticeSession(...)` |
+| transient（瞬时/新建） | 刚 new，未被持久化上下文管理，无 id | `new PracticeSession(studentId, paperVersionId)`（构造器 :22-24） |
 | managed（托管） | 已纳入持久化上下文，变更会被脏检查跟踪 | `save` 返回对象、查询结果 |
 | detached（游离） | 曾被管理但会话已关闭，有 id，改了不会自动同步 | 事务结束后仍持有的对象 |
 | removed（删除） | 标记删除，flush 时发 DELETE | `delete(entity)` |
 
-**脏检查（dirty checking）**：flush 时 Hibernate 对比 managed 实体当前值与加载时快照，有差异才生成 UPDATE。
-**派生 Repository**：
+**脏检查（dirty checking）**：flush 时 Hibernate 对比 managed 实体当前值与加载时快照，有差异才生成 UPDATE（如 PracticeService.submit 里 `session.submit(...)` 后 `sessions.save(session)`，:86-87，UPDATE 由脏检查+merge 共同保证）。
+**派生 Repository（本项目真实形态）**：
 ```java
 public interface PracticeSessionRepository extends JpaRepository<PracticeSession, Long> {
-    List<PracticeSession> findByStudentIdOrderByCreatedAtDesc(Long studentId);
+    List<PracticeSession> findByStudentIdOrderByCreatedAtDesc(Long studentId);   // :12
+
+    @Lock(LockModeType.PESSIMISTIC_WRITE)                                        // :14-16
+    @Query("select p from PracticeSession p where p.id = :id")
+    Optional<PracticeSession> findByIdForUpdate(@Param("id") Long id);
 }
 ```
 
@@ -81,40 +84,41 @@ try (Connection conn = dataSource.getConnection();       // 关闭顺序与声�
 }
 ```
 try-with-resources 按**逆序自动关闭**，即使抛异常也关闭。
-**适用边界**：
-- JPA 派生查询：简单条件 CRUD，零 SQL 样板；方法名过长/隐式 join 时可读性下降；
-- MyBatis：复杂多表、动态 SQL、需要精细控制执行计划时更合适，SQL 显式写在 XML/注解；
-- **N+1**：一次查 N 个父对象，再为每个父对象发一次子查询（共 1+N 次）。解法：投影只取需要的列、`join fetch`/`@EntityGraph` 一次 join 取回、批量加载（`IN` 分批）。
+**适用边界（本项目双持久层分工的真实选择）**：
+- JPA 派生查询：全部写入与等值/简单读，零 SQL 样板；方法名过长/隐式 join 时可读性下降；
+- MyBatis：本项目只让它接管 wrong_question 的「筛选条件全可选 + 分页 + 聚合」只读查询（WrongQuestionQueryMapper + [resources/mapper/WrongQuestionQueryMapper.xml](../../app/src/main/resources/mapper/WrongQuestionQueryMapper.xml)），动态 SQL 显式、EXPLAIN 时看得到完整语句；
+- **N+1**：一次查 N 个父对象，再为每个父对象发一次子查询（共 1+N 次）。解法：投影只取需要的列、`join fetch`/`@EntityGraph` 一次 join 取回、批量加载（`IN` 分批）。本项目用标量 ID 取代对象关联，结构上不存在关联 N+1。
 
 ---
 
 ### Q7. 连接/Statement/ResultSet 关闭顺序，连接池复用时事务状态如何恢复。
 - 关闭顺序：先 `ResultSet`，再 `Statement/PreparedStatement`，最后 `Connection`（try-with-resources 自动逆序处理）；
-- 连接池（HikariCP）中 `conn.close()` **不是物理关闭，而是归还连接池**；归还前连接会被重置：自动提交恢复为默认、未提交事务被回滚、Statement 被清理，因此下一个借到该连接的请求拿到的是干净连接，不会继承上一个请求的事务/隔离级别设置。
+- 连接池（HikariCP）中 `conn.close()` **不是物理关闭，而是归还连接池**；归还前连接会被重置：自动提交恢复为默认、未提交事务被回滚、Statement 被清理，因此下一个借到该连接的请求拿到的是干净连接，不会继承上一个请求的事务/隔离级别设置。读写分离场景下这一重置同样关键：`ReplicationRoutingDataSource` 依赖「取连接时刻」的 readOnly 标志路由主/从，所以配置里必须用 `LazyConnectionDataSourceProxy` 把取连接推迟到第一条 SQL。
 
 ---
 
 ## External
 
 ### E1. 制造 N+1 并修复。
-制造：查出 100 个 PaperVersion，循环里访问每个的 `questions`（若用对象关联且 LAZY），会发 1 次 + 100 次查询。修复：① `@Query("... left join fetch p.questions ...")` 一次取回；② 或分两条查询（先查 id 列表，再 `where paper_version_id in (...)` 批量取题目）在内存分组；③ 用投影 DTO 只选需要列。修复后用 SQL 日志确认查询次数从 N+1 降为常数次。
+制造：查出 100 个 PaperVersion，循环里访问每个的关联题目集合（若用对象关联且 LAZY），会发 1 次 + 100 次查询。修复：① `@Query("... left join fetch ...")` 一次取回；② 或分两条查询（先查 id 列表，再 `where paper_version_id in (...)` 批量取题目）在内存分组；③ 用投影 DTO 只选需要列。修复后用 SQL 日志确认查询次数从 N+1 降为常数次。本项目没有对象关联，对照可看 BankService 显式两次查询（先查 PaperVersion、再 `questionVersionRepository` 按 paperVersionId 批量取题），即修复手段②的写法。
 
 ### E2. 测乐观锁冲突。
-`PracticeSession.entityVersion` 标注 `@Version`：两个事务先后读到同一 version=1，A 先提交（version→2），B 提交时 `WHERE id=? AND entity_version=1` 匹配不到 → 抛 `ObjectOptimisticLockingFailureException`。测试断言该异常，并决定重试或转成 409。乐观锁适合冲突少的场景；本项目提交路径用悲观行锁 `findByIdForUpdate` 强串行化。
+`PracticeSession.entityVersion` 标注 `@Version`（PracticeSession:19，对应 [V1__m0_schema.sql](../../app/src/main/resources/db/migration/V1__m0_schema.sql) 的 entity_version BIGINT 默认 0）：两个事务先后读到同一 version=1，A 先提交（version→2），B 提交时 `WHERE id=? AND entity_version=1` 匹配不到 → 抛 `ObjectOptimisticLockingFailureException`。测试断言该异常，并决定重试或转成 409。乐观锁适合冲突少的场景；本项目提交路径同时用悲观行锁 `findByIdForUpdate`（PracticeSessionRepository:14-16，SQL 即 SELECT…FOR UPDATE）强串行化，ImportJob 实体同样带 @Version（[ImportJob.java:19](../../app/src/main/java/com/allen/questionbank/importjob/ImportJob.java)）。
 
 ### E3. 用连接池参数解释获取超时、最大连接数、泄漏检测；写一个 MyBatis select 映射。
 HikariCP 关键参数：
-- `maximumPoolSize`：最大物理连接数，决定并发数据库操作上限；
-- `connectionTimeout`：池满时获取连接最多等待多久，超时抛 `SQLTransientConnectionException`（快速失败而非无限挂起）；
+- `maximumPoolSize`：最大物理连接数，决定并发数据库操作上限（本项目读写分离配置 hikariOf 里 maxPoolSize=5，见 ReadReplicaDataSourceConfig:57-67）；
+- `connectionTimeout`：池满时获取连接最多等待多久，超时抛 `SQLTransientConnectionException`（快速失败而非无限挂起；读写分离配置为 5000ms）；
 - `leakDetectionThreshold`：连接借出超过该阈值未归还则打泄漏告警，定位“忘了 close/长事务占连接”。
 
-MyBatis select 映射：
+MyBatis select 映射（本项目真实 XML，[resources/mapper/WrongQuestionQueryMapper.xml:27-33](../../app/src/main/resources/mapper/WrongQuestionQueryMapper.xml)）：
 ```xml
-<select id="findByStudent" resultType="PracticeSessionView">
-  SELECT id, total_score AS totalScore, created_at AS createdAt
-  FROM practice_session
-  WHERE student_id = #{studentId}
-  ORDER BY created_at DESC
+<select id="search" resultMap="rowMap">
+    SELECT question_version_id, wrong_count, last_wrong_at
+    FROM wrong_question
+    <include refid="filters"/>                       <!-- studentId 必填，wrongCountMin/wrongSince 可选 <if> -->
+    ORDER BY last_wrong_at DESC, question_version_id DESC
+    LIMIT #{limit} OFFSET #{offset}
 </select>
 ```
-`#{studentId}` 是预编译参数绑定（防注入），区别于字符串替换的 `${}`。
+`#{limit}` 是预编译参数绑定（防注入），区别于字符串替换的 `${}`；namespace 上还声明了 `<cache size="512" eviction="LRU" flushInterval="60000" readOnly="false"/>`（:12）二级缓存，同参数第二次查询零 SQL（由 WrongQuestionQueryMapperTest.secondIdenticalSummarizeHitsSecondLevelCacheWithoutSql 用 MyBatisQueryMonitor 计数固化）。

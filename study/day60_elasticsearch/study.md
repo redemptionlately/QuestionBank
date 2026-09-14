@@ -12,4 +12,5 @@
 - ES 的近实时搜索、分片、副本和 refresh 与数据库事务提交不是同一个一致性边界；写 MySQL 成功不代表 ES 立即可搜。
 - 通过 Outbox、重试和重建任务同步搜索投影；删除、重复事件、乱序更新和 mapping 失败都要可恢复。
 - 分片数、routing、segment merge、堆和磁盘决定性能；只增加副本不能解决错误查询和热点分片。
+- 项目边界（MustRemember）：ES **未接入**（pom 无 ES 依赖、无客户端代码与测试，面试必须如实说）；已具备的是投影链路的 Outbox 半段——`event/OutboxPublisher`（同事务写 outbox_event，uk_outbox_dedup 去重）、`event/OutboxRelay`（投递 qb-events，失败重试至 maxAttempts=5 置 FAILED）、`event/PaperPublishedEventConsumer` + `consumed_event`（eventKey 幂等，未来 ES 投影消费者照此模式新增即可）。
 - 外部源码索引（MustUnderstand）：[Elasticsearch near real-time](https://www.elastic.co/guide/en/elasticsearch/reference/current/near-real-time.html)、[index lifecycle](https://www.elastic.co/guide/en/elasticsearch/reference/current/index-lifecycle-management.html)

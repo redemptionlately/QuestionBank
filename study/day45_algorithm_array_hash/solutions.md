@@ -5,7 +5,7 @@
 ## Current
 
 ### Q1. 按当天索引定位并口述 I/O 边界（方法论题）。
-复杂度分析必须同时写：时间、额外空间、输入范围、递归深度、整数溢出边界，缺一不可。
+复杂度分析必须同时写：时间、额外空间、输入范围、递归深度、整数溢出边界，缺一不可。本日为纯算法主题，app 内无直接对应业务类；HashMap"确定性键去重"思想在项目中的真实落地是 OutboxEvent.eventKey()（aggregateType+aggregateId+eventType 拼键）配合 uk_outbox_dedup 唯一索引、消费端 consumed_event 的 existsByEventKey 判重。
 
 ---
 

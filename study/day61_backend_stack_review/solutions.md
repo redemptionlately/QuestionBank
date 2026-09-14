@@ -7,11 +7,11 @@
 ### Q1. 选一个真实接口做端到端口述与白纸设计（以提交接口为例）。
 从外到内完整讲：
 1. **HTTP**：`POST /api/practices/{id}/submit`，Bearer 认证 + Idempotency-Key，请求体答案 JSON；
-2. **Spring 链**：RateLimitFilter→ApiTokenFilter（写 SecurityContext）→授权→DispatcherServlet 参数绑定与 @Valid→Controller→@PreAuthorize；
-3. **事务**：PracticeService 方法开事务，`findByIdForUpdate` 加行锁，校验归属/状态，canonical 判分，写 Item/Wrong/Session，提交时统一 commit（失败整体回滚）；
-4. **MySQL**：JPA 生成 SQL，联合唯一键兜底，行锁在提交/回滚时释放，EXPLAIN 验证索引；
-5. **缓存/队列边界**：已发布列表读缓存（cache-aside，可重建，事实仍在 DB）；异步导入走持久化任务表 + @Async，非内存队列；
-6. **日志指标**：requestId 贯穿、请求/失败/延迟原子计数、health 探针、统一 ErrorResponse。
+2. **Spring 链**：RequestIdFilter（@Order(HIGHEST_PRECEDENCE)，生成/透传 X-Request-Id、写 MDC）→SecurityFilterChain 内 ApiTokenFilter（写 SecurityContext）→授权→限流过滤器（本地固定窗口默认，可切 Redis 令牌桶）→DispatcherServlet 参数绑定与 @Valid→Controller→@PreAuthorize（类级 STUDENT）；
+3. **事务**：PracticeService.submit 开事务，`findByIdForUpdate`（@Lock(PESSIMISTIC_WRITE)）加行锁，校验归属/状态，canonical 判分，写 Item/Wrong/Session，提交时统一 commit（失败整体回滚）；app.lock.backend=redis 时外层还有 RedisGuardedPracticeSubmitter 的 Redis 锁（事务外获取、提交后释放）；
+4. **MySQL**：JPA 生成 SQL，uk_submission_question 联合唯一键兜底，行锁在提交/回滚时释放，EXPLAIN 验证索引（真库证据门控 MYSQL_EVIDENCE）；
+5. **缓存/队列边界**：已发布列表读 PublishedPaperCache（本地 ExpiringCache 默认，app.cache.backend=redis 可切 RedisPublishedPaperCache，afterCommit 失效、可重建，事实仍在 DB）；异步导入走持久化 import_job 表 + @Async 双池 + ImportJobRetrySweeper 退避重试；发布事件经 Kafka Outbox（app.kafka.enabled=true 时装配，topic qb-events、consumed_event 幂等、.DLT）；
+6. **日志指标**：requestId 贯穿（logback pattern [%X{requestId:-}]）、RequestMetrics 原子计数 + /api/metrics、micrometer-prometheus 的 /actuator/prometheus、ServiceLatencyAspect 慢调用 warn、DatabaseLatencyHealthIndicator 探针、统一 ErrorResponse(code,message,requestId,timestamp)。
 白纸画出时序图与状态机，并标注每步失败返回什么（400/401/403/404/409/500）。
 
 ---
@@ -36,10 +36,10 @@
 ### Q3. 写一页简历项目描述，只用源码/测试/日志能证明的事实。
 示例（每条都能指向证据）：
 - 基于 Spring Boot 3.4/Java 21 实现题库管理与在线练习模块化单体，覆盖建库、追加式版本发布、练习提交与错题归集闭环；
-- 用“行锁 + 幂等键 + 结果快照”实现提交幂等，并发同键重放结果一致，集成测试覆盖幂等/回滚/并发（9 个测试方法，H2+Flyway 真实建表）；
-- 为发布列表/学生练习/错题查询建立联合索引，真实 MySQL EXPLAIN 显示命中索引、Backward index scan 无 filesort（附 output 日志）；
-- 实现固定窗口限流、进程内 TTL 缓存、原子指标与持久化异步导入任务（事务提交后调度、状态机推进），并明确其单实例边界。
-**不写**：未接入的 Redis/Kafka/ES/K8s、没有压测的 QPS/延迟数字；区分“已实现/已测试/仅设计/未掌握”。
+- 用“Redis 锁（可选）+ FOR UPDATE 行锁 + 幂等键 + 结果快照 + 唯一键兜底”实现提交幂等，并发同键重放结果一致；测试共 27 类 119 个 @Test（默认构建 90 通过 / 29 个真实环境门控跳过 / 0 失败），含 ArchUnit 5 条架构规则、事务传播与失效五路径、jvm 包 4 类 17 法；
+- 为发布列表/学生练习/错题查询建立联合索引（V2 迁移），错题只读查询用 MyBatis 动态 SQL + 二级缓存（WrongQuestionQueryMapper 8 用例），真 MySQL EXPLAIN 证据测试门控 MYSQL_EVIDENCE；
+- 实现本地/Redis 可切换缓存与限流（条件装配）、Redis 分布式锁（fencing token）、Kafka Outbox（qb-events + consumed_event 幂等 + .DLT）、读写分离 profile、@Async 双池与导入任务退避重试、micrometer Prometheus 指标与 RequestId 全链路日志；cloud/ 另有独立 Spring Cloud 六模块演示（Eureka/Gateway/Feign/Resilience4j/Outbox），与单体不共享代码；deploy/k8s 提供 Deployment+Service+HPA+Secret 演示清单。
+**不写**：未接入的 ES、Redis 集群/Redlock、Kafka 精确一次、ShardingSphere 生产化（仅 test scope 证据）、没有实测的 QPS/延迟数字；任何条件装配能力都要同时说明“默认是否开启、证据测试由哪个环境变量门控、是否真跑过”，区分“已实现/已测试/仅设计/未掌握”。
 
 ---
 

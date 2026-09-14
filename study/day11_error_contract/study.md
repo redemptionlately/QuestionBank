@@ -14,9 +14,9 @@
       }
   }
   ```
-- 源码索引（MustRemember）：[GlobalExceptionHandler.java](../../src/main/java/com/allen/questionbank/common/GlobalExceptionHandler.java) 第 17-53 行的 `@ExceptionHandler` 分支和统一 `response` 方法
+- 源码索引（MustRemember）：[GlobalExceptionHandler.java](../../app/src/main/java/com/allen/questionbank/common/GlobalExceptionHandler.java) 第 19-63 行的 6 个 `@ExceptionHandler` 分支和统一 `response` 方法（:59-63，requestId 优先取请求属性）；[RequestIdFilter.java](../../app/src/main/java/com/allen/questionbank/common/RequestIdFilter.java) 第 22-41 行的 requestId 生成/透传与 MDC 写入
 
 # MustUnderstand
 
 - 错误处理器必须避免返回密码、token、SQL、堆栈和内部路径；健康探针只能证明进程/依赖探针状态，不能证明登录、发布和提交链路成功
-- 源码索引（MustUnderstand）：[SecurityConfig.java](../../src/main/java/com/allen/questionbank/auth/SecurityConfig.java) 第 39-55 行的过滤器错误入口；[ErrorResponse.java](../../src/main/java/com/allen/questionbank/common/ErrorResponse.java) 第 5-5 行的响应字段
+- 源码索引（MustUnderstand）：[SecurityConfig.java](../../app/src/main/java/com/allen/questionbank/auth/SecurityConfig.java) 第 37-65 行的过滤器错误入口与 writeError；[ErrorResponse.java](../../app/src/main/java/com/allen/questionbank/common/ErrorResponse.java) 第 5 行的响应字段；[DatabaseLatencyHealthIndicator.java](../../app/src/main/java/com/allen/questionbank/ops/DatabaseLatencyHealthIndicator.java) 的 SELECT 1 健康探测（500ms 阈值，异常判 DOWN）

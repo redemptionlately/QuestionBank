@@ -18,9 +18,9 @@
 ### Q2. 按任务类型选线程池参数、队列与拒绝策略。
 - **CPU 密集**：核心线程数 ≈ 核数（+1），队列有界，避免过多线程上下文切换；
 - **阻塞 I/O 密集**：线程数可按 `核数 × (1 + 等待时间/计算时间)` 估算，但**上限受下游容量（DB 连接、下游 QPS）约束**，不是越大越好；
-- **混合任务**：用多个独立池隔离（bulkhead），避免慢 I/O 占满公共池拖垮计算任务（本项目 importTaskExecutor 独立于 Web 线程池）；
+- **混合任务**：用多个独立池隔离（bulkhead），避免慢 I/O 占满公共池拖垮计算任务（本项目 importTaskExecutor 独立于 generalTaskExecutor 与 Web 线程池）；
 - 队列必须**有界**，配合拒绝策略：AbortPolicy 快速失败、CallerRunsPolicy 反压到调用方；keepAlive 回收多余线程；线程命名便于 thread dump 辨认。
-本项目 InfrastructureConfig：核心 2、最大 4、队列 100、命名线程工厂。
+本项目 InfrastructureConfig 双池（由 common/InfrastructureExecutorRoutingTest 4 个用例反射固化）：import 池 core 2 / max 4 / queue 100 / CallerRuns / 关停等待 30s / 前缀 import-worker-；general 池（@Async 默认池）core 2 / max 8 / queue 200 / CallerRuns / 关停等待 10s / 前缀 general-async-。另 jvm/JvmConcurrencyEvidenceTest 用 core=1+队列 1 时第 3 个任务触发 AbortPolicy 固化“有界队列+饱和拒绝”，用 5000 个 50ms 阻塞任务对比虚拟线程与 200 平台线程池的开销差异。
 
 ---
 
@@ -40,7 +40,7 @@
 ### E1. 比较公共 ForkJoinPool、自定义 Executor、虚拟线程处理阻塞任务的风险。
 - **commonPool**：并行流/`supplyAsync` 不指定 executor 时默认使用，大小≈核数-1；若在其中做阻塞 JDBC/HTTP，会占满少量公共线程拖慢所有无关并行任务——阻塞操作绝不能丢进 commonPool；
 - **自定义 Executor**：显式控制 core/max/有界队列/拒绝策略与命名，阻塞任务用它并按下游容量定大小，可控可观测；
-- **虚拟线程（Java 21）**：阻塞时卸载载体线程、成本极低，适合海量 I/O 并发；但不增加 DB 连接/CPU/下游容量，synchronized 长阻塞可能 pin 载体，大量 ThreadLocal 有内存开销，并发仍受连接池约束。
+- **虚拟线程（Java 21）**：阻塞时卸载载体线程、成本极低，适合海量 I/O 并发；但不增加 DB 连接/CPU/下游容量，synchronized 长阻塞可能 pin 载体，大量 ThreadLocal 有内存开销，并发仍受连接池约束。本项目证据：JvmConcurrencyEvidenceTest.virtualThreadsHandleBlockingWorkWithFarLessOverhead（5000×50ms 阻塞任务对比），[tools/loadgen/Loadgen.java](../../tools/loadgen/Loadgen.java) 用 Executors.newVirtualThreadPerTaskExecutor 承载开环压测响应。
 
 ### E2. P95 上升但平均值稳定的原因。
 均值对少量长尾不敏感，P95 直接反映尾部：① **排队**：线程池/连接池在高峰出现等待，多数请求仍快、少数排队很久；② **GC 暂停**：偶发 Full/Mixed GC 让落在暂停窗口的请求变慢；③ **锁竞争**：少数请求等行锁/监视器（如同热行提交）；④ 下游抖动/网络重传。用 JFR 看锁与 GC 事件、连接池等待指标、按时间分桶的 P95 定位，均值稳定不代表体验稳定。

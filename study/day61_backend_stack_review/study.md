@@ -9,6 +9,6 @@
 # MustUnderstand
 
 - 没有“学完全部 Java 就保证 Offer”；岗位、城市、年限和面试题差异会改变重点。路线提供能力覆盖，真实掌握要靠重复实现、测试和面试反馈。
-- M0 当前是模块化单体和单机基础设施基线；Redis/MQ/ES/Kubernetes 等补强内容用于面试理解和设计，除非实际接入并验证，不得写成项目经历。
+- M0 当前是模块化单体：本地缓存/固定窗口限流/原子指标/@Async 任务为默认基线；Redis 缓存/锁/令牌桶限流、Kafka Outbox、读写分离均已编码实现但靠配置键/profile 条件开启，其证据测试由 REDIS_EVIDENCE/KAFKA_EVIDENCE/READ_REPLICA_EVIDENCE/MYSQL_EVIDENCE 门控（默认构建跳过）；ShardingSphere 仅 test scope 证据；cloud/ 是不共享代码的独立微服务演示；ES 未接入。任何能力只有实际接入、跑过对应测试并留存日志，才可写成项目经历。
 - 最有效的补强顺序是先巩固 Java/Spring/MySQL 和算法，再根据目标 JD 选择 Redis、MQ、ES、微服务或中间件深入，避免同时堆多个未掌握组件。
 - 外部源码索引（MustUnderstand）：[Google SRE Workbook](https://sre.google/workbook/)、[OWASP ASVS](https://owasp.org/www-project-application-security-verification-standard/)

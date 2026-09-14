@@ -5,7 +5,7 @@
 ## Current
 
 ### Q1. 按源码索引定位并默写、口述 I/O 边界。
-锚点：`GlobalExceptionHandler` 17-53 行各 `@ExceptionHandler` 分支与统一 `response`；`SecurityConfig` 39-55 行过滤器阶段错误入口；`ErrorResponse` 字段。
+锚点（主代码在 `app/src/main/java/com/allen/questionbank/`）：[common/GlobalExceptionHandler.java:19-63](../../app/src/main/java/com/allen/questionbank/common/GlobalExceptionHandler.java) 6 个 `@ExceptionHandler` 分支（ApiException :23、校验 :28、约束违反 :35、缺头/坏 JSON :40、越权 :45、兜底 :50）与统一出口 response()（:59-63）；[auth/SecurityConfig.java:37-57](../../app/src/main/java/com/allen/questionbank/auth/SecurityConfig.java) 过滤器阶段错误入口（401/403 在 :50-55，writeError :59-65）；[common/ErrorResponse.java:5](../../app/src/main/java/com/allen/questionbank/common/ErrorResponse.java) 错误体字段；[ops/DatabaseLatencyHealthIndicator.java:18-19](../../app/src/main/java/com/allen/questionbank/ops/DatabaseLatencyHealthIndicator.java) 自定义 DB 健康指标。
 
 ---
 
@@ -30,31 +30,35 @@ throw new ApiException(HttpStatus.BAD_REQUEST, "INVALID_INPUT", "题目字段不
 ---
 
 ### Q3. 未知异常不泄露堆栈、SQL、密码和 token。
-最宽泛的兜底处理器只返回固定文案，详细信息只进服务端日志：
+最宽泛的兜底处理器只返回固定文案，详细信息只进服务端日志（[GlobalExceptionHandler.java:50-57](../../app/src/main/java/com/allen/questionbank/common/GlobalExceptionHandler.java)）：
 ```java
 @ExceptionHandler(Exception.class)
-ResponseEntity<ErrorResponse> handleUnexpected(Exception e) {
-    // log.error("internal error, requestId=...", e);  ← 堆栈只在日志
-    return response(HttpStatus.INTERNAL_SERVER_ERROR, "INTERNAL_ERROR", "服务内部错误");
+ResponseEntity<ErrorResponse> handleUnexpected(Exception e, HttpServletRequest request) {
+    // 堆栈、method、URI 只进日志（带 requestId），响应体不携带
+    log.error("未处理异常 {} {} (requestId={})", request.getMethod(), request.getRequestURI(),
+            request.getAttribute("requestId"), e);
+    return response(HttpStatus.INTERNAL_SERVER_ERROR, "INTERNAL_ERROR", "服务内部错误", request);
 }
 ```
-另外 `application.yml` 中 `server.error.include-message: never` 关闭默认错误页的 message 回显；登录失败统一“用户名或密码错误”，不区分用户是否存在；响应 DTO 不含密码哈希/token 之外的敏感字段。
+另外 [application.yml:35](../../app/src/main/resources/application.yml) 中 `server.error.include-message: never` 关闭默认错误页的 message 回显；登录失败统一“用户名或密码错误”，不区分用户是否存在；响应 DTO 不含密码哈希/token 之外的敏感字段。
 
 ---
 
 ### Q4. 每个错误响应包含 requestId 和 timestamp。
-统一出口：
+统一出口（[GlobalExceptionHandler.java:59-63](../../app/src/main/java/com/allen/questionbank/common/GlobalExceptionHandler.java)）：
 ```java
-new ErrorResponse(code, message, UUID.randomUUID().toString(), Instant.now())
+Object id = request.getAttribute("requestId");                 // RequestIdFilter 每请求写入
+String requestId = id instanceof String value ? value : UUID.randomUUID().toString();
+return ResponseEntity.status(status).body(new ErrorResponse(code, message, requestId, Instant.now()));
 ```
-四个字段：`code`（程序分支用，稳定）、`message`（人读）、`requestId`（每次请求唯一，排障时用它 grep 日志）、`timestamp`（发生时刻，ISO-8601）。Security 层 401/403 也通过 `SecurityConfig.writeError` 输出同一结构，保证全系统错误格式一致。
+四个字段：`code`（程序分支用，稳定）、`message`（人读）、`requestId`（优先复用 RequestIdFilter 生成/透传并写入 MDC 的同一个值，响应头也回写 `X-Request-Id`，排障时用它 grep 日志）、`timestamp`（发生时刻，ISO-8601）。Security 层 401/403 在过滤链阶段、请求属性尚未就绪时通过 `SecurityConfig.writeError`（:59-65）用随机 UUID 输出同一结构，保证全系统错误格式一致。
 
 ---
 
 ### Q5. `/actuator/health` 状态。
-- 依赖 `spring-boot-starter-actuator`，`application.yml` 暴露 `health,info,metrics`，并开启探针 `management.endpoint.health.probes.enabled=true`；
-- SecurityConfig 对 `/actuator/health` `permitAll`；
-- 进程与默认依赖正常返回 `{"status":"UP"}`。注意：health UP 只证明**进程存活、被探针覆盖的依赖可用**，不证明登录→发布→提交业务链路成功（业务正确性要靠集成测试）。
+- 依赖 `spring-boot-starter-actuator`，[application.yml:28](../../app/src/main/resources/application.yml) 暴露 `health,info,metrics,prometheus`，并开启探针 `management.endpoint.health.probes.enabled=true`（:32，提供 liveness/readiness 组）；
+- SecurityConfig 对 `/actuator/health/**`、`/actuator/prometheus` `permitAll`（:47-48，探针与抓取器不带 token）；
+- 除 Spring 自带的 db 指标外，项目自研了 `ops/DatabaseLatencyHealthIndicator`（实现 HealthIndicator，执行 `SELECT 1`，阈值 SLOW_QUERY_THRESHOLD_MS=500，超时/异常判 DOWN，details 带 probeQuery 与 latencyMs）；进程与依赖正常返回 `{"status":"UP"}`。注意：health UP 只证明**进程存活、被探针覆盖的依赖可用**，不证明登录→发布→提交业务链路成功（业务正确性要靠集成测试）。探针免 token 与 requestId 由 M0OpsIntegrationTest.containerProbesAreAccessibleWithoutToken（:28）等用例固化。
 
 ---
 
@@ -68,10 +72,10 @@ new ErrorResponse(code, message, UUID.randomUUID().toString(), Instant.now())
 ## External
 
 ### E1. 让数据库不可用后请求接口，记录返回状态是否符合依赖故障语义。
-DB 不可用时：查询路径会抛底层 `DataAccessException`，因没有专门映射，落到兜底处理器返回 500 `INTERNAL_ERROR`（不应返回 200 或把 SQL 异常透出）；若配置了数据源健康指示器，`/actuator/health` 变为 DOWN。依赖故障属于服务端问题，语义上是 5xx，而不是 4xx。
+DB 不可用时分两条路径：① 业务查询路径抛底层 `DataAccessException`，没有专门映射，落到兜底处理器返回 500 `INTERNAL_ERROR`（不应返回 200 或把 SQL 异常透出）；② 健康探测路径上，`DatabaseLatencyHealthIndicator`（ops 包，执行 `SELECT 1`）探测异常时返回 `Health.down(failure)`，`/actuator/health` 变为 DOWN（HTTP 状态 503），details 只带 probeQuery/latencyMs，不泄露连接串。该 DOWN 分支由 OpsComponentsTest.healthIndicatorReportsDownWhenDatabaseIsUnreachable（:38）固化。依赖故障属于服务端问题，语义上是 5xx，而不是 4xx。
 
 ### E2. 检查错误日志能否用 requestId 关联而不记录敏感正文。
-做法：在过滤器/MDC 中把 `requestId` 放入日志上下文（MDC），每条日志都带同一 requestId；异常处理器记录 `log.error("requestId={} code={}", requestId, code, e)`。日志禁止打印明文密码、完整 token（只打前缀）、请求体中的敏感字段；客户端凭响应里的 requestId 报障，服务端即可串起整条调用链。
+项目真实做法：[common/RequestIdFilter.java:22-24](../../app/src/main/java/com/allen/questionbank/common/RequestIdFilter.java) 在每请求开始时把 requestId 写入 MDC（key 固定为 `"requestId"`，:33；优先透传入站 `X-Request-Id`，否则 UUID），finally 中 `MDC.remove` 防线程复用串号（:41）；[logback-spring.xml:6](../../app/src/main/resources/logback-spring.xml) 的 pattern 含 `[%X{requestId:-}]`，每条日志都带同一 requestId；兜底处理器记录 `log.error("未处理异常 {} {} (requestId={})", method, uri, requestId, e)`。日志禁止打印明文密码、完整 token（只打前缀）、请求体中的敏感字段；客户端凭响应头/响应体里的 requestId 报障，服务端即可串起整条调用链。
 
 ### E3. 对 JSON、纯文本和空 body 分别测试错误响应格式。
 - 合法 JSON 但字段非法 → 400 `VALIDATION_ERROR`；

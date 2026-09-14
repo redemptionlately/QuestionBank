@@ -10,8 +10,9 @@
 - **绝对不要再手动挂 `DeferringLoadBalancerExchangeFilterFunction`**：builder 上已带（同名覆盖的结果），再挂同一个 = **双重解析**——第一遍 auth-service→实例 IP，第二遍把实例 IP 当服务名找 `No servers available for service: 192.168.1.103` → 503（实测踩过）。
 - Eureka 时序竞争：服务**首次注册默认最长延迟 40s**（`eureka.client.initial-instance-info-replication-interval-seconds`），gateway 的 **LB 缓存刷新默认 35s**（`spring.cloud.loadbalancer.cache.refresh-interval`）——加起来赶不上"服务刚就绪就发起跨服务调用"的时刻，症状是网关 503 `No servers available for service: practice-service`。解法：两边都调快 + 脚本轮询 eureka apps API 确认注册再发请求。
 - **span 导出是批量异步的**（BatchSpanProcessor 默认 5s 一批）：断言"trace 齐备"必须**轮询到信号出现**（如"三个服务出现在同一条 trace"），固定 sleep 会撞上批次未齐的假阴性（首跑 18s 只解析到 121/310 个 span）。
-- 日志-链路互查的锚点必须选**请求路径的日志行**：`@Scheduled` 调度线程的日志同样带 `[service,traceId,spanId]` 前缀（调度任务也被 Observation 包住），任意抓第一行会把后台调度的 trace 当成请求 trace（实测踩过）。本项目选 `internalSnapshot` 里的 `[snapshot]` INFO 行——只有 Feign 真实到达 bank 才会打印。
-- 接收端用 `otelcol-contrib`：OTLP http :4318 / grpc :4317+1 收全部 span，**debug exporter `verbosity: detailed` 把每个 span 原样打印到 stdout 落盘**——证据文化要求解析对象就是落盘原件，不依赖任何第三方 UI。
+- 日志-链路互查的锚点必须选**请求路径的日志行**：`@Scheduled` 调度线程的日志同样带 `[service,traceId,spanId]` 前缀（调度任务也被 Observation 包住），任意抓第一行会把后台调度的 trace 当成请求 trace（实测踩过）。本项目选 bank-service `BankController` 的 `/internal/papers/{id}/snapshot`（:117-125）里的 `[snapshot] paperId={} items={}` INFO 行——只有 Feign 真实到达 bank 才会打印（OutboxRelay 调度线程无请求上下文，不能当锚点）。
+- 接收端用 `otelcol-contrib`（scripts/otelcol-config.yaml，0.160.0）：OTLP http **4318** / grpc **4319** 双协议收全部 span，无 processors，**debug exporter `verbosity: detailed` 把每个 span 原样打印到 stdout 落盘**——证据文化要求解析对象就是落盘原件，不依赖任何第三方 UI。
+- **app 单体与 cloud 的追踪边界（MustRemember，禁止混称）**：app 只做单进程请求关联——`common/RequestIdFilter`（MDC key 固定 "requestId"、X-Request-Id 入站透传/出站回写、finally MDC.remove 防线程复用串号）、logback-spring.xml pattern `[%X{requestId:-}]`、`ops/ServiceLatencyAspect`（200ms 慢调用 warn）、micrometer-registry-prometheus 的 `/actuator/prometheus` 指标；app pom **没有** bridge-otel/OTLP 导出，不产生 span。W3C traceparent、CLIENT/SERVER span、otelcol、采样率这套分布式追踪只存在于 cloud 四服务（gateway/auth/bank/practice，均引 bridge-otel + exporter-otlp，practice 额外 feign-micrometer），两套体系不共享代码。
 
 # MustUnderstand
 

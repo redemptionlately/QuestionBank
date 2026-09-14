@@ -5,7 +5,7 @@
 ## Current
 
 ### Q1. 按源码索引定位并默写、口述 I/O 边界。
-锚点：`PracticeController` 21-36 行 create/save/submit 入口；`PracticeService` 39-49 行答案覆盖保存；`PracticeSession` 状态字段与 `submit()`；V1 49-74 行外键与答案唯一键。
+锚点（主代码在 `app/src/main/java/com/allen/questionbank/`）：[practice/PracticeController.java:34-53](../../app/src/main/java/com/allen/questionbank/practice/PracticeController.java) create/save/submit 入口（类级 STUDENT 鉴权在 :17，submit 可选走 RedisGuardedPracticeSubmitter :49-52）；[practice/PracticeService.java:43-54](../../app/src/main/java/com/allen/questionbank/practice/PracticeService.java) saveAnswer 答案覆盖保存（requireSession :120-124、requireQuestion :126-130）、`:37-41` create；[practice/PracticeSession.java:13](../../app/src/main/java/com/allen/questionbank/practice/PracticeSession.java) 状态字段与 `:35-38` submit()；[V1__m0_schema.sql](../../app/src/main/resources/db/migration/V1__m0_schema.sql) 第 49-75 行外键与答案唯一键 uk_submission_question（:72）。
 
 ---
 
@@ -13,7 +13,7 @@
 
 **状态机**：`IN_PROGRESS → SUBMITTED`（单向，由实体 `submit()` 内聚维护，客户端不能传 status）。
 
-**保存答案调用顺序（真实代码）**：
+**保存答案调用顺序（真实代码 [PracticeService.java:43-54](../../app/src/main/java/com/allen/questionbank/practice/PracticeService.java)）**：
 ```java
 @Transactional
 public SubmissionItem saveAnswer(AuthPrincipal user, Long sessionId, Long questionId, JsonNode answer) {
@@ -48,9 +48,9 @@ private QuestionVersion requireQuestion(PracticeSession session, Long questionId
 ### Q3. 学生从已发布版本创建练习成功，从草稿创建返回 409。
 
 ```java
-@Transactional
+@Transactional   // PracticeService.java:37-41
 public PracticeSession create(AuthPrincipal user, Long paperId) {
-    PaperVersion paper = banks.requirePublished(paperId);   // 内部要求 status=PUBLISHED，否则 409
+    PaperVersion paper = banks.requirePublished(paperId);   // 内部要求 status=PUBLISHED，否则 409（BankService:117-122）
     return sessions.save(new PracticeSession(user.userId(), paper.getId()));
 }
 ```

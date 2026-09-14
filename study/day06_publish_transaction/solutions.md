@@ -5,7 +5,7 @@
 ## Current
 
 ### Q1. 按源码索引定位并默写、口述 I/O 边界。
-锚点：`BankService` 55-67 行发布方法（owner/status/非空校验顺序）；`PaperVersion` 14-17 行状态与时间字段、31 行状态转换方法。
+锚点（主代码在 `app/src/main/java/com/allen/questionbank/`）：[bank/BankService.java:64-81](../../app/src/main/java/com/allen/questionbank/bank/BankService.java) publish 发布方法（存在性/所有权/状态/非空校验顺序 :66-71，状态迁移与 save :72-73，同事务 Outbox :74-78，afterCommit 缓存淘汰注册 :79）、`:87-98` evictPublishedAfterCommit；[bank/PaperVersion.java:14-17](../../app/src/main/java/com/allen/questionbank/bank/PaperVersion.java) 状态与时间字段、`:31` publish() 状态转换方法。
 
 ---
 
@@ -30,8 +30,24 @@ public PaperVersion publish(AuthPrincipal user, Long paperId) {
         throw bad("试卷不能发布为空版本");                                    // 空版本→400
     paper.publish();
     PaperVersion result = papers.save(paper);
-    publishedCache.evict("published");                                      // 失效已发布列表缓存
+    // Outbox 与发布在同一事务落库（:74-78）；app.kafka.enabled!=true 时 ObjectProvider 为空，整段 no-op
+    outboxPublisher.stream().findFirst().ifPresent(publisher -> publisher.enqueue(
+            "paper", result.getId(), "PAPER_PUBLISHED",
+            Map.of("paperId", result.getId(), "bankId", result.getBankId(),
+                    "title", result.getTitle(), "publishedAt", String.valueOf(result.getPublishedAt()))));
+    evictPublishedAfterCommit();   // 注意：缓存淘汰注册到事务提交之后，不是当场 evict
     return result;
+}
+
+// 缓存淘汰必须在提交之后（BankService.java:87-98）：事务内淘汰会被并发请求在提交前回写旧值
+private void evictPublishedAfterCommit() {
+    if (TransactionSynchronizationManager.isSynchronizationActive()) {
+        TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronization() {
+            @Override public void afterCommit() { publishedCache.evict(PUBLISHED_KEY); }
+        });
+    } else {
+        publishedCache.evict(PUBLISHED_KEY);   // 无活跃事务（一般不会走到）才直接淘汰
+    }
 }
 ```
 | 状态 | 条件 | 结果 |
@@ -57,23 +73,24 @@ public PaperVersion publish(AuthPrincipal user, Long paperId) {
 ---
 
 ### Q5. 重复发布返回同一版本，不生成第二个版本。
-代码中 `if ("PUBLISHED".equals(status)) return paper;` 实现**幂等**：不新建 PaperVersion、不刷新 publishedAt、不重复 evict 之外的写入。测试上对同一 paperId 调两次 publish，返回体 id 与第一次完全相同。
+代码中 `if ("PUBLISHED".equals(status)) return paper;`（:69）实现**幂等**：在所有写入之前提前返回，不新建 PaperVersion、不刷新 publishedAt、不再写 Outbox、不注册缓存淘汰。测试上对同一 paperId 调两次 publish，返回体 id 与第一次完全相同。
 
 ---
 
 ### Q6. 解释发布事务失败时应保持哪些数据不变。
-发布是一个 `@Transactional` 事务，方法内任何未捕获 RuntimeException 都会让事务回滚：
+发布是一个 `@Transactional` 事务（:64），方法内任何未捕获 RuntimeException 都会让事务回滚：
 - `paper_version.status` 仍为 DRAFT，`published_at` 仍为 NULL（不会出现“状态改了但时间没写”的半发布）；
+- 同事务写入的 `outbox_event` 行一并回滚，不会出现“库回滚了但事件已入箱”；
 - 不会产生新的版本行、题目行；
-- 缓存 evict 若在回滚前执行影响有限（下次查询会重新加载），因此把 `evict` 放在 save 之后、且以数据库为准。
-原则：状态与状态时间必须在同一事务内一起落库，要么全部成功要么全部不变。
+- **缓存淘汰注册在 afterCommit 回调里（:87-98），事务回滚则 afterCommit 根本不触发，缓存不会被错误清空**——这正是不能在事务内直接 evict 的原因：事务内淘汰后，并发读可能在提交前把旧值重新写回缓存。该时序由 `RedisCacheIntegrationTest.publishEvictsCacheOnlyAfterCommit`（:74）锁死。
+原则：状态、状态时间、Outbox 事件必须在同一事务内一起落库，缓存失效放在提交之后，要么全部成功要么全部不变。
 
 ---
 
 ## External
 
 ### E1. 在发布事务中注入异常，确认没有半发布状态。
-在 `paper.publish()` 之后、`save` 之前（或 save 时）人为抛异常，断言：事务回滚后数据库该行仍是 DRAFT、publishedAt 为 NULL，`GET /api/papers/published` 列表不含它。这就是 `@Transactional` 默认对 RuntimeException 回滚的验证（rollback 规则；checked 异常默认不回滚，需要 `rollbackFor` 指定）。
+在 `paper.publish()` 之后、`save` 时（或 Outbox enqueue 序列化失败时）人为抛异常，断言：事务回滚后数据库该行仍是 DRAFT、publishedAt 为 NULL、outbox_event 无对应行，afterCommit 回调不触发、缓存不被清空，`GET /api/papers/published` 列表不含它。草稿侧的整笔回滚由 `M0FlowIntegrationTest.invalidQuestionRollsBackTheWholeDraftTransaction`（:154）固化；回滚规则本身由 TransactionFailureModeTest 5 个用例覆盖（RuntimeException 回滚、checked 异常默认不回滚、需要 `rollbackFor` 才纳入回滚等）。
 
 ### E2. 并发发布同一版本，记录两个响应和最终状态。
 两个请求同时进入：都读到 DRAFT，先后提交。理想结果：一个 200 完成发布，另一个因状态已变/乐观锁得到 409 或走幂等分支返回同一 PUBLISHED 版本；最终数据库只有一行、status=PUBLISHED。要严格防并发覆盖，可对行加 `@Version` 乐观锁或 `SELECT ... FOR UPDATE`。

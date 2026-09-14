@@ -1,6 +1,6 @@
 # Day60 Elasticsearch · 题目与标准解答（Solutions）
 
-> ES 搜索投影；事实仍在 MySQL，ES 可重建。
+> ES 搜索投影；事实仍在 MySQL，ES 可重建。**诚实边界：本项目未接入 Elasticsearch（无 ES 依赖/客户端/索引与测试），以下为设计能力；但投影链路的“Outbox 半段”已真实存在**——app 的 event 包已在发布事务内写 PAPER_PUBLISHED 事件（outbox_event 表、OutboxRelay 投递 qb-events、consumed_event 消费幂等），未来接 ES 时只需新增一个消费端，不能对面试官声称 ES 已落地。
 
 ## Current
 
@@ -56,8 +56,8 @@
 
 ### Q3. 设计 MySQL→Outbox→ES 投影的首次同步、重复、删除、重建。
 - **首次同步**：全量批读 MySQL（按主键分页/游标），批量 bulk 写入 ES，记录同步水位；
-- **增量**：业务事务写 MySQL + outbox 事件（同事务），投递器消费事件更新 ES；
-- **重复事件**：文档用业务主键做 `_id`（如 paperId/versionId），写操作用 index 幂等覆盖，重复事件结果相同；
+- **增量**：业务事务写 MySQL + outbox 事件（同事务）——**这半段本项目已实现**：BankService.publish 同事务 enqueue("paper", paperId, "PAPER_PUBLISHED", payloadJson)，OutboxRelay 轮询 PENDING 投到 qb-events；缺的只是“ES consumer”这一段，可直接复用 PaperPublishedEventConsumer 的 consumed_event 幂等模式新增投影消费者；
+- **重复事件**：文档用业务主键做 `_id`（如 paperId/versionId），写操作用 index 幂等覆盖，重复事件结果相同（本项目消费端已按 eventKey 去重，投影天然只处理一次）；
 - **乱序更新**：文档带 `updatedAt`/版本号，更新时比较版本，旧事件不覆盖新数据；
 - **删除**：发逻辑删除事件（或墓碑），ES 执行 delete；不能只删 MySQL 而不通知 ES；
 - **重建**：mapping 变更或数据漂移时，全量灌到新索引，校验文档数/抽样一致后用别名原子切换（见 E2），旧索引保留以便回滚。

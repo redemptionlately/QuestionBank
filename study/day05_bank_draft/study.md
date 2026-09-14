@@ -15,10 +15,10 @@
   ```
 - `correctAnswers` 必须是 `options` 的子集；SINGLE/TRUE_FALSE 只有一个答案，MULTIPLE 可有多个答案
 - `(bank_id, version_no)` 和 `(paper_version_id, question_no)` 联合唯一键分别防止版本号和题号重复
-- 源码索引（MustRemember）：[BankController.java](../../src/main/java/com/allen/questionbank/bank/BankController.java) 第 58-65 行的 `QuestionInput`；[BankService.java](../../src/main/java/com/allen/questionbank/bank/BankService.java) 第 35-53 行的版本创建和题目循环
+- 源码索引（MustRemember）：[BankController.java](../../app/src/main/java/com/allen/questionbank/bank/BankController.java) 第 58-64 行的 record（QuestionInput 在 :60-61，题型枚举 QuestionType 只有 SINGLE/MULTIPLE/TRUE_FALSE）；[BankService.java](../../app/src/main/java/com/allen/questionbank/bank/BankService.java) 第 44-62 行的版本创建和题目循环、第 129-138 行的 validateQuestion
 
 # MustUnderstand
 
 - 历史练习引用具体 `paper_version_id`，新版本只能追加，不能改变已经引用的题面和答案
 - 客户端提交的分数、角色、题目 ID 和题目归属都不可信；服务端用当前用户、会话版本和数据库标准答案重新判定
-- 源码索引（MustUnderstand）：[QuestionVersion.java](../../src/main/java/com/allen/questionbank/bank/QuestionVersion.java) 第 19-35 行的版本字段；[V1__m0_schema.sql](../../src/main/resources/db/migration/V1__m0_schema.sql) 第 35-47 行的约束
+- 源码索引（MustUnderstand）：[QuestionVersion.java](../../app/src/main/java/com/allen/questionbank/bank/QuestionVersion.java) 第 5-35 行的不可变题目快照实体（联合唯一约束在 :6、字段 :9-17）；[V1__m0_schema.sql](../../app/src/main/resources/db/migration/V1__m0_schema.sql) 第 35-47 行的 question_version 约束

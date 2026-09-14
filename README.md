@@ -108,3 +108,15 @@ using it as interview evidence.
 
 The source code is not proof of user mastery. Run `mvn test`, inspect the migration and explain the
 publish/submit transaction boundaries before calling M0 verified or learned.
+
+## Reunion：选择 + 非选合卷（extra 扩展，不动 bank）
+
+ ingest 曾把整卷拆散（选择进卷，非选只剩书正文）。补录链路：
+
+- 新表 `extra_question`（`V10__extra_question.sql`）+ `ExtraQuestion{,Type,Repository,Validator,Service,Controller}`
+  全部在 `extra/` 包内；校验器有纯单测（`ExtraQuestionValidatorTest` 7/7）。
+- `GET /api/extra/questions?paperVersionId=`（STUDENT 可读）、`POST /api/extra/questions/bulk` +
+  `DELETE /api/extra/questions/{id}`（ADMIN）。导入幂等（paper + 归一题干去重），解析规则：答案块归属其前面的题干。
+- 答题页把 extra 题按题号并入同一列表、同卡片结构；作答只记本地（会话/判分/mastery 接口碰不到 extra id）；
+  书全文阅读不再展示 `答案：/解析：` 行（答案只进题目显示答案）。
+- 回滚：`DELETE FROM extra_question WHERE paper_version_id = ?`（只增不改，无需恢复备份）。

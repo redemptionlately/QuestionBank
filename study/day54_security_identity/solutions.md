@@ -16,17 +16,18 @@
 4. nonce/state（OIDC 流程防 CSRF/重放）；
 5. 是否已被撤销（如维护黑名单/版本号）。
 
-**轮换与撤销**：refresh token 用一次即换发新的（rotation），旧的作废；检测到旧 refresh 被再次使用 → 判定被盗，撤销整条 token 链；登出/封禁在服务端把 refresh（必要时含 access 版本号）置失效。JWT 签名完整 ≠ 可撤销，因此 access 短 TTL + 服务端可撤销的 refresh 是常见组合。本项目当前是内存 UUID token（resolve 时查 Map，过期惰性删除），属单实例教学实现。
+**轮换与撤销**：refresh token 用一次即换发新的（rotation），旧的作废；检测到旧 refresh 被再次使用 → 判定被盗，撤销整条 token 链；登出/封禁在服务端把 refresh（必要时含 access 版本号）置失效。JWT 签名完整 ≠ 可撤销，因此 access 短 TTL + 服务端可撤销的 refresh 是常见组合。本项目 app 形态当前是内存 UUID token（auth/TokenService 查 Map，resolve 时过期惰性删除，TTL 由 app.token-ttl 配置默认 PT8H），属单实例教学实现；独立演示的 cloud/auth-service 则是自研无状态 HMAC-SHA256 token（base64url(payload).base64url(签名)，定长比较防计时侧信道，刻意不引 JWT 库）——两套体系在不同模块、不共享代码，面试时要能说清“有状态内存会话”和“无状态签名 token”在撤销能力上的差别。
 
 ---
 
 ### Q2. 为题库详情、管理员发布、任务查询分别写对象级/功能级/owner 授权。
 | 场景 | 授权类型 | 判断位置与规则 |
 |---|---|---|
-| GET 题库详情/已发布试卷 | 对象级（BOLA） | 公开已发布可读；私有题库必须 `bank.ownerId == currentUser.id`，否则 404/403 |
-| POST 发布版本 | 功能级 + owner | 先 `@PreAuthorize("hasRole('ADMIN')")`（功能级），Service 再判 owner（对象级） |
-| GET import-jobs/{id} | 资源归属 | `findByIdAndOwnerId(id, userId)`，查不到按 404 处理，不泄露他人资源 |
-原则：**认证通过不代表有权操作具体对象**；功能级角色是粗筛，对象级 owner/租户判断必须在 Service 用资源实际归属做，不能只靠前端隐藏按钮。
+| GET 已发布试卷/试卷详情 | 对象级（BOLA） | 端点限 ADMIN/STUDENT 登录可见；私有资源必须归属当前用户，否则 404/403 |
+| POST 建库/版本/发布 | 功能级 + owner | BankController 端点方法级 `@PreAuthorize("hasRole('ADMIN')")`（功能级），Service 再做资源校验（对象级） |
+| GET import-jobs/{id} | 资源归属 | `ImportJobRepository.findByIdAndOwnerId(id, userId)`（真实派生查询），查不到按 404 处理，不泄露他人资源；ImportJobController 类级先挂 STUDENT |
+练习域同理：PracticeController 类级 `@PreAuthorize("hasRole('STUDENT')")`，PracticeService.view 内比对 session.studentId 与当前用户，不匹配 403。
+原则：**认证通过不代表有权操作具体对象**；功能级角色是粗筛，对象级 owner/租户判断必须在 Service 用资源实际归属做，不能只靠前端隐藏按钮；ArchitectureTest 的 controllersDoNotTouchRepositoriesDirectly 规则还强制 Controller 不能绕过 Service 直接摸 Repository。
 
 ---
 
@@ -50,7 +51,7 @@
 - **主动退出**：删除/撤销 refresh，access 因短 TTL 自然快速失效，或维护 token 版本号（登出递增版本，旧 access 校验版本不符即拒）。
 
 ### E2. 构造 IDOR 越权并指出 Service 修复位置。
-攻击：学生 A 登录后把 `GET /api/import-jobs/{B的任务id}` 或 `PUT /practices/{B的sessionId}` 中的 id 改成 B 的。若 Controller 只按 id 查询不判归属就是 IDOR（OWASP API1）。修复在 **Service**：所有按 id 加载资源的方法都附加当前用户条件（`findByIdAndOwnerId`、`requireSession` 内比对 studentId），不匹配返回 404（避免存在性泄露）或 403；并加集成测试用他人 token 断言被拒。
+攻击：学生 A 登录后把 `GET /api/import-jobs/{B的任务id}` 或 `POST /api/practices/{B的sessionId}/submit` 中的 id 改成 B 的。若 Controller 只按 id 查询不判归属就是 IDOR（OWASP API1）。修复在 **Service**：所有按 id 加载资源的方法都附加当前用户条件（本项目 `findByIdAndOwnerId`、PracticeService.view 内比对 studentId 返回 403），不匹配返回 404（避免存在性泄露）或 403；并加集成测试用他人 token 断言被拒（M0FlowIntegrationTest.rolesAndValidationAreEnforced 覆盖角色与越权拒绝）。注意身份只取自 SecurityContext（cloud 网关形态则取网关注入的 X-User-Id 头且服务端重复鉴权），绝不信任请求体里传入的 userId。
 
 ### E3. 文件上传 / URL 抓取 / PDF 解析的 SSRF 与资源消耗防线。
 - **SSRF（URL 抓取）**：用户给 URL 时禁止访问内网/元数据地址（169.254.169.254、10/172.16/192.168、localhost），解析后的真实 IP 再校验（防 DNS rebinding），限制协议为 http/https、设连接与总超时、禁止重定向到内网；

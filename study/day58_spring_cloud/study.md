@@ -6,6 +6,7 @@
 - 数据所有权的物理证据是 `SHOW TABLES`：任何一张表只属于一个服务。跨服务取数只能走接口（同步 Feign）或事件（异步 Kafka），**跨服务 JOIN 是拆分失败的第一信号**。
 - 单体模块化与微服务是取舍不是升级：拆出去换来独立部署与技术异构，代价是分布式事务、链路追踪、版本兼容。M0 单体的价值在事务内事实清晰，cloud 拆分演示的是边界划清之后事务如何跨服务表达。
 - 试卷快照（`PaperSnapshot`）是"数据所有权"落地的关键设计：practice 建会话时把题目与标准答案**复制**进自己的库，之后判分是纯本地事务。bank 挂掉只影响"开新会话"，不影响"提交已开会话"——熔断降级能真正生效，正是因为依赖被切成一次性的快照拉取。
+- **cloud 与 app 是两套不相交体系**：cloud 父 POM 不继承 question-bank-parent、不在根 `<modules>` 聚合，包名 `com.allen.cloud.*`（app 是 `com.allen.questionbank.*`、自研 starter 是 `com.questionbank.monitor`），三服务各持 qb_auth/qb_bank/qb_practice 库（app 单库 question_bank，表结构也不同，如 cloud 用 version、app 用 version_no），frontend 只对接 app 形态。面试时禁止把 cloud 的能力算到 app 头上，反之亦然。
 
 ## 注册发现与网关
 
@@ -47,16 +48,16 @@ client -> gateway:8080 (RequestIdFilter 生成 X-Request-Id)
 
 ## 源码索引（文件 -> 类/方法 -> 行号 -> 学习动作）
 
-- [AuthFilter.java](../../cloud/gateway-service/src/main/java/com/allen/cloud/gateway/AuthFilter.java) 第 44 行定义受保护前缀 `/api/banks` `/api/practice`；第 60 行放行公开路径；第 70 行用**服务名** `http://auth-service/internal/token/verify` 调验签；第 76 行验签成功后把身份写进 `X-User-Id`；第 84-87 行区分 401（token 无效）与 503（auth 不可达）。学习动作：背写"验签 + 透传身份，不做业务判断"的三条决定。
-- [gateway application.yml](../../cloud/gateway-service/src/main/resources/application.yml) 第 18-34 行三条显式路由（`lb://` 服务名 URI）；第 28-29 行限流参数。学习动作：解释为什么关掉 `discovery.locator.enabled`（自动路由按服务名生成 `/AUTH-SERVICE/**`，暴露内部拓扑且大小写陷阱）。
-- [RequestIdFilter.java](../../cloud/gateway-service/src/main/java/com/allen/cloud/gateway/RequestIdFilter.java) 第 29-33 行请求无 ID 则生成 UUID、写入请求与响应头；order=-200 保证 401 响应也带 ID。学习动作：说明没有它为什么"三个服务的日志对不上一次请求"。
-- [BankClient.java](../../cloud/cloud-common/src/main/java/com/allen/cloud/common/BankClient.java) 第 14 行 `@FeignClient(name="bank-service", path="/internal")` 声明式契约；[PracticeApplication.java](../../cloud/practice-service/src/main/java/com/allen/cloud/practice/PracticeApplication.java) 第 11 行 `@EnableFeignClients(basePackages="com.allen.cloud.common")` 扫描契约包。学习动作：说出契约模块模式解决什么问题（两处签名漂移上线才炸）。
-- [BankSnapshotGateway.java](../../cloud/practice-service/src/main/java/com/allen/cloud/practice/BankSnapshotGateway.java) 第 37 行 `@CircuitBreaker(name="bankService", fallbackMethod="fallback")`；第 43-47 行 fallback 抛 503 并打日志。学习动作：背写"为什么是快速失败而不是兜底数据"。
-- [practice application.yml](../../cloud/practice-service/src/main/resources/application.yml) 第 38-42 行 Feign 超时 2s/3s；第 43-48 行熔断参数（窗口 5、最少 5 次、失败率 50%、OPEN 10s、HALF_OPEN 放 3 个探测）。学习动作：算出"连打 6 次全败，第 5 次触发断开，第 6 次 CallNotPermitted 直接快速失败"。
-- [PracticeService.java](../../cloud/practice-service/src/main/java/com/allen/cloud/practice/PracticeService.java) 第 45 行建会话**先查 clientToken 幂等再拉快照**（顺序反了重试会放大下游压力）；第 50 行 Feign 拉快照；第 70-88 行提交判分全在本库完成，重复提交直接返回上次结果。学习动作：解释为什么判分不依赖 bank。
-- [BankService.java](../../cloud/bank-service/src/main/java/com/allen/cloud/bank/BankService.java) 第 69 行 `saveAndFlush` 撞 `(bank_id, version)` 唯一约束时第 70-72 行转 409（并发发布的兜底，靠数据库而不是应用层判断）；第 83 行 outbox_event 与业务写入**同一个事务**。学习动作：背写"查 max(version)+1 为什么必须配唯一约束"。
-- [OutboxRelay.java](../../cloud/bank-service/src/main/java/com/allen/cloud/bank/OutboxRelay.java) 第 43 行 2s 周期轮询；第 46 行取未发送批次；第 49-51 行 `send().get(5s)` 同步等确认后 `markSent()`；投递失败 `return` 留待下轮。学习动作：画出"发送成功但未标记就崩溃"的重发时序，并指出消费端幂等键。
-- [TokenService.java](../../cloud/auth-service/src/main/java/com/allen/cloud/auth/TokenService.java) 第 39 行 `issue`（HMAC-SHA256 签名 payload `userId|username|role|exp`）；第 49-63 行 `verify`；第 102-108 行 `constantTimeEquals` 定长比较防时序攻击。学习动作：说出签名防什么（篡改）、不防什么（泄露），以及为什么网关每请求都回验签。
+- [AuthFilter.java](../../cloud/gateway-service/src/main/java/com/allen/cloud/gateway/AuthFilter.java) 第 50 行定义受保护前缀 `/api/banks` `/api/practice`；filter(:81-110) 先放行非保护路径，再用**服务名** `http://auth-service/internal/token/verify`（@LoadBalanced WebClient）调验签，成功后 mutate 写入 `X-User-Id`/`X-User-Role`；第 104-114 行区分 401（WebClientResponseException 401 → TOKEN_INVALID）与 503（连不上/超时 → AUTH_SERVICE_DOWN），reject 在 :116-127，getOrder=-100 在 :135-138。学习动作：背写"验签 + 透传身份，不做业务判断"的三条决定。
+- [gateway application.yml](../../cloud/gateway-service/src/main/resources/application.yml) 三条显式路由（`lb://` 服务名 URI，`discovery.locator.enabled: false` 关闭按服务名自动路由）；bank 路由挂 RequestRateLimiter（replenishRate 2、burstCapacity 5、按 IP 的 KeyResolver）。学习动作：解释为什么关掉自动路由（自动生成 `/AUTH-SERVICE/**` 暴露内部拓扑且有大小写陷阱）。
+- [RequestIdFilter.java](../../cloud/gateway-service/src/main/java/com/allen/cloud/gateway/RequestIdFilter.java) HEADER 常量在 :24；:29 传入头空白则 UUID 生成；:32-36 同时改写下游请求头与本次响应头；getOrder=-200（:42）保证 401 响应也带 ID。学习动作：说明没有它为什么"多个服务的日志对不上一次请求"。
+- [BankClient.java](../../cloud/cloud-common/src/main/java/com/allen/cloud/common/BankClient.java) 第 17 行 `@FeignClient(name="bank-service", path="/internal")` 声明式契约，:20-21 唯一 snapshot 方法；[PracticeApplication.java](../../cloud/practice-service/src/main/java/com/allen/cloud/practice/PracticeApplication.java) 第 11 行 `@EnableFeignClients(basePackages="com.allen.cloud.common")` 扫描契约包。学习动作：说出契约模块模式解决什么问题（两处签名漂移上线才炸）。
+- [BankSnapshotGateway.java](../../cloud/practice-service/src/main/java/com/allen/cloud/practice/BankSnapshotGateway.java) 第 37-40 行 `@CircuitBreaker(name="bankService", fallbackMethod="fallback")`；第 42-48 行 fallback 抛 503 并打日志。学习动作：背写"为什么是快速失败而不是兜底数据"。
+- [practice application.yml](../../cloud/practice-service/src/main/resources/application.yml) Feign 超时 connect 2s/read 3s；Resilience4j 实例 bankService（滑动窗口 5、最少 5 次调用、失败率 50%、OPEN 等待 10s、HALF_OPEN 放 3 个探测、TimeLimiter 4s）。学习动作：算出"连败 5 次触发断开，第 6 次 CallNotPermitted 直接快速失败"。
+- [PracticeService.java](../../cloud/practice-service/src/main/java/com/allen/cloud/practice/PracticeService.java) createSession(:43-61) **先查 clientToken 幂等再拉快照**（顺序反了重试会放大下游压力），经 Gateway 拉快照后逐题固化标准答案；submit(:69-90) 判分全在本库完成，已 SUBMITTED 直接回放上次结果。学习动作：解释为什么判分不依赖 bank。
+- [BankService.java](../../cloud/bank-service/src/main/java/com/allen/cloud/bank/BankService.java) publish(:70-96) 先算 max(version)+1，`saveAndFlush` 撞 `(bank_id, version)` 唯一约束 uk_paper_version_bank_version 时捕 DataIntegrityViolationException 转 409（并发发布的兜底，靠数据库而不是应用层判断）；:92-94 outbox_event 与业务写入**同一个事务**。学习动作：背写"查 max(version)+1 为什么必须配唯一约束"。
+- [OutboxRelay.java](../../cloud/bank-service/src/main/java/com/allen/cloud/bank/OutboxRelay.java) @Scheduled fixedDelay 2s/initialDelay 3s；findTop50BySentFalseOrderByIdAsc 取未发送批次；`send(topic,eventKey,payload).get(5,SECONDS)` 同步等确认后 markSent()+save；任一条失败打 warn 并 return 留待下轮（不吞异常、不杀死调度器）。学习动作：画出"发送成功但未标记就崩溃"的重发时序，并指出消费端幂等键 event_key。
+- [TokenService.java](../../cloud/auth-service/src/main/java/com/allen/cloud/auth/TokenService.java) issue(:39-50)（HMAC-SHA256 签名 payload `id|username|role|expiresAt`，含 `|` 直接拒）；verify(:56-88) 无点/解码失败/签名不符/段数错/过期统一返回 Optional.empty（不区分失败原因，防探测）；constantTimeEquals(:109-118) 定长异或比较防时序攻击。学习动作：说出签名防什么（篡改）、不防什么（泄露），以及为什么网关每请求都回验签。
 
 ## 一键复跑证据（本机已验证的命令）
 

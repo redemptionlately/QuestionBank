@@ -9,7 +9,8 @@
 - bindingTables：父子表用相同分片键 + 对齐算法时声明绑定，join 路由按下标对齐下推，消除 N×M 笛卡尔积（本项目实测 4 条 → 1 条 Actual SQL）。
 - 子表冗余父表的分片键（如 submission_item 冗余 student_id）：让子表**不 join 父表也能路由**，是分片schema 设计的标准动作；代价是写入要维护冗余列一致性。
 - SS 5.5 起数据源 YAML 为**平铺格式**：`jdbcUrl/username/password` 直接写在数据源条目下；旧文档的 `props:` 嵌套写法在 5.5.2 被静默忽略（javap 反编译 swapper + 官方文档双确认）。
-- `shardingsphere-jdbc` 的 Maven 依赖图**不含** `shardingsphere-infra-data-source-pool-hikari`（发行包才带）：缺它则 PoolMetaData SPI 加载不到 → 同义词表为空 → 标准 props 全部静默丢弃，症状是 `Access denied for 'OS用户'@'localhost'` 或 `StorageUnit` NPE。
+- `shardingsphere-jdbc` 的 Maven 依赖图**不含** `shardingsphere-infra-data-source-pool-hikari`（发行包才带）：缺它则 PoolMetaData SPI 加载不到 → 同义词表为空 → 标准 props 全部静默丢弃，症状是 `Access denied for 'OS用户'@'localhost'` 或 `StorageUnit` NPE；两个坐标在 app/pom.xml:119-132 均为 **test scope**，生产 classpath 不含 ShardingSphere。
+- 项目源码/脚本索引（MustRemember）：`src/test/java/com/allen/questionbank/sharding/ShardingEvidenceTest.java`（类声明 :54、@TestMethodOrder + 门控 :52-53、密码取 MYSQL_PASSWORD 默认 783421 :56、buildShardingDataSource :139-148 读 classpath:/sharding-evidence.yaml 并调 SS 5.5.2 createDataSource(byte[])、createPhysicalTables :92-126、六证据 evidence01:233/evidence02:267/evidence03:292/evidence04:314/evidence05:341/evidence06:370）、`src/test/resources/sharding-evidence.yaml`（80 行：ds_0/ds_1 平铺 Hikari、!SHARDING 规则 :26、INLINE 库表算法 :58-71、SNOWFLAKE :72-74、bindingTables :56-57、!BROADCAST exam_dict :75-77、props.sql-show :78-80）、`scripts/sharding-evidence.sh`（存在，19 行：导出门控变量后 -Dtest=ShardingEvidenceTest 单跑并 tee output/）。
 - 外部源码索引（MustRemember）：[ShardingSphere 5.5.2 YAML data source](https://shardingsphere.apache.org/document/5.5.2/en/user-manual/shardingsphere-jdbc/yaml-config/data-source/)、[SNOWFLAKE paper](https://blog.twitter.com/engineering/en_us/a/2010/announcing-snowflake)
 
 # MustUnderstand

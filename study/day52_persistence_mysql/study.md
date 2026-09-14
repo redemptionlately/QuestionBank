@@ -6,6 +6,7 @@
 - InnoDB 的 MVCC 通过 undo 版本和 Read View 支持一致性读；隔离级别影响脏读、不可重复读和幻读，写冲突仍依赖锁。
 - 常见隔离级别：READ COMMITTED 每次一致性读可能看到新提交，REPEATABLE READ 在事务内保持快照，SERIALIZABLE 进一步限制并发；具体锁行为必须结合索引和 SQL 分析。
 - N+1 查询是一次主查询加每行关联查询；可通过 join fetch、批量查询、投影或明确分页消除，但 join 过宽会造成重复行和大结果集。
+- 项目源码索引（MustRemember）：`practice/WrongQuestionQueryMapper.java:17-50`（@Mapper 双方法 + 可序列化 Row/Summary）、`resources/mapper/WrongQuestionQueryMapper.xml`（#{} 绑定、`<if>` 动态片段、namespace 二级缓存 60s）、`practice/PracticeSessionRepository.java`（FOR UPDATE 悲观锁查询）、`V1__m0_schema.sql`（uk_paper_version_no:30、uk_submission_question:72、uk_wrong_question:83）、`V2__m0_query_indexes.sql`（三个读路径复合索引）；测试索引：`WrongQuestionQueryMapperTest`（8 用例，含二级缓存零 SQL 与非法分页 400）、`MysqlRealDbIntegrationTest`（7 用例，MYSQL_EVIDENCE 门控：EXPLAIN 正反对照、RR/RC、FOR UPDATE 锁等待、1213 死锁、真库对账）。
 - 外部源码索引（MustRemember）：[JDBC API](https://docs.oracle.com/en/java/javase/21/docs/api/java.sql/module-summary.html)、[MyBatis SQL Map XML](https://mybatis.org/mybatis-3/sqlmap-xml.html)、[HikariCP configuration](https://github.com/brettwooldridge/HikariCP)、[MySQL transaction isolation](https://dev.mysql.com/doc/refman/8.4/en/innodb-transaction-isolation-levels.html)
 
 # MustUnderstand

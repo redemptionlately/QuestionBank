@@ -18,5 +18,6 @@
 # MustUnderstand
 
 - 树是无环连通图；递归深度过大可能耗尽 Java 栈，图搜索必须明确有向/无向、重复边、断开图和权值条件
+- 本日为纯算法内容，app 无图算法源码；聚合内仅一对多层级关联（paper_version→question_version、practice_session→submission_item），visited 去重思想对应工程上的幂等键
 - 外部源码索引（MustUnderstand）：[CP-Algorithms BFS](https://cp-algorithms.com/graph/breadth-first-search.html)、[Dijkstra](https://cp-algorithms.com/graph/dijkstra.html)、[DSU](https://cp-algorithms.com/data_structures/disjoint_set_union.html)
 - 题面索引：[树与 LCA INDEX](../../../AI_Infra/Phases_book/algorithm/4_链表_树与_LCA/INDEX.md)、[图论与最短路 INDEX](../../../AI_Infra/Phases_book/algorithm/5_图论与最短路/INDEX.md)；官方：[Graph](https://cp-algorithms.com/graph/)

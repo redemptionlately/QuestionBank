@@ -5,7 +5,7 @@
 ## Current
 
 ### Q1. 按源码索引定位并默写、口述 I/O 边界。
-锚点：`BankController` 58-65 行 `QuestionInput` DTO；`BankService` 35-53 行版本创建与题目循环、86-95 行题目校验。
+锚点（主代码在 `app/src/main/java/com/allen/questionbank/`）：[bank/BankController.java:74-80](../../app/src/main/java/com/allen/questionbank/bank/BankController.java) 的 6 个 record（QuestionInput 在 :76-77）；[bank/BankService.java:44-62](../../app/src/main/java/com/allen/questionbank/bank/BankService.java) createDraft 版本创建与题目循环、`:129-138` validateQuestion 题目校验（createBank 在 :38-42）。
 
 ---
 
@@ -13,11 +13,11 @@
 
 **解答（真实代码流程）**：
 ```java
-// ① 创建题库：校验当前用户与名称 → 构造实体 → save
+// ① 创建题库：校验当前用户与名称 → 构造实体 → save（真实代码 BankService.java:38-42）
 @Transactional
 public QuestionBank createBank(AuthPrincipal user, String name, String description) {
-    if (user == null || name == null || name.isBlank())
-        throw new ApiException(HttpStatus.BAD_REQUEST, "INVALID_INPUT", "题库名称不能为空");
+    if (user == null || name == null || name.isBlank()) throw bad("题库名称不能为空");
+    // bad()=类内工厂 :145 → new ApiException(HttpStatus.BAD_REQUEST, "INVALID_INPUT", msg)
     return banks.save(new QuestionBank(user.userId(), name.trim(), description));
 }
 
@@ -61,7 +61,7 @@ private void validateQuestion(QuestionInput input) {
 
 ### Q3. 管理员创建题库和含单选/多选/判断题的草稿成功。
 
-- 先 `POST /api/auth/login`（admin/admin123）拿 token；
+- 演示账号由 `auth/DevDataInitializer`（条件 `app.dev.data.enabled`，默认开）播种 admin/teacher/student；先 `POST /api/auth/login` 拿 token；
 - `POST /api/admin/banks`，body `{"name":"M0 Bank","description":"..."}` → 200，返回 bank.id；
 - `POST /api/admin/banks/{id}/versions`，body 示例：
 ```json

@@ -3,6 +3,7 @@
 - 双指针依靠左右指针单调移动降低嵌套循环；滑动窗口维护 `[left,right]` 不变量；前缀和 `prefix[i+1]=prefix[i]+a[i]` 将区间和转为两次访问
 - HashMap 平均 O(1) 查找依赖 hash 分布；常见模式是计数、去重、两数和、前缀和映射和窗口频次
 - 复杂度分析同时写时间、额外空间、输入范围、递归深度和整数溢出边界
+- 本日为纯算法内容，app 无直接源码锚点；HashMap 确定性键去重的项目实例：OutboxEvent.eventKey() + uk_outbox_dedup、consumed_event.existsByEventKey
 - Java 写法常用 `Map<Integer,Integer> count = new HashMap<>(); count.merge(x, 1, Integer::sum);`
 - 滑动窗口代码骨架是：
   ```java

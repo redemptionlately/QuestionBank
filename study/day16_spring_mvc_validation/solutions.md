@@ -5,7 +5,7 @@
 ## Current
 
 ### Q1. 按源码索引定位并默写、口述 I/O 边界。
-锚点：`BankController` 13-65 行参数绑定、`@PreAuthorize`、record DTO；`PracticeController` 27-35 行路径变量/请求头；`GlobalExceptionHandler` 17-54 行异常分类。
+锚点（主代码在 `app/src/main/java/com/allen/questionbank/`）：[bank/BankController.java:15-80](../../app/src/main/java/com/allen/questionbank/bank/BankController.java) 参数绑定、`@PreAuthorize`、6 个 record DTO（:74-80）；[practice/PracticeController.java:40-53](../../app/src/main/java/com/allen/questionbank/practice/PracticeController.java) 路径变量/请求头（submit 在 :46-53，含可选 RedisGuardedPracticeSubmitter 分支）；[common/GlobalExceptionHandler.java:19-63](../../app/src/main/java/com/allen/questionbank/common/GlobalExceptionHandler.java) 六类异常分类。
 
 ---
 
@@ -36,21 +36,24 @@ mvc.perform(post("/api/admin/banks").header(AUTH, adminToken)
 
 ### Q4. 写出含 `@RequestBody`、`@PathVariable`、`@RequestHeader`、`@Valid` 的 Controller 方法。
 
-真实示例（提交练习）：
+真实示例（提交练习，[PracticeController.java:46-53](../../app/src/main/java/com/allen/questionbank/practice/PracticeController.java)；直接返回 Service 的 SubmitResult record，无额外包装层）：
 ```java
 @PostMapping("/practices/{sessionId}/submit")
-public SubmitResponse submit(@PathVariable Long sessionId,
-                             @RequestHeader("Idempotency-Key") String idempotencyKey) {
-    SubmitResult result = service.submit(CurrentUser.require(), sessionId, idempotencyKey);
-    return SubmitResponse.from(result);
+public PracticeService.SubmitResult submit(@PathVariable Long sessionId,
+                                           @RequestHeader("Idempotency-Key") String key) {
+    AuthPrincipal user = CurrentUser.require();
+    if (guardedSubmitter != null) {                       // app.lock.backend=redis 时走 Redis 锁包装
+        return guardedSubmitter.submit(user, sessionId, key);
+    }
+    return service.submit(user, sessionId, key);
 }
 ```
-创建版本（带 `@Valid @RequestBody`）：
+创建版本（带 `@Valid @RequestBody`，[BankController.java:33-38](../../app/src/main/java/com/allen/questionbank/bank/BankController.java)）：
 ```java
 @PostMapping("/admin/banks/{bankId}/versions")
 @PreAuthorize("hasRole('ADMIN')")
-public PaperResponse createDraft(@PathVariable Long bankId,
-                                 @Valid @RequestBody CreatePaperRequest request) { ... }
+public PaperDetailResponse createDraft(@PathVariable Long bankId,
+                                       @Valid @RequestBody CreatePaperRequest request) { ... }
 ```
 - `@RequestBody`：用 HttpMessageConverter（Jackson）把 JSON 反序列化为 DTO；
 - `@PathVariable`：取 URI 模板变量；
@@ -61,7 +64,7 @@ public PaperResponse createDraft(@PathVariable Long bankId,
 
 ### Q5. 写出嵌套 `@Valid` DTO，并区分字段校验、Service 校验、错误处理器职责。
 
-真实 DTO：
+真实 DTO（[BankController.java:75-77](../../app/src/main/java/com/allen/questionbank/bank/BankController.java)）：
 ```java
 public record CreatePaperRequest(
         @NotBlank @Size(max = 200) String title,
@@ -70,8 +73,8 @@ public record CreatePaperRequest(
 public record QuestionInput(
         @NotBlank String prompt,
         @NotNull QuestionType type,
-        @NotEmpty List<String> options,
-        @NotEmpty List<String> correctAnswers,
+        @NotEmpty List<@NotBlank String> options,           // 列表非空且每个元素非空白
+        @NotEmpty List<@NotBlank String> correctAnswers,
         @Min(1) int score,
         String explanation) {}
 ```

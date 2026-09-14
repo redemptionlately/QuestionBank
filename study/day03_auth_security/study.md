@@ -13,10 +13,10 @@
   ```
 - BCrypt 为每个密码生成 salt 并使用成本因子计算摘要；`matches(raw, encoded)` 验证输入，不保存明文
 - Bearer 过滤器读取 `Authorization: Bearer <token>`，解析成功后创建 `UsernamePasswordAuthenticationToken` 并写入 SecurityContext
-- 源码索引（MustRemember）：[AuthController.java](../../src/main/java/com/allen/questionbank/auth/AuthController.java) 第 8-22 行的登录 Controller/record；[AuthService.java](../../src/main/java/com/allen/questionbank/auth/AuthService.java) 第 21-32 行的用户查询、密码匹配和 token 签发
+- 源码索引（MustRemember）：[AuthController.java](../../app/src/main/java/com/allen/questionbank/auth/AuthController.java) 第 8-23 行的登录 Controller/record（POST /api/auth/login 在 :15）；[AuthService.java](../../app/src/main/java/com/allen/questionbank/auth/AuthService.java) 第 21-32 行的用户查询、密码匹配和 token 签发；[TokenService.java](../../app/src/main/java/com/allen/questionbank/auth/TokenService.java) 第 21-34 行的 UUID 令牌签发与过期惰性清理（TTL 键 app.token-ttl 默认 PT8H）
 
 # MustUnderstand
 
 - 角色只证明粗粒度能力，不能替代 `studentId/ownerId` 的资源所有权检查；Service 必须再次校验资源归属
 - 内存 token 重启失效且多实例不共享；JWT 把状态放在签名载荷，集中 Session/Redis Session 把状态和撤销放到服务端
-- 源码索引（MustUnderstand）：[ApiTokenFilter.java](../../src/main/java/com/allen/questionbank/auth/ApiTokenFilter.java) 第 23-35 行的过滤器链与 SecurityContext 生命周期；[SecurityConfig.java](../../src/main/java/com/allen/questionbank/auth/SecurityConfig.java) 第 31-55 行的无状态策略和 JSON 401/403
+- 源码索引（MustUnderstand）：[ApiTokenFilter.java](../../app/src/main/java/com/allen/questionbank/auth/ApiTokenFilter.java) 第 22-36 行的过滤器链与 SecurityContext 生命周期（AuthPrincipal record 在 :38）；[SecurityConfig.java](../../app/src/main/java/com/allen/questionbank/auth/SecurityConfig.java) 第 37-57 行的 STATELESS 无状态策略、放行清单（:47-48）和 JSON 401/403（writeError :59-65）；BCrypt 强度配置在 :27-30（app.security.bcrypt-strength 默认 10）

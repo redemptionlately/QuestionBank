@@ -5,16 +5,16 @@
 ## Current
 
 ### Q1. 60 分钟模拟并运行 test/package/E2E。
-流程：10 分钟自述项目 → 30 分钟八股 + 项目追问 → 15 分钟手写代码/SQL → 5 分钟反问。过程中实际跑：`mvn test`（9 个测试）、`mvn package`（产出 jar）、启动后走一遍登录→发布→提交 E2E。本机无 Maven 时用 IDE 等价执行，并如实说明环境限制。
+流程：10 分钟自述项目 → 30 分钟八股 + 项目追问 → 15 分钟手写代码/SQL → 5 分钟反问。过程中实际跑：`.\mvnw.cmd -pl app test`（27 个测试类、119 个 @Test；2026-09-09 基线实测默认构建 90 通过、29 个 `*_EVIDENCE` 环境门禁用例 Assumption 跳过、0 失败）、`package`（产出可执行 jar）、启动后走一遍登录→发布→提交 E2E。门控跳过的 29 个用例需真实 Kafka/MySQL/Redis/读写分离/分库分表环境并设置对应环境变量才执行，面试时必须如实说明这一口径，不能把跳过说成失败、也不能把未跑的证据说成已验证。
 
 ---
 
 ### Q2. 列五个“不会”，并把每个不会拆成五项。
-诚实列缺口（示例：Redis 集群、Kafka 精确一次、K8s 调度、JVM 调优实战、分库分表）。每个不会按五项拆解：
+诚实列缺口（示例：Redis 集群/Redlock、Kafka 精确一次、ShardingSphere 生产接入、JVM 调优实战、多实例水平扩容）。注意区分“已实现到什么程度”与“完全没做”：本项目已有单机 Redis 缓存/分布式锁/令牌桶限流（cache、redis 包，证据测试门控 REDIS_EVIDENCE）、Kafka Outbox 至少一次投递 + consumed_event 幂等 + DLT（event 包 8 类）、ShardingSphere 2 库×2 表证据测试（仅 test scope，不进生产 classpath）、deploy/k8s 演示清单；没做的是 Redis 集群、精确一次语义、分库分表生产化、自动扩缩容实测。每个不会按五项拆解：
 1. **定义**：它是什么、解决什么问题；
-2. **源码位置/对应物**：本项目里最接近的实现（如 Redis→ExpiringCache、MQ→@Async 任务）；
+2. **源码位置/对应物**：本项目里最接近的实现（如 Redis 集群→已有单机 RedisLockService/RedisPublishedPaperCache；精确一次→已有 Outbox + 消费幂等的至少一次基线）；
 3. **边界**：现有实现哪里不够、差异是什么；
-4. **证据**：要验证它需要什么实验/测试；
+4. **证据**：要验证它需要什么实验/测试（含需要哪个 `*_EVIDENCE` 环境变量）；
 5. **复习缺口**：要补的最小知识点清单。
 这样“不会”也能展示结构化理解，而不是直接说不知道。
 
@@ -53,9 +53,9 @@ Java 语义问题→查 JLS 语言规则；Spring 问题→先问“Bean 是否�
 ---
 
 ### Q7. Spring AOP/JDBC/MQ/TCP-Linux/分页/探针：定义+代码命令+失败边界+项目结合。
-- **AOP**：代理织入横切；失败边界是 self-invocation；项目中 @Transactional/@PreAuthorize 都靠它；
-- **JDBC**：DataSource→Connection→PreparedStatement→ResultSet；失败边界是连接泄漏/注入；项目用 JPA 但锁定查询本质是 FOR UPDATE；
-- **MQ**：producer confirm/broker 持久化/consumer ack/重试/死信；项目对应物是持久化 import_job + @Async worker；
+- **AOP**：代理织入横切；失败边界是 self-invocation（本项目 TransactionFailureModeTest 五路径之一固化了自调用绕过代理导致回滚失效）；项目中 @Transactional/@PreAuthorize 与 ops/ServiceLatencyAspect（@Around 拦截所有 *Service 方法、超 200ms 打 warn）都靠它；
+- **JDBC**：DataSource→Connection→PreparedStatement→ResultSet；失败边界是连接泄漏/注入；项目写路径走 JPA，错题只读查询走 MyBatis（WrongQuestionQueryMapper + XML 动态 SQL），锁定查询本质是 SELECT … FOR UPDATE；
+- **MQ**：producer confirm/broker 持久化/consumer ack/重试/死信；项目已有真实 Kafka Outbox（event 包：同事务写 outbox_event、OutboxRelay 轮询投递 qb-events、consumed_event 幂等、毒丸重试后进 qb-events.DLT，app.kafka.enabled 条件装配），异步导入另由持久化 import_job + @Async worker + ImportJobRetrySweeper 退避重试承担；
 - **TCP/Linux**：ss/lsof/curl -v/top；失败边界是把五段延迟都算给应用；
 - **分页**：稳定排序（含唯一 tiebreaker）、限制最大 page size、深分页用游标；
 - **容器探针**：liveness 决定是否重启、readiness 决定是否接流量。
@@ -65,7 +65,7 @@ Java 语义问题→查 JLS 语言规则；Spring 问题→先问“Bean 是否�
 ### Q8. Git 协作 + 最小 CI；用判分逻辑说明 Strategy/事件。
 **Git 协作**：小步提交、feature 分支、`status/diff/log` 检查、merge/rebase 后冲突解决必须重新测试。
 **最小 CI**：依赖缓存 → 编译 → 单元/集成测试 → 静态检查 → 打包镜像 → 发布；密钥通过受控环境变量/Secrets 注入（不写代码/镜像）；任一阶段失败阻断后续发布。
-**设计模式（讲解决的问题，不背名）**：判分规则用 **Strategy**——把 SINGLE/MULTIPLE/TRUE_FALSE（未来主观题）判分封装为可替换策略，新增题型不改提交主流程；不适用场景：规则永远唯一且无变化时引入 Strategy 是过度设计。发布后通知/失效缓存用 **Observer/事件**（afterCommit 事件）解耦；不适用：需要强一致、立即知道结果的核心写路径。
+**设计模式（讲解决的问题，不背名）**：判分规则用 **Strategy**——把 SINGLE/MULTIPLE/JUDGE/FILL 判分封装为可替换策略，新增题型不改提交主流程；不适用场景：规则永远唯一且无变化时引入 Strategy 是过度设计。发布后通知/失效缓存用 **Observer/事件**（BankService 同事务写 Outbox、TransactionSynchronization afterCommit 回调里 evict 已发布试卷缓存）解耦；不适用：需要强一致、立即知道结果的核心写路径。
 
 ### Q9. Stream/Optional 无副作用链 + Path/Files + 滚动回滚。
 ```java

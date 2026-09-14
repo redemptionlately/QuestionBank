@@ -1,18 +1,18 @@
 # Day15 Spring DI & Config · 题目与标准解答（Solutions）
 
-> 依据：`study.md` + 真实 `SecurityConfig`（@Bean）、`QuestionBankApplication`、`application.yml`。
+> 依据：`study.md` + 真实 `SecurityConfig`（@Bean）、`QuestionBankApplication`、[application.yml](../../app/src/main/resources/application.yml)。
 
 ## Current
 
 ### Q1. 按源码索引定位并默写、口述 I/O 边界。
-锚点：`SecurityConfig` 23-29 行 `@Bean PasswordEncoder`、31-46 行 `SecurityFilterChain`；`QuestionBankApplication` 7-12 行扫描入口；`application.yml` 环境变量占位符。
+锚点（主代码在 `app/src/main/java/com/allen/questionbank/`）：[auth/SecurityConfig.java:27-30](../../app/src/main/java/com/allen/questionbank/auth/SecurityConfig.java) `@Bean PasswordEncoder`（强度读 app.security.bcrypt-strength）、:37-57 `@Bean SecurityFilterChain`；[QuestionBankApplication.java:7-13](../../app/src/main/java/com/allen/questionbank/QuestionBankApplication.java) 扫描入口（@EnableAsync 在 :8）；[common/InfrastructureConfig.java:12-14](../../app/src/main/java/com/allen/questionbank/common/InfrastructureConfig.java) @Configuration+@EnableScheduling（两个线程池 @Bean 在 :22/:41）；[application.yml](../../app/src/main/resources/application.yml) 环境变量占位符（:5-7）。
 
 ---
 
 ### Q2. 改一个配置项并验证 profile。
 示例：把 token TTL 从默认 8h 改为测试 1h：
-- 主配置 `application.yml`：`app.token-ttl: PT8H`；
-- 测试 `application-test.yml`：`app.token-ttl: PT1H`；
+- 主配置 [application.yml](../../app/src/main/resources/application.yml)：`app.token-ttl: PT8H`；
+- 测试 [application-test.yml](../../app/src/test/resources/application-test.yml)：`app.token-ttl: PT1H`；
 - `TokenService` 构造器 `@Value("${app.token-ttl:PT8H}") Duration ttl` 注入；
 - 测试类 `@ActiveProfiles("test")` 激活后断言 token 记录的过期时间为 1 小时。
 验证 profile 生效的方式：启动日志打印 `The following profiles are active: test`，或在测试中 `@Autowired Environment` 调 `getActiveProfiles()`。
@@ -28,8 +28,9 @@ class BankServiceTest {
     @Mock PaperVersionRepository papers;
     @Mock QuestionVersionRepository questions;
     @Mock ObjectMapper objectMapper;
-    @Mock ExpiringCache<String, List<PaperVersion>> cache;
-    @InjectMocks BankService service;   // 把 mock 从构造器注入
+    @Mock PublishedPaperCache publishedCache;                 // 缓存抽象（local/redis 同接口）
+    @Mock ObjectProvider<OutboxPublisher> outboxPublisher;    // Kafka 关闭时容器内无该 Bean，用 ObjectProvider 可选注入
+    @InjectMocks BankService service;   // 把 mock 从构造器注入（真实构造器共 6 个依赖，BankService.java:29-36）
 
     @Test
     void blankNameRejected() {
@@ -40,19 +41,23 @@ class BankServiceTest {
     }
 }
 ```
-构造器注入让依赖成为 `final` 不变量，单测不需要 Spring 容器，直接 new/Mockito 即可装配。
+构造器注入让依赖成为 `final` 不变量，单测不需要 Spring 容器，直接 new/Mockito 即可装配；可选依赖（OutboxPublisher 仅在 app.kafka.enabled=true 时存在）用 `ObjectProvider` 包装，避免关闭 Kafka 时启动报缺 Bean。
 
 ---
 
 ### Q4. 写出 singleton Bean 的线程安全约束和一个 `@ConditionalOnMissingBean` 条件。
 - **线程安全约束**：singleton Bean 只有一个实例、被所有请求线程共享，**不能把用户/请求级数据存到成员字段**（否则线程间串数据）；请求状态放方法局部变量、参数、`SecurityContextHolder`/`ThreadLocal`。需要可变共享状态时用并发容器或无状态设计。
-- **条件示例**（自动配置典型写法）：
+- **条件示例（项目真实写法）**：同一接口 `PublishedPaperCache` 有两个实现，用 `@ConditionalOnProperty` 互斥选择，切换配置即换实现、不改业务代码：
 ```java
-@Bean
-@ConditionalOnMissingBean(PasswordEncoder.class)   // 容器里没有用户自定义 Bean 时才装配默认实现
-PasswordEncoder defaultPasswordEncoder() { return new BCryptPasswordEncoder(); }
+@Component
+@ConditionalOnProperty(name = "app.cache.backend", havingValue = "local", matchIfMissing = true) // 缺省=本地
+public class LocalPublishedPaperCache implements PublishedPaperCache { ... }
+
+@Component
+@ConditionalOnProperty(name = "app.cache.backend", havingValue = "redis")                        // 显式=Redis
+public class RedisPublishedPaperCache implements PublishedPaperCache { ... }
 ```
-含义：用户自定义的同类型 Bean 优先，框架默认实现让位，实现“可替换的自动配置”。
+自研 monitor-starter 则是标准自动配置写法：`MonitorAutoConfiguration:24-25` 同时用 `@ConditionalOnClass(StatementHandler.class)`（classpath 有 MyBatis 才装配）+ `@ConditionalOnProperty("app.mybatis.monitor.enabled")`，并对内部协作 Bean 用 `@ConditionalOnMissingBean` 让用户可替换。含义：用户自定义的同类型 Bean 优先，框架默认实现让位，实现"可替换的自动配置"。
 
 ---
 
@@ -88,17 +93,17 @@ class Caller {
     void run() { order.inner(); }      // ✅ 外部调用经过代理 → 切面生效
 }
 ```
-- Spring AOP 用代理包裹目标 Bean：外部调用 → 代理前置逻辑（开事务/缓存/鉴权）→ 目标方法 → 代理后置（提交事务）；
-- 同类内部 `this.inner()` 直接调用原始对象、绕过代理，所以 `@Transactional/ @Cacheable/@PreAuthorize` 等注解**不生效**；
-- 其他失效场景：方法非 public、类未被 Spring 管理（自己 new 的）、异常被 catch 吞掉、自调用；解决：拆到另一个 Bean，或注入自身代理（`@Lazy` 自注入 / `AopContext.currentProxy()`）。
+- Spring AOP 用代理包裹目标 Bean：外部调用 → 代理前置逻辑（开事务/缓存/鉴权）→ 目标方法 → 代理后置（提交事务）；项目里真实的切面是 [ops/ServiceLatencyAspect.java:23-24](../../app/src/main/java/com/allen/questionbank/ops/ServiceLatencyAspect.java)（`@Aspect @Component`，@Around 切 service 包记录方法延迟），它能生效正是因为调用方持有的是代理；
+- 同类内部 `this.inner()` 直接调用原始对象、绕过代理，所以 `@Transactional/@Cacheable/@PreAuthorize` 等注解**不生效**；
+- 其他失效场景：方法非 public、类未被 Spring 管理（自己 new 的）、异常被 catch 吞掉、自调用；解决：拆到另一个 Bean，或注入自身代理（`@Lazy` 自注入 / `AopContext.currentProxy()`）。事务回滚规则本身（RuntimeException 回滚、checked 异常默认不回滚）由 TransactionFailureModeTest 5 个用例固化。
 
 ---
 
 ### Q7. 写出 `@ConditionalOnClass`、`@ConditionalOnMissingBean`、`@ConditionalOnProperty` 的条件含义。
-- `@ConditionalOnClass(Xxx.class)`：classpath 上存在该类才装配（如存在某驱动/某 starter 才启用对应自动配置）；
+- `@ConditionalOnClass(Xxx.class)`：classpath 上存在该类才装配——项目实例：monitor-starter 的 MonitorAutoConfiguration 要求存在 MyBatis 的 `StatementHandler`，app 没引 MyBatis 时整个监控自动配置静默不生效；
 - `@ConditionalOnMissingBean`：容器中不存在同类型 Bean 才装配（用户自定义优先，提供默认兜底）；
-- `@ConditionalOnProperty(name="app.xxx", havingValue="true", matchIfMissing=false)`：配置项满足才启用（开关式自动配置，缺省值由 matchIfMissing 决定）。
-三者共同实现 Spring Boot“约定优于配置、可覆盖”的自动装配机制。
+- `@ConditionalOnProperty(name="app.xxx", havingValue="...", matchIfMissing=...)`：配置项满足才启用——项目实例：`app.cache.backend=local|redis` 选缓存实现（local 带 matchIfMissing=true 兜底）、`app.lock.backend=redis` 才装配 RedisGuardedPracticeSubmitter（:26）、`app.kafka.enabled` 控制 Outbox 外发链。
+三者共同实现 Spring Boot"约定优于配置、可覆盖"的自动装配机制。
 
 ---
 

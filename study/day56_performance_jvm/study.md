@@ -6,6 +6,7 @@
 - 线程池核心参数是 core、max、queue、keepAlive、拒绝策略和线程命名；队列、超时和拒绝共同决定背压，不能无限扩容。
 - `CompletableFuture` 的异步阶段应显式指定 executor；阻塞 I/O 混入公共池会拖慢无关任务，虚拟线程适合大量阻塞 I/O 但不消除数据库和 CPU 容量限制。
 - 性能证据要区分端到端延迟、线程池排队、数据库耗时、GC 暂停和 CPU 样本；平均值不能替代 P95/P99。
+- 项目源码/测试索引（MustRemember）：`common/InfrastructureConfig.java:22-56`（import 2/4/100/30s、general 2/8/200/10s 双池、CallerRuns、@EnableScheduling）、`common/InfrastructureExecutorRoutingTest`（4 用例反射断言池参数与线程名前缀）、`jvm/JvmConcurrencyEvidenceTest`（volatile 立即可见、普通标志可能被 JIT 提升、虚拟线程阻塞任务、有界队列饱和 AbortPolicy）、`jvm/AqsEvidenceTest`（手写 MiniReentrantLock/MiniSemaphore 与 JDK 对照 6 证据）、`tools/loadgen/Loadgen.java`（开环压测、虚拟线程、warmup 后取样、P50/P95/P99/P999）。
 - 外部源码索引（MustRemember）：[JVM Tool Interface](https://docs.oracle.com/en/java/javase/21/docs/specs/man/jcmd.html)、[JFR](https://docs.oracle.com/en/java/javase/21/docs/specs/man/jfr.html)、[ThreadPoolExecutor](https://docs.oracle.com/en/java/javase/21/docs/api/java.base/java/util/concurrent/ThreadPoolExecutor.html)、[Virtual Threads](https://docs.oracle.com/en/java/javase/21/core/virtual-threads.html)
 
 # MustUnderstand

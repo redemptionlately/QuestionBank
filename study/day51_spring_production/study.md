@@ -5,7 +5,9 @@
 - 配置优先级必须区分配置文件、profile、环境变量、系统属性和命令行参数；凭据使用环境注入或密钥管理，不写入源码和镜像。
 - AOP 代理在目标方法外织入事务、日志和权限；JDK 动态代理面向接口，CGLIB/Byte Buddy 可代理类，self-invocation 不经过外层代理。
 - `@ConfigurationProperties` 将分组配置绑定为类型安全对象；配置校验失败应在启动阶段暴露，而不是请求运行时才失败。
-- Actuator 的 health、info、metrics 暴露面必须鉴权和限制；readiness 表示能否接流量，liveness 表示进程是否需要重启，二者不是同一个探针。
+- Actuator 的 health、info、metrics、prometheus 暴露面必须鉴权和限制；readiness 表示能否接流量，liveness 表示进程是否需要重启，二者不是同一个探针。
+- 项目源码索引（MustRemember）：`QuestionBankApplication.java:7-9`（@SpringBootApplication+@EnableAsync，调度开关不在此类）、`common/InfrastructureConfig.java:12-59`（@EnableScheduling 与双异步池）、`common/RequestIdFilter.java:22-41`（@Order(HIGHEST_PRECEDENCE)、MDC key="requestId"、响应头回写、finally remove）、`auth/SecurityConfig.java:37-55`（过滤链与 addFilterBefore(ApiTokenFilter)）、`ops/ServiceLatencyAspect.java:14-22`（@Around 所有 *Service、200ms 慢调用阈值）、`ops/DatabaseLatencyHealthIndicator.java:18-43`（SELECT 1、500ms 阈值）、`common/ReadReplicaDataSourceConfig.java:21-67` + `common/ReplicationRoutingDataSource.java:14-25`（@Profile("read-replica")、LazyConnectionDataSourceProxy、只读才路由从库）；自研 starter 索引：`monitor-starter/.../QuestionBankMonitorAutoConfiguration.java:16-25`（@AutoConfiguration+@ConditionalOnClass(StatementHandler)+属性条件+imports 注册）、`MyBatisQueryMonitor.java:33-63`（拦截 StatementHandler.query/update，二级缓存命中不计 SQL）。
+- 项目测试索引（MustRemember）：`TransactionFailureModeTest`（事务失效五路径）、`TransactionPropagationIntegrationTest`（REQUIRES_NEW 独立提交 + isAopProxy）、`ReadReplicaRoutingH2Test`（H2 验证路由键 3 用例）、`M0OpsIntegrationTest`（探针免 token、认证指标、requestId 响应头）、monitor-starter 的 `QuestionBankMonitorAutoConfigurationTest`（ApplicationContextRunner 三用例）。
 - 外部源码索引（MustRemember）：[Spring Boot auto-configuration](https://docs.spring.io/spring-boot/reference/using/auto-configuration.html)、[@ConfigurationProperties](https://docs.spring.io/spring-boot/reference/features/external-config.html)、[Spring AOP Proxying](https://docs.spring.io/spring-framework/reference/core/aop/proxying.html)
 
 # MustUnderstand

@@ -1,5 +1,7 @@
 # Day 63 · 解答与源码索引
 
+<a id="sec-acceptance"></a>
+
 ## 背写验收解答
 
 1. **traceparent**：`00-<traceId>-<parentSpanId>-<flags>`，如 `00-07d597b7ec943183f67af157772c0807-3b9b69177113e848-01`。两跳传播：网关自己生成 traceId 与入口 spanId → 调 practice 时把 traceId + gateway CLIENT spanId 写进头 → practice 的 SERVER span 以该 spanId 为 parentSpanId、自身产生新 spanId → practice 调 bank 时再写 traceId + practice CLIENT spanId → bank SERVER 又以它为 parent。**traceId 全程不变，spanId 每跳换新，parent 指向上游 CLIENT**。
@@ -20,7 +22,7 @@
    ```
    默认采样率 **0.1**——随机丢 90% 的 trace，证据要求每条请求可追溯，必须 1.0。
 4. `%X{traceId:-}` 从 **SLF4J MDC** 取：micrometer-tracing 的 W3C 上下文把当前 traceId/spanId 放进 MDC，pattern 里的占位符逐行展开；`:-` 是"缺省为空"（非请求线程如启动期没有 trace 时输出空）。
-5. 构造器（`AuthFilter.java:66-68`）：
+5. 构造器（[AuthFilter.java:72-74](../../cloud/gateway-service/src/main/java/com/allen/cloud/gateway/AuthFilter.java)，PROTECTED_PREFIXES 在 :50）：
    ```java
    public AuthFilter(WebClient.Builder builder, ObservationRegistry observationRegistry) {
        this.authClient = builder.observationRegistry(observationRegistry).build();
@@ -29,6 +31,7 @@
    原因：Spring Cloud 用**同名**（`webClientBuilder`）的 @LoadBalanced builder 覆盖了 Boot 的 prototype builder（bean 定义覆盖，Boot 默认允许）。注入到手的 builder 定义上带 @LoadBalanced → `LoadBalancerWebClientBuilderBeanPostProcessor` 给它挂了 LB 过滤器；但 Boot 的 `ObservationWebClientCustomizer` 只在 Boot 那个 bean 定义创建时应用——定义被覆盖后**从未执行**。所以 LB 在、observation 不在，链式补 registry 即可。
 6. 双重解析因果链：Spring 预置 builder 已带 DeferringLoadBalancerExchangeFilterFunction → 手动 `builder.filter(同一个过滤器)` 后链条里有两个 → 请求 `http://auth-service/...` 第一遍把 `auth-service` 解析成 `http://192.168.1.103:8081` → 第二遍过滤器取 `request.url().getHost()` 当 serviceId，拿 `192.168.1.103` 去注册表找实例 → `No servers available for service: 192.168.1.103` → 网关 onErrorResume 落到 503 AUTH_SERVICE_DOWN。DEBUG 日志能看到同一请求 20ms 内两遍过 LB。
 
+<a id="sec-followup"></a>
 ## 变式/追问解答要点
 
 7. 5 条证据语义：①跨 3 服务同 traceId = 请求级关联成立；②parent 链在单 trace 内闭合（根唯一、无断链）= traceparent 真实透传；③practice CLIENT 存在且 bank SERVER.parent 等于它 = Feign 传播成立；④401 的 gateway span = 错误路径也被追踪；⑤bank 日志行 traceId/spanId 在 collector 中反查命中 = 日志与 trace 可互查。失败长相：①失败→看各 trace 的服务分布（断裂在哪一跳）；②失败→trace 根多于 1（孤立根）或 parent 解析不到；③失败→feign-micrometer 缺失或 B 锚点没到 practice；④失败→伪造 token 请求没经过 gateway observation；⑤失败→日志 pattern 没生效或锚点行抓错（如抓到调度线程日志）。
@@ -47,12 +50,14 @@
 11. 默认 40s 注册 + 35s 缓存刷新下，"practice 就绪 → gateway 首次路由它"的窗口内 LB 可能拿不到实例（run3 实测 503 `No servers available for service: practice-service`）。竞争窗口 ≈ 注册延迟（0~40s）− gateway 启动到锚点 B 的间隔 + 0~35s 缓存陈旧。修法是两侧调快 + 脚本轮询 eureka apps API 到注册出现再留一个刷新周期。
 12. 面试要点见 tests.md 第 12 条，答题骨架分别是"一条 trace 的故事 / 三层根因 / 信号轮询"，不要背"W3C 规范"这类空词。
 
+<a id="sec-source"></a>
 ## 源码索引
 
-- `cloud/gateway-service/src/main/java/com/allen/cloud/gateway/AuthFilter.java:49-68` → 背写同名覆盖坑与修法；第 2 条 PROTECTED_PREFIXES 决定哪些路径走验签。
-- `cloud/practice-service/src/main/java/com/allen/cloud/practice/BankSnapshotGateway.java:37-48` → Feign + 熔断快速失败的边界（降级 = 明确失败，不是假成功）。
-- `cloud/bank-service/src/main/java/com/allen/cloud/bank/BankController.java:81-89` → `[snapshot]` 日志锚点为什么必须在请求路径打。
-- `scripts/tracing-evidence.sh` → run 模式全流程：清孤儿 → 基础设施 → collector → 编译 → 5 服务 → 3 锚点 → 轮询导出齐备 → python 断言。
-- `scripts/parse_tracing.py` → 容错正则解析原始 span 文本、5 项断言、调用树渲染；学"证据解析器怎么写得可复核"。
-- `scripts/otelcol-config.yaml` → OTLP 双协议 receiver + debug exporter 配置。
+- [cloud/gateway-service/src/main/java/com/allen/cloud/gateway/AuthFilter.java:50,72-127](../../cloud/gateway-service/src/main/java/com/allen/cloud/gateway/AuthFilter.java) → :50 PROTECTED_PREFIXES 决定哪些路径走验签；:72-74 构造器背写同名覆盖坑与修法（链式 observationRegistry）；:81-110 filter 流程、:104-114 401/503 分流、:135-138 getOrder=-100。
+- [cloud/practice-service/src/main/java/com/allen/cloud/practice/BankSnapshotGateway.java:37-48](../../cloud/practice-service/src/main/java/com/allen/cloud/practice/BankSnapshotGateway.java) → Feign + 熔断快速失败的边界（降级 = 明确失败，不是假成功）。
+- [cloud/bank-service/src/main/java/com/allen/cloud/bank/BankController.java:117-125](../../cloud/bank-service/src/main/java/com/allen/cloud/bank/BankController.java) → `/internal/papers/{id}/snapshot` 上的 `[snapshot]` INFO 锚点为什么必须打在请求路径（调度线程无请求上下文，不能当锚点）。
+- **app 单体侧的“轻量追踪”对照（不要与 cloud 混淆）**：app 没有引入 micrometer-tracing-bridge-otel / OTLP 导出，它只有同进程关联——`common/RequestIdFilter`（X-Request-Id 透传/生成、MDC key="requestId"、响应头回写、finally remove）、[resources/logback-spring.xml:6](../../app/src/main/resources/logback-spring.xml) pattern `[%X{requestId:-}]`、`ops/ServiceLatencyAspect`（@Around 所有 *Service、200ms 阈值 warn）、micrometer-registry-prometheus 暴露 `/actuator/prometheus`；跨进程 traceparent/span/collector 只存在于 cloud 四服务（gateway/auth/bank/practice）+ [scripts/otelcol-config.yaml](../../scripts/otelcol-config.yaml) 这条独立演示链。
+- [scripts/tracing-evidence.sh](../../scripts/tracing-evidence.sh) → run 模式全流程：清孤儿 → 基础设施 → collector → 编译 → 5 服务 → 3 锚点 → 轮询导出齐备 → python 断言。
+- [scripts/parse_tracing.py](../../scripts/parse_tracing.py) → 容错正则解析原始 span 文本、5 项断言、调用树渲染；学"证据解析器怎么写得可复核"。
+- [scripts/otelcol-config.yaml](../../scripts/otelcol-config.yaml) → otelcol-contrib 0.160.0：OTLP 双协议 receiver（http 127.0.0.1:4318 / grpc 127.0.0.1:4319）、无 processors、debug exporter（verbosity: detailed），traces pipeline 原样落盘。
 - `output/tracing_collector.log` / `output/tracing_evidence_console.log` → 全部原始证据。

@@ -1,6 +1,6 @@
 # Day58 Spring Cloud · 题目与标准解答（Solutions）
 
-> 本拆分已在 `cloud/` 落地并可复跑（`./scripts/cloud-evidence.sh`，10 项证据）。
+> 本拆分已在 `cloud/` 落地并可复跑（[./scripts/cloud-evidence.sh](../../scripts/cloud-evidence.sh)，10 项证据）。
 > 每题先给标准解答，再给"本项目实锤"——面试时两者都要能说。
 
 ## Current
@@ -10,11 +10,11 @@
 **标准解答**：按业务边界拆 auth（认证）/ bank（出题发布）/ practice（练习判分）；Eureka 注册发现，Gateway 统一入口做路由+鉴权+限流但不写业务规则；Feign 声明式调用并显式设超时；Resilience4j 熔断 `CLOSED→OPEN→HALF_OPEN`；降级分"快速失败"与"返回兜底数据"两类，按业务语义选。
 
 **本项目实锤**：
-- 拆分边界：[cloud/pom.xml](../../cloud/pom.xml) 六模块；每服务独立 schema，`SHOW TABLES` 可验证表集合互不相交；
-- 网关只验签+透传身份：[AuthFilter.java:70-87](../../cloud/gateway-service/src/main/java/com/allen/cloud/gateway/AuthFilter.java)（服务名调用 auth 验签 → 塞 `X-User-Id` → 401/503 分流）；
-- Feign 超时 2s/3s + 熔断参数：[practice application.yml:38-48](../../cloud/practice-service/src/main/resources/application.yml)；
-- 降级的诚实版本：建会话无有意义兜底数据 → **快速失败 503**（[BankSnapshotGateway.java:43-47](../../cloud/practice-service/src/main/java/com/allen/cloud/practice/BankSnapshotGateway.java)），而不是返回空卷假装成功；
-- 重试只放在 outbox relay（2s 轮询），调用链上不叠 retry，避免流量乘法。
+- 拆分边界：[cloud/pom.xml](../../cloud/pom.xml) 独立聚合六模块（cloud-common + discovery/gateway/auth/bank/practice，共 41 个 .java、无 src/test，证据全靠 [scripts/cloud-evidence.sh](../../scripts/cloud-evidence.sh) 拉真进程）；cloud 父 POM 直接继承 spring-boot-starter-parent、**不在根 Maven 聚合内、与 app 不共享代码**；每服务独立 schema，`SHOW TABLES` 可验证表集合互不相交；
+- 网关只验签+透传身份：[AuthFilter.java:72-127](../../cloud/gateway-service/src/main/java/com/allen/cloud/gateway/AuthFilter.java)（@LoadBalanced WebClient 以服务名调 auth 验签 → 塞 `X-User-Id/X-User-Role` → 401/503 分流，getOrder=-100 晚于 RequestIdFilter 的 -200）；
+- Feign 超时 2s/3s + 熔断参数：[practice application.yml](../../cloud/practice-service/src/main/resources/application.yml)；
+- 降级的诚实版本：建会话无有意义兜底数据 → **快速失败 503**（[BankSnapshotGateway.java:37-48](../../cloud/practice-service/src/main/java/com/allen/cloud/practice/BankSnapshotGateway.java)），而不是返回空卷假装成功；
+- 重试只放在 outbox relay（fixedDelay 2s、initialDelay 3s、每批 50、send.get(5s)），HTTP 调用链上不叠 retry，避免流量乘法。注意 cloud bank 的 topic 是 `qb-paper-events`，与单体 app 的 `qb-events` 是两套独立体系，不要混称。
 
 ### Q2. 写出 OpenFeign 调用的错误映射和幂等条件，指出哪些异常不能重试。
 
@@ -50,7 +50,7 @@ bank 发布分支：paper_version + paper_item + outbox_event 同一事务 → r
 
 **标准解答**：单体里一个 `@Transactional` 全覆盖；拆分后强一致只能留在**服务内**，跨服务走 Saga 或 Outbox + 事件最终一致，发布可能变成异步状态机。
 
-**本项目实锤**：本拆分把"创建版本 + 固化题目 + 写事件"完整留在 bank-service **一个本地事务**里（这正是数据所有权划分的红利——不是所有拆分都会打散事务），跨服务只剩"至少一次"的事件传播：[BankService.java:69-83](../../cloud/bank-service/src/main/java/com/allen/cloud/bank/BankService.java) + [OutboxRelay.java:43-55](../../cloud/bank-service/src/main/java/com/allen/cloud/bank/OutboxRelay.java)。并发发布的兜底不是应用层判断而是 `(bank_id, version)` 唯一约束，撞键转 409（第 70-72 行）。
+**本项目实锤**：本拆分把"创建版本 + 固化题目 + 写事件"完整留在 bank-service **一个本地事务**里（这正是数据所有权划分的红利——不是所有拆分都会打散事务），跨服务只剩"至少一次"的事件传播：[BankService.java:70-96](../../cloud/bank-service/src/main/java/com/allen/cloud/bank/BankService.java)（同事务写 OutboxEvent 在 :92-94）+ [OutboxRelay.java:43-60](../../cloud/bank-service/src/main/java/com/allen/cloud/bank/OutboxRelay.java)。并发发布的兜底不是应用层判断而是 `(bank_id, version)` 唯一约束 uk_paper_version_bank_version，saveAndFlush 撞键捕 DataIntegrityViolationException 转 409（publish 方法 :70-96 内）。
 
 ### E2. 配置中心回滚、实例摘除、下游雪崩恢复路径。
 
