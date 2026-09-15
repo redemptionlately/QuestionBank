@@ -275,8 +275,8 @@ curl -s --noproxy '*' -X POST http://127.0.0.1:8080/api/auth/login \
   （对齐侧栏语义，桌面零改动，桌面回归 hover 开/离开收/点内容不误伤）。
   非问题定性：① 二次点热区不关=抽屉本体覆盖热区；② book 39（FULL_TEXT、`.doc` 原件）
   `images` 400 属设计内防御，前端 catch 兜底 count=0 零感知（`_q39c.out`）；③ 错题页空=无数据。
-  遗留（UI 冻结区，待批准）：`menuBtn` 34×25（×0.75≈26×19 设备 px）低于触控建议值，
-  可加 `@media (pointer:coarse)` `::before` 扩容（同 qno-chip 先例）。
+  遗留已裁决（09-15 用户拍板：**维持现状不扩容**）：`menuBtn` 34×25（×0.75≈26×19 设备 px）
+  低于触控建议值，但用户实测可用，不再加 `pointer:coarse` 扩容（后续会话勿再提）。
   证据：`output/mobile-touch-{phone,tablet}.log`、`mobile-touch2-*.log`、`_touch-outside.cjs`、
   `_desktop-drawer.log`、`shots-m/touch*-*.png`。
 
