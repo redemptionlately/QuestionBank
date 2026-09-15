@@ -138,8 +138,14 @@ curl -s --noproxy '*' -X POST http://127.0.0.1:8080/api/auth/login \
   上下题只走 `sidePrev`/`sideNext`，返回走顶栏常驻按钮。分组策略：题型(≥2) → 真题年份 → 单组。
 - **答题反馈**（2026-09-13/14）：答对 toast（`exam.rightToast`）后立跳下一题
   （`jumpToNextAfter`，选择/文本统一）；答错展开手动收起；未评三态不计 0；做完只挂横幅（无交卷）。
-- **顶栏/侧栏**：无面包屑、无用户块；侧栏默认隐藏（`.rail-hot` 滑出，点住 `.pinned`，Esc/点外部解除）；
-  `≤860px` 走 `.open` + scrim。深链靠 `pendingRoute` 在静默登录后恢复。
+- **顶栏/侧栏**：无面包屑、无用户块；侧栏默认隐藏，左缘 `.rail-hot`（桌面 = 70px 图标轨的常驻入口，
+  恒可见可点：`z-index:75` 压过 `.sidebar`，否则悬停召唤时被侧栏盖住点不动；锁态用 `clip-path`
+  收成中段竖带保底）悬停召唤 `body.sidepeek` / 点击开 `.open` 抽屉（`.pinned` 钉住，
+  Esc/点外部解除）；抽屉内点主题/退出**不关抽屉**（`composedPath()` + 进出时重查节点 + `modal-scrim` 豁免）。
+  `≤860px` 走 `#menuBtn` 的 `.open` + scrim；桌面 `#menuBtn` 反而是 **zen 开关**
+  （`body.rail-off` 收掉热区+侧栏、`data-sidelock=1` 收起科目左树，再点即退出——不是抽屉键）。
+  深链靠 `pendingRoute` 在静默登录后恢复。
+  **入口 script 禁带 `?v=`**（ESM 视作第二个模块 → 双实例 → shell 节点全变死节点，见 §12）。
 - **样式**：就近加（`cc-ui.css`/`pages.css`），沿用 token；自有卡片独立类名，禁复用裸 `.card`；
   cinema 整文件 scoped `[data-theme="cinema"]`（`qb.theme.v2`，默认影院；`dark` 残留映射 `cinema`），
   共享精修放最后引入的 `polish.css`；`logo` 用 `fill="currentColor"`。
@@ -237,6 +243,42 @@ curl -s --noproxy '*' -X POST http://127.0.0.1:8080/api/auth/login \
 - **去重**（09-14）：93/105/103 判重删除（留 104/102/106），备份可回滚。
 - **UI 冻结**（09-13）：dashboard 欢迎区、影院配色（深蓝单色+暖金，回滚 checkout 三个 css）、
   答题页连续渲染架构——改前必须用户批准。
+- **左栏死锁根治**（09-15，用户报"左侧 UI 不显示 + 退出/主题找不到"）：根因四层 ——
+  ① `qb.side.lock` 自菜单键改抽屉语义后再无写入方，读侧恒 `true` ⇒ `display:none` 热区 +
+  悬停召唤被挡 + 科目页左树永久收起（三重死锁）；② `.rail-hot z-index:65 < .sidebar z-index:70`
+  ⇒ 悬停召出侧栏后微光条被盖住，点击落到 `.content`；③ 入口 script 带 `?v=` ⇒ app.js 双实例，
+  后注入 shell 把先注入的节点全变死节点（侧栏/主题/退出失联）；④ 侧栏内按钮 onclick 就地改写
+  `innerHTML`（`themeBtn.innerHTML = icons.sun`）⇒ 事件冒泡时被点 SVG 已脱离 DOM，
+  `sbEl.contains(e.target)` 恒 false，被判"点外部"当场关抽屉。
+  修复：默认**开锁**（仅显式 `localStorage['qb.side.lock']='1'` 才锁，锁态仍有微光条保底入口）；
+  热区 `z-index:75` + 锁态 `clip-path` 竖带；入口去 `?v=`（靠 server.js no-cache）；
+  点击判定改 `composedPath()` + 点击时重查 `#sidebar` 活节点 + `modal-scrim` 豁免；
+  `mountApp()` 加 `data-shell-mounted` 幂等栅栏（防双实例）；`#welcome` 深链修正
+  （`pendingPath` 只收 `/` 开头路径、空路径不覆盖），否则直接开 `#welcome` 会停在空 outlet、
+  热区 0×0 被误读成"没进站"。深链 `#/welcome` 3/3 可达，点「进入」后热区 10×900 可用（`output/_wel.log`）。
+  桌面 `#menuBtn` 定案为 zen 开关（`body.rail-off`，studio.css §14）——左栏的**唯一常驻入口**
+  是左缘微光条，zen 态属用户显式收起（再点恢复）。
+  证据：`output/sidebar-diag.log`/`sidebar-diag-2.log`（根因取证 INSTANCES/CAUSE/RAILGEOM）、
+  `output/sidebar-fix-probe-final.log`（A–F 全绿：悬停召唤、微光条点击开抽屉、抽屉内主题/退出/V2
+  模态取消均保持开启、Esc 关、导航跳转关、D2 桌面科目页 `#/subjects/5` 左树 `treeW:264`
+  可见、移动端零回归、`pageerrors=[]` `httpErrors=[]`）、`output/rail-hit-probe.log`
+  （`z-index:75` 不抢左树点击：热区在科目页 `w:0`，行左缘 x=31 点击归 `side-tree`）、
+  `output/i18n-parity.log`（顺带补齐 3 个既有缺口：en `exam.filterNone`/`exam.noQuestions`、
+  zh `wrong.loadFail`，现 zh=412 / en=412 零缺口）、`output/supervise-final.log`
+  （30 分钟窗口：60s 健康采样 + 每 5 分钟无头冒烟→0 fails 才算过闸）。
+- **移动/平板全面检查**（09-15）：真实触摸（`touchscreen.tap`）三视口 phone 390×844 /
+  tablet 820×1180 / land 1180×820 全绿：顶栏、侧栏抽屉（触摸开/主题不断抽/导航关）、
+  科目页零溢出、右缘光条点按开抽屉、答题链（选中+命中+答案展开+答对 toast）、翻题条、
+  FAB 回顶、三视口 scrollWidth==innerWidth、`pageerrors=[]`。
+  修复 1 项：手机端大纲/文件夹抽屉关不掉（本体无关闭钮 + 右缘二次点按被抽屉 z-index
+  覆盖 + 触屏无 Esc/hover-out）→ subjects.js `wireRdrGlobal()` 补触屏点抽屉外部关闭
+  （对齐侧栏语义，桌面零改动，桌面回归 hover 开/离开收/点内容不误伤）。
+  非问题定性：① 二次点热区不关=抽屉本体覆盖热区；② book 39（FULL_TEXT、`.doc` 原件）
+  `images` 400 属设计内防御，前端 catch 兜底 count=0 零感知（`_q39c.out`）；③ 错题页空=无数据。
+  遗留（UI 冻结区，待批准）：`menuBtn` 34×25（×0.75≈26×19 设备 px）低于触控建议值，
+  可加 `@media (pointer:coarse)` `::before` 扩容（同 qno-chip 先例）。
+  证据：`output/mobile-touch-{phone,tablet}.log`、`mobile-touch2-*.log`、`_touch-outside.cjs`、
+  `_desktop-drawer.log`、`shots-m/touch*-*.png`。
 
 ---
 
