@@ -1,7 +1,7 @@
 # MustRemember
 
 - 候选状态（设计态，未实现）`CREATED -> REVIEWING -> ACCEPTED/REJECTED`；正式版本真实状态只有 [PaperVersion.java](../../app/src/main/java/com/allen/questionbank/bank/PaperVersion.java) 的 `DRAFT -> PUBLISHED`，ARCHIVED 是设计扩展；题目快照 question_version 不可变
-- 真实发布出口：[BankController.java](../../app/src/main/java/com/allen/questionbank/bank/BankController.java) :34-35 `POST /api/admin/versions/{paperId}/publish`（ADMIN）；[BankService.java](../../app/src/main/java/com/allen/questionbank/bank/BankService.java) :64 写事务内翻转状态，:74-77 **同事务**写 Outbox（PAPER_PUBLISHED → topic qb-events），:87-96 afterCommit 才淘汰 PublishedPaperCache（回滚则不淘汰），:107 读路径走缓存
+- 真实发布出口：[BankController.java](../../app/src/main/java/com/allen/questionbank/bank/BankController.java) :40-41 `POST /api/admin/versions/{paperId}/publish`（ADMIN）；[BankService.java](../../app/src/main/java/com/allen/questionbank/bank/BankService.java) :64 写事务内翻转状态，:74-78 **同事务**写 Outbox（PAPER_PUBLISHED → topic qb-events），:87-96 afterCommit 才淘汰 PublishedPaperCache（回滚则不淘汰），:107 读路径走缓存
 - 并发建版本的 DB 兜底：uk_paper_version_no UNIQUE(bank_id,version_no)（V1:30）；坏题整笔草稿回滚见 M0FlowIntegrationTest:154
 - 审核记录（review_record 表，设计态、当前不存在）保存 reviewer、decision、reason、sourceVersion、createdAt；审核记录是追加事实而不是覆盖字段；撤回、归档、恢复通过状态或新版本表达，不能覆盖已发布题面和历史审核意见
 - 状态转换表必须定义 `fromState + command + actor -> toState`；不存在的边返回 409，越权 actor 返回 403（统一 ApiException + GlobalExceptionHandler 契约）

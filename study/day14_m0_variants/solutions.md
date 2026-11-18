@@ -5,7 +5,7 @@
 ## Current
 
 ### Q1. 按源码索引定位并默写、口述 I/O 边界。
-锚点（主代码在 `app/src/main/java/com/allen/questionbank/`）：[bank/BankController.java:26-58](../../app/src/main/java/com/allen/questionbank/bank/BankController.java) 五个题库/发布/查询接口；[practice/PracticeController.java:15-67](../../app/src/main/java/com/allen/questionbank/practice/PracticeController.java) 练习与错题接口；包结构 `auth / bank / practice / common / importjob / cache / event / redis / ops`（后四个是重构后新增：缓存三实现、Kafka Outbox、Redis 锁与限流、运维切面与指标）。
+锚点（主代码在 `app/src/main/java/com/allen/questionbank/`）：[bank/BankController.java:26-58](../../app/src/main/java/com/allen/questionbank/bank/BankController.java) 五个题库/发布/查询接口；[practice/PracticeController.java:15-70](../../app/src/main/java/com/allen/questionbank/practice/PracticeController.java) 练习与错题接口；包结构 `auth / bank / practice / common / importjob / cache / event / redis / ops`（后四个是重构后新增：缓存三实现、Kafka Outbox、Redis 锁与限流、运维切面与指标）。
 
 ---
 

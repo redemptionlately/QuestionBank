@@ -5,7 +5,7 @@
 ## Current
 
 ### Q1. 按源码索引定位并默写、口述 I/O 边界。
-当前事实：项目无对象存储适配器、无 bucket 配置、无 Multipart 字节链路；[importjob/ImportJobController.java:20-21](../../app/src/main/java/com/allen/questionbank/importjob/ImportJobController.java) 的 POST 只落一条文本任务，[importjob/ImportJob.java:8](../../app/src/main/java/com/allen/questionbank/importjob/ImportJob.java) 的 source_name 列为 V3 普通 VARCHAR(200)。可参照的**已实现同型模式**：①定时扫描+状态补偿的 [importjob/ImportJobRetrySweeper.java:26-63](../../app/src/main/java/com/allen/questionbank/importjob/ImportJobRetrySweeper.java)（@Scheduled 60s、状态条件查询、到点才推进、幂等）；②同型轮询投递的 [event/OutboxRelay.java:23-48](../../app/src/main/java/com/allen/questionbank/event/OutboxRelay.java)（扫 PENDING、成功 markSent、失败 requeue、达上限 FAILED）——未来对象清理扫描器直接套用这一结构。目标设计锚点：AWS S3Presigner / MinIO Java SDK，业务元数据仍在 MySQL。
+当前事实：项目无对象存储适配器、无 bucket 配置、无 Multipart 字节链路；[importjob/ImportJobController.java:22-23](../../app/src/main/java/com/allen/questionbank/importjob/ImportJobController.java) 的 POST 只落一条文本任务，[importjob/ImportJob.java:8](../../app/src/main/java/com/allen/questionbank/importjob/ImportJob.java) 的 source_name 列为 V3 普通 VARCHAR(200)。可参照的**已实现同型模式**：①定时扫描+状态补偿的 [importjob/ImportJobRetrySweeper.java:26-63](../../app/src/main/java/com/allen/questionbank/importjob/ImportJobRetrySweeper.java)（@Scheduled 60s、状态条件查询、到点才推进、幂等）；②同型轮询投递的 [event/OutboxRelay.java:23-48](../../app/src/main/java/com/allen/questionbank/event/OutboxRelay.java)（扫 PENDING、成功 markSent、失败 requeue、达上限 FAILED）——未来对象清理扫描器直接套用这一结构。目标设计锚点：AWS S3Presigner / MinIO Java SDK，业务元数据仍在 MySQL。
 
 ---
 

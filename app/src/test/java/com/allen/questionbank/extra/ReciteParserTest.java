@@ -177,4 +177,216 @@ class ReciteParserTest {
         assertTrue(r.cards().stream().anyMatch(c -> c.title().contains("排序")),
                 "真卡应保留：" + r.cards());
     }
+
+    @Test
+    @DisplayName("纯章节抬头（第X节）不混进上一卡的答案（书48 实锤 2026-09-17）")
+    void sectionHeadDoesNotLeakIntoBody() {
+        ReciteParser.ReciteResult r = ReciteParser.parse(lines(
+                "核心目标：理解数据结构与算法的基本概念，掌握算法分析方法，了解基础算法设计策略，建立“问题-",
+                "数据结构-算法”的解题思维",
+                "第一节 基本概念和术语",
+                "核心考点：数据、数据元素、数据项、数据结构、逻辑结构与物理结构的定义及区别；抽象数据类型",
+                "（ADT）的概念及描述方法。"));
+        assertTrue(r.cards().stream().noneMatch(c -> c.body().contains("第一节")),
+                "章节抬头不得混进任何卡的答案：" + r.cards());
+        assertTrue(r.cards().stream().anyMatch(c -> c.title().equals("核心目标")
+                        && c.body().contains("解题思维") && !c.body().contains("第一节")),
+                "核心目标卡的答案应保持完整：" + r.cards());
+        assertTrue(r.cards().stream().anyMatch(c -> c.title().equals("核心考点")),
+                "下一节的核心考点仍应正常成卡：" + r.cards());
+    }
+
+    @Test
+    @DisplayName("编号术语定义拆成「术语标题+完整定义」，不再半句入标题（书48 实锤 2026-09-17）")
+    void numberedTermDefinitionStaysWhole() {
+        ReciteParser.ReciteResult r = ReciteParser.parse(lines(
+                "核心考点：数据、数据元素、数据项、数据结构、逻辑结构与物理结构的定义及区别；抽象数据类型",
+                "（ADT）的概念及描述方法。",
+                "1. 数据（Data）：计算机可以处理的各种符号的集合，是程序的操作对象。",
+                "通俗理解：就像厨房食材（蔬菜、肉类），是烹饪（程序运行）的基础原料。",
+                "2. 数据元素（Data Element）：数据的基本单位，是计算机在一次操作中处理的最小独立单位。",
+                "4. 数据结构（Data Structure）：相互之间存在一种或多种特定关系的数据元素的集合。简单说，",
+                "就是“数据元素的组织方式”。",
+                "通俗理解：食材的摆放和搭配方式（比如把蔬菜分类放在冰箱抽屉，肉类放在冷冻层；或者按“主",
+                "菜+配菜”的逻辑搭配）。"));
+        assertTrue(r.cards().stream().noneMatch(c -> c.title().contains("简单说，")),
+                "折行半句不得成为卡标题：" + r.cards());
+        assertTrue(r.cards().stream().anyMatch(c -> c.title().equals("数据结构（Data Structure）")),
+                "4 号编号术语应立术语卡：" + r.cards());
+        assertTrue(r.cards().stream().anyMatch(c -> c.title().equals("数据（Data）")),
+                "1 号编号术语也应立术语卡：" + r.cards());
+        assertTrue(r.cards().stream().anyMatch(c -> c.title().equals("数据元素（Data Element）")),
+                "2 号编号术语也应立术语卡：" + r.cards());
+        String dsBody = r.cards().stream().filter(c -> c.title().equals("数据结构（Data Structure）"))
+                .findFirst().orElseThrow().body();
+        assertTrue(dsBody.contains("相互之间存在一种或多种特定关系的数据元素的集合。简单说，")
+                        && dsBody.contains("就是“数据元素的组织方式”。"),
+                "两行定义必须完整落在答案里：" + dsBody);
+        assertTrue(dsBody.contains("通俗理解"),
+                "通俗理解子标签应并入本卡答案：" + dsBody);
+    }
+
+    @Test
+    @DisplayName("短代码/公式行不得丢（书48 实锤 2026-09-17：def sum_n(n): / while low <= high: 曾被当排版碎片丢）")
+    void shortCodeAndFormulaLinesSurvive() {
+        ReciteParser.ReciteResult r = ReciteParser.parse(lines(
+                "算法分析的目标：评价算法效率，比较不同算法优劣，为选择算法提供量化依据。",
+                "例：Python 实现求 1 到 n 的和：",
+                "def sum_n(n):",
+                "sum = 0",
+                "for i in range(1, n+1):",
+                "sum += i",
+                "return sum",
+                "二分查找核心逻辑：",
+                "while low <= high:",
+                "else: high = mid - 1",
+                "空间复杂度结论：",
+                "S(n) = O(1)（与n无关）。"));
+        String all = r.cards().stream().map(c -> c.title() + "\n" + c.body()).reduce("", (a, b) -> a + "\n" + b);
+        for (String frag : new String[]{"def sum_n(n):", "for i in range(1, n+1):", "sum += i",
+                "while low <= high:", "else: high = mid - 1", "S(n) = O(1)（与n无关）。"}) {
+            assertTrue(all.contains(frag), "短代码/公式行不得丢：" + frag + "\n" + all);
+        }
+        assertTrue(r.cards().stream().anyMatch(c -> c.title().startsWith("算法分析的目标")),
+                "真卡不受影响：" + r.cards());
+    }
+
+    @Test
+    @DisplayName("泛化标签（核心思想/小白实例/专业实例）不立同名卡，并回父题（书48 实锤 2026-09-17）")
+    void genericLabelsJoinParentCard() {
+        ReciteParser.ReciteResult r = ReciteParser.parse(lines(
+                "1. 枚举法（Enumeration）—— 暴力搜索，逐个尝试",
+                "核心思想：将问题的所有可能解一一列举出来，判断是否符合条件，符合则保留。",
+                "小白实例：求1到100之间的所有偶数，判断每个数能否被2整除后保留。",
+                "2. 递推法（Recurrence）—— 从已知推未知，逐步递推",
+                "核心思想：利用问题的递推关系，从初始条件出发逐步计算出第n项的解。",
+                "专业实例：计算阶乘 n! = n × (n-1)!，初始条件 0! = 1（递推公式明确）。"));
+        assertTrue(r.cards().stream().noneMatch(c -> c.title().equals("核心思想") || c.title().equals("小白实例")
+                        || c.title().equals("专业实例")),
+                "泛化标签不得立同名卡：" + r.cards());
+        String enumBody = r.cards().stream().filter(c -> c.title().contains("枚举法"))
+                .findFirst().orElseThrow().body();
+        assertTrue(enumBody.contains("核心思想：将问题的所有可能解") && enumBody.contains("小白实例：求1到100"),
+                "核心思想/小白实例应并回枚举法卡答案：" + enumBody);
+        String recBody = r.cards().stream().filter(c -> c.title().contains("递推法"))
+                .findFirst().orElseThrow().body();
+        assertTrue(recBody.contains("核心思想：利用问题的递推关系") && recBody.contains("专业实例：计算阶乘"),
+                "核心思想/专业实例应并回递推法卡答案：" + recBody);
+    }
+
+    @Test
+    @DisplayName("小节抬头「（一）…」/「一、…」立卡，泛化标签归其答案（书48 实锤 2026-09-17）")
+    void subSectionHeadBecomesCard() {
+        ReciteParser.ReciteResult r = ReciteParser.parse(lines(
+                "（一）时间复杂度（Time Complexity）",
+                "1. 定义：算法执行过程中基本运算的次数与问题规模n的关系，记为T(n) = O(f(n))。",
+                "2. 核心步骤（小白必学计算方法）：",
+                "Step1：确定问题规模n。",
+                "（二）空间复杂度（Space Complexity）",
+                "1. 定义：算法执行过程中额外占用的内存空间与问题规模n的关系。",
+                "（三）专业进阶：最坏、最好、平均时间复杂度"));
+        java.util.List<String> titles = r.cards().stream().map(ReciteParser.Card::title).toList();
+        assertTrue(titles.contains("（一）时间复杂度（Time Complexity）"), "（一）抬头应立卡：" + titles);
+        assertTrue(titles.contains("（二）空间复杂度（Space Complexity）"), "（二）抬头应立卡：" + titles);
+        assertFalse(titles.contains("定义"), "泛化标签「定义」不得单独立卡：" + titles);
+        ReciteParser.Card tc = r.cards().stream()
+                .filter(c -> c.title().equals("（一）时间复杂度（Time Complexity）"))
+                .findFirst().orElseThrow();
+        assertTrue(tc.body().contains("T(n) = O(f(n))") && tc.body().contains("Step1：确定问题规模n。"),
+                "定义/步骤应归小节卡的答案：" + tc.body());
+        assertFalse(titles.contains("最坏、最好、平均时间复杂度"),
+                "带冒号的子标题不立卡（是卡内小标题）：" + titles);
+    }
+
+    @Test
+    @DisplayName("「实例N：…」一例一卡，标题独立可读（书48 实锤 2026-09-17）")
+    void instanceHeadBecomesCard() {
+        ReciteParser.ReciteResult r = ReciteParser.parse(lines(
+                "3. 实例分析（小白入门+专业深化）：",
+                "实例1：求1到n的和（简单循环）",
+                "伪代码：",
+                "sum = 0  // 1次（常数项，忽略）",
+                "执行次数：T(n) = 1 + n + 1 = n + 2",
+                "实例3：常数阶（无循环，直接操作）",
+                "时间复杂度：O(1)（常数阶）"));
+        java.util.List<String> titles = r.cards().stream().map(ReciteParser.Card::title).toList();
+        assertTrue(titles.contains("实例1：求1到n的和（简单循环）"), "实例抬头应立卡：" + titles);
+        assertTrue(titles.contains("实例3：常数阶（无循环，直接操作）"),
+                "括号内有逗号的实例抬头也应立卡：" + titles);
+        ReciteParser.Card i1 = r.cards().stream().filter(c -> c.title().startsWith("实例1")).findFirst().orElseThrow();
+        assertTrue(i1.body().contains("sum = 0  // 1次（常数项，忽略）")
+                        && i1.body().contains("执行次数：T(n) = 1 + n + 1 = n + 2"),
+                "实例的伪代码与执行次数应归其答案：" + i1.body());
+    }
+
+    @Test
+    @DisplayName("编号+冒号收尾的子标题立卡，引子句仍归正文（书48 实锤 2026-09-17）")
+    void numberedColonHeadingBecomesCard() {
+        ReciteParser.ReciteResult r = ReciteParser.parse(lines(
+                "4. 常见时间复杂度等级（从快到慢排序，核心考点）：",
+                "O(1) < O(log n) < O(n) < O(n²) < O(2ⁿ) < O(n!)",
+                "1. 各阶段的基本目标为：",
+                "掌握基本概念与算法分析。"));
+        assertTrue(r.cards().stream().anyMatch(c -> c.title().equals("常见时间复杂度等级（从快到慢排序，核心考点）")),
+                "编号+冒号收尾的短名词短语应立卡：" + r.cards());
+        ReciteParser.Card rank = r.cards().stream()
+                .filter(c -> c.title().contains("常见时间复杂度等级")).findFirst().orElseThrow();
+        assertTrue(rank.body().contains("O(1) < O(log n)"), "其下清单应归该卡答案：" + rank.body());
+        assertTrue(r.cards().stream().noneMatch(c -> c.title().contains("基本目标")),
+                "「…为：」引子句不得立卡（守门对照）：" + r.cards());
+    }
+
+    @Test
+    @DisplayName("重复主题标签不另立卡，也不跨卡搬运——留在当前卡（书48 实锤 2026-09-17）")
+    void repeatedTopicLabelStaysInCurrentCard() {
+        ReciteParser.ReciteResult r = ReciteParser.parse(lines(
+                "6. 动态规划（Dynamic Programming, DP）—— 记忆子问题解，避免重复计算",
+                "核心思想：将大问题分解为重叠的子问题，保存子问题解避免重复计算。",
+                "二、专业进阶：各策略的核心区别（考点）",
+                "3. 分治法 vs 动态规划：",
+                "分治法：子问题独立（无重叠），合并子问题解；",
+                "动态规划：子问题重叠，保存子问题解避免重复计算。"));
+        assertTrue(r.cards().stream().noneMatch(c -> c.title().equals("动态规划")),
+                "短主题词是已有卡标题的子串时不得另立重复卡：" + r.cards());
+        ReciteParser.Card cmp = r.cards().stream()
+                .filter(c -> c.body().contains("分治法：子问题独立（无重叠），合并子问题解；"))
+                .findFirst().orElseThrow();
+        assertTrue(cmp.body().contains("动态规划：子问题重叠，保存子问题解避免重复计算。"),
+                "同一对比块的两行必须落在同一张卡（不跨卡搬运）：" + cmp.body());
+        String dp = r.cards().stream().filter(c -> c.title().contains("动态规划（Dynamic"))
+                .findFirst().orElseThrow().body();
+        assertFalse(dp.contains("动态规划：子问题重叠"),
+                "后文对比块的行不得被搬回远处的同名主题卡：" + dp);
+    }
+
+    @Test
+    @DisplayName("「N. 主题名——描述句」标题只留主题名，描述句落答案（书48 实锤 2026-09-17）")
+    void dashDescriptionMovesToBody() {
+        ReciteParser.ReciteResult r = ReciteParser.parse(lines(
+                "1. 枚举法（Enumeration）—— 暴力搜索，逐个尝试",
+                "核心思想：将问题的所有可能解一一列举出来，判断是否符合条件，符合则保留。"));
+        ReciteParser.Card c = r.cards().stream().filter(x -> x.title().contains("枚举法"))
+                .findFirst().orElseThrow();
+        assertEquals("枚举法（Enumeration）", c.title(), "标题只保留「——」前的主题名：" + r.cards());
+        assertTrue(c.body().contains("—— 暴力搜索，逐个尝试"),
+                "「——」后的描述句不得丢，应落到答案：" + c.body());
+    }
+
+    @Test
+    @DisplayName("带句读/引子句/题型词的编号行维持旧行为，不被误拆（守门对照）")
+    void numberedNonTermLinesKeepOldBehaviour() {
+        ReciteParser.ReciteResult r = ReciteParser.parse(lines(
+                "考点 1：简述顺序栈的进栈过程",
+                "进栈时先判断栈是否还有剩余空间，如果栈已满则报出上溢错误，否则把新元素存入栈顶位置。",
+                "2. 核心步骤（小白必学计算方法）：",
+                "Step1：确定问题规模n，例如排序问题中n是待排序元素个数，求和问题中n是相加的数字个数。",
+                "3. 单选题：下列说法正确的是哪一个选项，请结合定义判断后作答并说明理由。"));
+        /* 引子句（冒号收尾）与题型词抬头不拆卡：不得出现以「核心步骤」为标题的卡 */
+        assertTrue(r.cards().stream().noneMatch(c -> c.title().contains("核心步骤")),
+                "冒号收尾的引子句不得立卡：" + r.cards());
+        assertTrue(r.cards().stream().noneMatch(c -> c.title().startsWith("单选题")),
+                "题型词抬头不得被拆成术语卡：" + r.cards());
+        assertTrue(r.cards().stream().anyMatch(c -> c.title().contains("考点 1")),
+                "考点卡不受影响：" + r.cards());
+    }
 }

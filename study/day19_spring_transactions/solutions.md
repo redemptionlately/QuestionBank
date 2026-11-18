@@ -10,7 +10,7 @@
 ---
 
 ### Q2. 运行 M0 rollback。
-对应集成测试 `M0FlowIntegrationTest.invalidQuestionRollsBackTheWholeDraftTransaction`（:154，test profile、H2 内存库默认运行）：创建草稿时某题非法（如标准答案不在选项中，validateQuestion 在 BankService:129-138 抛 `ApiException`（RuntimeException 系））。断言：
+对应集成测试 `M0FlowIntegrationTest.invalidQuestionRollsBackTheWholeDraftTransaction`（:154，test profile、H2 内存库默认运行）：创建草稿时某题非法（如标准答案不在选项中，validateQuestion 在 BankService:129-142 抛 `ApiException`（RuntimeException 系））。断言：
 - PaperVersion 没有新增（`papers.count()` 前后相等）；
 - 排在前面的题目即使已 `save`，也随事务整体回滚，`questions.count()` 不变。
 这验证了“一个业务不变量 = 一个事务”：不允许留下“版本建了但题目残缺”的半成品。回滚规则的五条路径另有纯证据测试 TransactionFailureModeTest（5 个 @Test，默认运行）逐条固化。

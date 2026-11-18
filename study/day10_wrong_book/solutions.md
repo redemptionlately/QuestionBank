@@ -44,7 +44,7 @@ public void markWrong() { wrongCount++; lastWrongAt = Instant.now(); }
 
 ### Q6. `/api/wrong-questions` 只能返回当前学生记录。
 
-错题列表查询已由 **MyBatis 动态 SQL** 接管（JPA 只负责写入侧），支持可选筛选、分页与聚合。Controller 真实代码（[PracticeController.java:58-67](../../app/src/main/java/com/allen/questionbank/practice/PracticeController.java)）：
+错题列表查询已由 **MyBatis 动态 SQL** 接管（JPA 只负责写入侧），支持可选筛选、分页与聚合。Controller 真实代码（[PracticeController.java:61-70](../../app/src/main/java/com/allen/questionbank/practice/PracticeController.java)）：
 ```java
 @GetMapping("/wrong-questions")
 public PracticeService.WrongBook wrongQuestions(

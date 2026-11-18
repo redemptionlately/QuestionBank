@@ -12,7 +12,7 @@
   common: ApiException、ErrorResponse、CurrentUser、RequestIdFilter、读写分离路由
   cache/event/redis/ops: 缓存三实现、Kafka Outbox、Redis 锁与限流、延迟切面与健康指标
   ```
-- 源码索引（MustRemember）：[BankController.java](../../app/src/main/java/com/allen/questionbank/bank/BankController.java) 第 13-56 行的题库/发布/查询接口；[PracticeController.java](../../app/src/main/java/com/allen/questionbank/practice/PracticeController.java) 第 15-67 行的练习与错题接口
+- 源码索引（MustRemember）：[BankController.java](../../app/src/main/java/com/allen/questionbank/bank/BankController.java) 第 26-58 行的题库/发布/查询接口；[PracticeController.java](../../app/src/main/java/com/allen/questionbank/practice/PracticeController.java) 第 15-70 行的练习与错题接口
 
 # MustUnderstand
 

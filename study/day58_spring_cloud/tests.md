@@ -3,7 +3,7 @@
 - 复跑 `./scripts/cloud-evidence.sh`，逐项核对 10 个 `[evidence]` 输出；对每一项能回答"它证明了什么、失败会长什么样"。
 - 背写请求全链路：client -> 网关(RequestId) -> 验签(auth-service) -> 路由(lb://) -> 下游授权 -> Feign 快照 -> outbox/Kafka。画出来，并标注每一步失败时的返回码（401 / 429 / 503 / 409）。
 - 用 `SHOW TABLES` 分别查 `qb_auth` / `qb_bank` / `qb_practice`，证明表集合互不相交；指出哪张表是"跨服务 JOIN 的替代品"（`practice_item` 固化的快照副本）。
-- 打开 [AuthFilter.java](../../cloud/gateway-service/src/main/java/com/allen/cloud/gateway/AuthFilter.java) 第 44-87 行，独立写出"验签 + 透传身份 + 两类失败码"的过滤器骨架；解释为什么 `@LoadBalanced` 不能少。
+- 打开 [AuthFilter.java](../../cloud/gateway-service/src/main/java/com/allen/cloud/gateway/AuthFilter.java) 第 46-127 行，独立写出"验签 + 透传身份 + 两类失败码"的过滤器骨架；解释为什么 `@LoadBalanced` 不能少。
 - 改坏一次验证一次：把 practice 的 `spring.application.name` 改成别的，重启后观察 Eureka 注册表与 Feign 调用各自如何失败，并解释失败点在哪一层（注册 vs 发现）。
 - 熔断实验：`./scripts/cloud-evidence.sh` 第 10 项杀 bank 后，手动 `curl http://127.0.0.1:8083/actuator/circuitbreakers` 看状态机；改小 `wait-duration-in-open-state` 重跑，观察恢复变快，并能说出 HALF_OPEN 放行的 3 个探测请求去哪了。
 - 限流实验：登录后对 `GET /api/banks` 连发 10 次记录状态码序列，解释哪 5 个被放行、为什么第 6 个开始 429；把 `burstCapacity` 改成 8 重跑对比。

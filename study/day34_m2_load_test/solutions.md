@@ -8,8 +8,8 @@
 本主题压测方法论的真实锚点：
 - [tools/loadgen/Loadgen.java](../../tools/loadgen/Loadgen.java)（204 行，单文件源码，`java Loadgen.java` 直接运行，无 Maven 坐标）：参数 Args 在 :175-183，默认 url=`http://127.0.0.1:8080/api/papers/published`、method=GET、rps=100、warmup=10s、duration=60s；`--url/--method/--body/--token-file/--rps/--warmup/--duration/--out`（:185-201）。输入：命令行参数 + 可选 token 文件/请求体；输出：控制台报告与 `--out` JSON（目标 RPS、实测 RPS、样本数、错误数/率、P50/P95/P99/P999、Max）。
 - [scripts/sql/seed_papers.sql](../../scripts/sql/seed_papers.sql)：递归 CTE 向 paper_version 插 5000 行（500 行 PUBLISHED），`ANALYZE TABLE` 刷新统计；清理用 [scripts/sql/cleanup_seed.sql](../../scripts/sql/cleanup_seed.sql)（按外键逆序 6 步删除）。
-- 被测真实接口：`POST /api/auth/login`（AuthController:15，permitAll）、`POST /api/practices/{sessionId}/submit`（PracticeController:46-47，需 Bearer token 且强制 `Idempotency-Key` 头）。
-- 配套配置：[application.yml:44-45](../../app/src/main/resources/application.yml) 限流 capacity=300/window=PT1M（压测时需放宽，否则先撞 429 而非容量上限）；主数据源未显式设池大小（HikariCP 默认 maximumPoolSize=10）；`read-replica` profile 的 `ReadReplicaDataSourceConfig.hikariOf`（:57-67）显式 maxPoolSize=5/minIdle=1/connectionTimeout=5000ms。
+- 被测真实接口：`POST /api/auth/login`（AuthController:15，permitAll）、`POST /api/practices/{sessionId}/submit`（PracticeController:49-50，需 Bearer token 且强制 `Idempotency-Key` 头）。
+- 配套配置：[application.yml:48-49](../../app/src/main/resources/application.yml) 限流 capacity=300/window=PT1M（压测时需放宽，否则先撞 429 而非容量上限）；主数据源未显式设池大小（HikariCP 默认 maximumPoolSize=10）；`read-replica` profile 的 `ReadReplicaDataSourceConfig.hikariOf`（:57-67）显式 maxPoolSize=5/minIdle=1/connectionTimeout=5000ms。
 
 ---
 

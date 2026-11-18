@@ -5,7 +5,7 @@
 - V2__m0_query_indexes.sql 三条读路径索引：paper_version(status,published_at)、practice_session(student_id,created_at)、wrong_question(student_id,last_wrong_at)；H2 侧存在性断言在 M0FlowIntegrationTest:215
 - InnoDB MVCC 通过隐藏版本和 undo 读取一致性视图；RR 快照保持到提交（MysqlRealDbIntegrationTest:186）、RC 立即可见已提交（:205）；FOR UPDATE 当前读加行锁（:227 锁等待超时）；循环等待触发死锁检测、回滚牺牲者报 1213（:259）
 - Top-N per group 常用 `ROW_NUMBER() OVER (PARTITION BY ... ORDER BY ...)` 再过滤 `rn <= N`
-- 复杂只读查询走 MyBatis 双栈：[WrongQuestionQueryMapper.java](../../app/src/main/java/com/allen/questionbank/practice/WrongQuestionQueryMapper.java) + resources/mapper/WrongQuestionQueryMapper.xml（动态 `<if>`、ORDER BY 双列、LIMIT/OFFSET、COUNT/SUM/MAX+COALESCE、namespace 二级缓存 60s）；8 用例在 WrongQuestionQueryMapperTest，真 MySQL 对账在 :368
+- 复杂只读查询走 MyBatis 双栈：[WrongQuestionQueryMapper.java](../../app/src/main/java/com/allen/questionbank/practice/WrongQuestionQueryMapper.java) + resources/mapper/WrongQuestionQueryMapper.xml（动态 `<if>`、ORDER BY 双列、LIMIT/OFFSET、COUNT/SUM/MAX+COALESCE、namespace 二级缓存 60s）；8 用例在 WrongQuestionQueryMapperTest，真 MySQL 对账 [已失效 2026-09-23：WrongQuestionQueryMapperTest 现仅 164 行，原 :368 已不存在，MySQL 对账用例已迁至 MysqlRealDbIntegrationTest]
 - app 单体练习状态是 IN_PROGRESS/COMPLETED（PracticeStatus），不要与 cloud 的 ACTIVE/SUBMITTED 混用；数据源 URL 带 serverTimezone=UTC，统一存 UTC
 - ShardingSphere 仅 **test scope**（ShardingEvidenceTest 6 证据，MYSQL_SHARDING_EVIDENCE 门控），生产不进 classpath，不得说成分库分表已上线
 - Top-N SQL 形态是：

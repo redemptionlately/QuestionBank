@@ -5,7 +5,7 @@
 ## Current
 
 ### Q1. 按源码索引定位并默写、口述 I/O 边界。
-锚点（主代码在 `app/src/main/java/com/allen/questionbank/`）：[practice/PracticeController.java:34-53](../../app/src/main/java/com/allen/questionbank/practice/PracticeController.java) create/save/submit 入口（类级 STUDENT 鉴权在 :17，submit 可选走 RedisGuardedPracticeSubmitter :49-52）；[practice/PracticeService.java:43-54](../../app/src/main/java/com/allen/questionbank/practice/PracticeService.java) saveAnswer 答案覆盖保存（requireSession :120-124、requireQuestion :126-130）、`:37-41` create；[practice/PracticeSession.java:13](../../app/src/main/java/com/allen/questionbank/practice/PracticeSession.java) 状态字段与 `:35-38` submit()；[V1__m0_schema.sql](../../app/src/main/resources/db/migration/V1__m0_schema.sql) 第 49-75 行外键与答案唯一键 uk_submission_question（:72）。
+锚点（主代码在 `app/src/main/java/com/allen/questionbank/`）：[practice/PracticeController.java:37-56](../../app/src/main/java/com/allen/questionbank/practice/PracticeController.java) create/save/submit 入口（类级 STUDENT 鉴权在 :20，submit 可选走 RedisGuardedPracticeSubmitter :52-54）；[practice/PracticeService.java:43-54](../../app/src/main/java/com/allen/questionbank/practice/PracticeService.java) saveAnswer 答案覆盖保存（requireSession :120-124、requireQuestion :126-130）、`:37-41` create；[practice/PracticeSession.java:13](../../app/src/main/java/com/allen/questionbank/practice/PracticeSession.java) 状态字段与 `:35-38` submit()；[V1__m0_schema.sql](../../app/src/main/resources/db/migration/V1__m0_schema.sql) 第 49-75 行外键与答案唯一键 uk_submission_question（:72）。
 
 ---
 

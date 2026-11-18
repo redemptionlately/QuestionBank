@@ -40,8 +40,9 @@ public class PracticeController {
 
     @PostMapping("/api/practice/sessions/{sessionId}/submit")
     public PracticeService.SubmitView submit(@PathVariable Long sessionId,
+                                             @RequestHeader("X-User-Id") Long userId,
                                              @RequestBody SubmitRequest request) {
-        return practiceService.submit(sessionId, request.answers());
+        return practiceService.submit(sessionId, userId, request.answers());
     }
 
     @GetMapping("/api/practice/sessions/{sessionId}")

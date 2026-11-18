@@ -14,7 +14,7 @@
 - 均值 QPS = 100000 / 7200s ≈ 14 QPS；峰值 ≈ 42 QPS；
 - 由 Little 定律，峰值在途请求 L = λ×W = 42×0.05 ≈ 2.1；
 - 每请求 6 条 SQL、每条 5ms，则每请求占用连接约 30ms，需要的 DB 并发 ≈ 42×0.03 ≈ 1.3，留余量配 10~20 连接即可（连接池不是越大越好）；项目主数据源未显式设池大小（HikariCP 默认 maximumPoolSize=10），read-replica profile 显式 maxPoolSize=5/connectionTimeout=5000ms；
-- 队列：异步导入按"峰值生产速率 × 可接受积压时长"估算，项目 import 池 queue=100、CallerRunsPolicy 反压；注意应用层限流默认 capacity=300/min（[application.yml:44](../../app/src/main/resources/application.yml)），容量估算必须先确认限流阈值已按场景调整。
+- 队列：异步导入按"峰值生产速率 × 可接受积压时长"估算，项目 import 池 queue=100、CallerRunsPolicy 反压；注意应用层限流默认 capacity=300/min（[application.yml:48](../../app/src/main/resources/application.yml)），容量估算必须先确认限流阈值已按场景调整。
 所有数字都标注假设，改假设重算；**不得把假设演算说成项目实测 QPS**（实测数字只存在于 docs/interview/resume_one_page.md 且绑定固定环境）。
 
 ---

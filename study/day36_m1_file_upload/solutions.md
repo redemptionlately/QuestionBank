@@ -6,7 +6,7 @@
 
 ### Q1. 按源码索引定位并默写、口述 I/O 边界。
 当前事实锚点（行号取自真实代码）：
-- [importjob/ImportJobController.java:13-16](../../app/src/main/java/com/allen/questionbank/importjob/ImportJobController.java)：`@RestController @RequestMapping("/api/import-jobs")`，类级 `@PreAuthorize("hasRole('STUDENT')")`（:15）；`POST`（:20-21）入参为 record `CreateJobRequest`（:32，仅 sourceName 文本字段），`GET /{id}`（:26）返回 JobView（:33）。输入：JSON；输出：202/任务视图，全程无字节流。
+- [importjob/ImportJobController.java:13-16](../../app/src/main/java/com/allen/questionbank/importjob/ImportJobController.java)：`@RestController @RequestMapping("/api/import-jobs")`，类级 `@PreAuthorize("hasAnyRole('ADMIN','STUDENT')")`（:17）；`POST`（:22-23）入参为 record `CreateJobRequest`（:34，仅 sourceName 文本字段），`GET /{id}`（:28）返回 JobView（:35）。输入：JSON；输出：202/任务视图，全程无字节流。
 - [importjob/ImportJobService.java:11-12](../../app/src/main/java/com/allen/questionbank/importjob/ImportJobService.java)：submit（@Transactional :17）落库 RECEIVED，并在 :27 注册 afterCommit 回调——**事务提交后**才触发 worker.process；require 只读（:32）。
 - [importjob/ImportJobWorker.java:7-8](../../app/src/main/java/com/allen/questionbank/importjob/ImportJobWorker.java)：`@Async("importTaskExecutor")`（:12）+ `@Transactional`（:13），process(id) :14 走 start→处理→succeed/fail（:18/:22/:24）。
 - [importjob/ImportJob.java:8](../../app/src/main/java/com/allen/questionbank/importjob/ImportJob.java) + [ImportJobStatus.java:3](../../app/src/main/java/com/allen/questionbank/importjob/ImportJobStatus.java)：真实状态枚举仅 RECEIVED/PROCESSING/SUCCEEDED/FAILED；迁移 [V3__async_import_jobs.sql](../../app/src/main/resources/db/migration/V3__async_import_jobs.sql) 建表列：owner_id/source_name/status/progress/error/attempt/entity_version(@Version)/created_at/updated_at。

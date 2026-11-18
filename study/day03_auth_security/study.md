@@ -13,7 +13,7 @@
   ```
 - BCrypt 为每个密码生成 salt 并使用成本因子计算摘要；`matches(raw, encoded)` 验证输入，不保存明文
 - Bearer 过滤器读取 `Authorization: Bearer <token>`，解析成功后创建 `UsernamePasswordAuthenticationToken` 并写入 SecurityContext
-- 源码索引（MustRemember）：[AuthController.java](../../app/src/main/java/com/allen/questionbank/auth/AuthController.java) 第 8-23 行的登录 Controller/record（POST /api/auth/login 在 :15）；[AuthService.java](../../app/src/main/java/com/allen/questionbank/auth/AuthService.java) 第 21-32 行的用户查询、密码匹配和 token 签发；[TokenService.java](../../app/src/main/java/com/allen/questionbank/auth/TokenService.java) 第 21-34 行的 UUID 令牌签发与过期惰性清理（TTL 键 app.token-ttl 默认 PT8H）
+- 源码索引（MustRemember）：[AuthController.java](../../app/src/main/java/com/allen/questionbank/auth/AuthController.java) 第 8-23 行的登录 Controller/record（POST /api/auth/login 在 :15）；[AuthService.java](../../app/src/main/java/com/allen/questionbank/auth/AuthService.java) 第 21-32 行的用户查询、密码匹配和 token 签发；[TokenService.java](../../app/src/main/java/com/allen/questionbank/auth/TokenService.java) 第 53-76 行的 UUID 令牌签发与过期惰性清理（TTL 键 app.token-ttl 默认 PT8H）
 
 # MustUnderstand
 

@@ -1,11 +1,11 @@
 # Day22 M0 Draft Rollback · 题目与标准解答（Solutions）
 
-> 依据：`study.md` + 真实 `BankService.createDraft/validateQuestion`（:44-62 / :129-138）、集成测试 M0FlowIntegrationTest.invalidQuestionRollsBackTheWholeDraftTransaction（:154-177）。
+> 依据：`study.md` + 真实 `BankService.createDraft/validateQuestion`（:44-62 / :129-142）、集成测试 M0FlowIntegrationTest.invalidQuestionRollsBackTheWholeDraftTransaction（:154-177）。
 
 ## Current
 
 ### Q1. 按源码索引定位并默写、口述 I/O 边界。
-锚点：[BankService.java:44-62](../../app/src/main/java/com/allen/questionbank/bank/BankService.java) 草稿事务（nextVersion 计算 :52-53、循环内先 validateQuestion 再 save :55-60）、`:129-138` validateQuestion 业务校验；[V1__m0_schema.sql](../../app/src/main/resources/db/migration/V1__m0_schema.sql) :21-33 paper_version（uk_paper_version_no 在 :30）、:35-47 question_version（uk_question_version_no 在 :45）；[M0FlowIntegrationTest.java:154-177](../../app/src/test/java/com/allen/questionbank/M0FlowIntegrationTest.java) 回滚断言。
+锚点：[BankService.java:44-62](../../app/src/main/java/com/allen/questionbank/bank/BankService.java) 草稿事务（nextVersion 计算 :52-53、循环内先 validateQuestion 再 save :55-60）、`:129-142` validateQuestion 业务校验；[V1__m0_schema.sql](../../app/src/main/resources/db/migration/V1__m0_schema.sql) :21-33 paper_version（uk_paper_version_no 在 :30）、:35-47 question_version（uk_question_version_no 在 :45）；[M0FlowIntegrationTest.java:154-177](../../app/src/test/java/com/allen/questionbank/M0FlowIntegrationTest.java) 回滚断言。
 
 ---
 
@@ -22,19 +22,19 @@ assertThatThrownBy(() -> service.createDraft(admin, bankId, "t", List.of(bad)))
 assertThat(papers.findByBankIdOrderByVersionNoDesc(bankId)).isEmpty();
 assertThat(questions.findAll()).isEmpty();   // 连版本带题目整体不存在
 ```
-可参数化覆盖（对应 validateQuestion :129-138 每个分支）：题干空白、type=null、options 空、选项重复、答案重复、答案不是选项子集、SINGLE/TRUE_FALSE 多答案、score≤0（DTO 层另有 `@Min(1)`/`@NotBlank`/`@NotEmpty` Bean Validation，BankController:58-61），每一种都必须回滚且不残留。
+可参数化覆盖（对应 validateQuestion :129-142 每个分支）：题干空白、type=null、options 空、选项重复、答案重复、答案不是选项子集、SINGLE/TRUE_FALSE 多答案、score≤0（DTO 层另有 `@Min(1)`/`@NotBlank`/`@NotEmpty` Bean Validation，BankController:58-61），每一种都必须回滚且不残留。
 
 ---
 
 ### Q4. 写出题干、选项、答案、分值和联合唯一键的校验规则。
 
-真实 `validateQuestion`（BankService:129-138）规则（任一不满足即 400 `INVALID_INPUT`）：
+真实 `validateQuestion`（BankService:129-142）规则（任一不满足即 400 `INVALID_INPUT`）：
 1. `prompt` 非 null 且非空白（题干非空，:130）；
 2. `type` 非 null（题型枚举仅 SINGLE/MULTIPLE/TRUE_FALSE 三个值，:130）；
-3. `options` 非空，且**无重复**（`distinct().count()==size()`，:134）；
-4. `correctAnswers` 非空、**无重复**（:135），且 `options.containsAll(correctAnswers)`（答案必须是选项子集，:133）；
+3. `options` 非空，且**无重复**（`distinct().count()==size()`，:138）；
+4. `correctAnswers` 非空、**无重复**（:139），且 `options.containsAll(correctAnswers)`（答案必须是选项子集，:137）；
 5. `score > 0`（正数分值，:132；DTO 层 `@Min(1)` 再兜一层）；
-6. SINGLE（:136）、TRUE_FALSE（:137）恰好 1 个正确答案，MULTIPLE 可多个。
+6. SINGLE（:140）、TRUE_FALSE（:141）恰好 1 个正确答案，MULTIPLE 可多个。
 
 联合唯一键（数据库最终防线，[V1__m0_schema.sql](../../app/src/main/resources/db/migration/V1__m0_schema.sql)）：
 - `uk_paper_version_no UNIQUE(bank_id, version_no)`（:30）；

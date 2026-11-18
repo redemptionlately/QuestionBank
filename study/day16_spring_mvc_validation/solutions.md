@@ -5,7 +5,7 @@
 ## Current
 
 ### Q1. 按源码索引定位并默写、口述 I/O 边界。
-锚点（主代码在 `app/src/main/java/com/allen/questionbank/`）：[bank/BankController.java:15-80](../../app/src/main/java/com/allen/questionbank/bank/BankController.java) 参数绑定、`@PreAuthorize`、6 个 record DTO（:74-80）；[practice/PracticeController.java:40-53](../../app/src/main/java/com/allen/questionbank/practice/PracticeController.java) 路径变量/请求头（submit 在 :46-53，含可选 RedisGuardedPracticeSubmitter 分支）；[common/GlobalExceptionHandler.java:19-63](../../app/src/main/java/com/allen/questionbank/common/GlobalExceptionHandler.java) 六类异常分类。
+锚点（主代码在 `app/src/main/java/com/allen/questionbank/`）：[bank/BankController.java:15-80](../../app/src/main/java/com/allen/questionbank/bank/BankController.java) 参数绑定、`@PreAuthorize`、6 个 record DTO（:74-80）；[practice/PracticeController.java:43-55](../../app/src/main/java/com/allen/questionbank/practice/PracticeController.java) 路径变量/请求头（submit 在 :49-55，含可选 RedisGuardedPracticeSubmitter 分支）；[common/GlobalExceptionHandler.java:19-63](../../app/src/main/java/com/allen/questionbank/common/GlobalExceptionHandler.java) 六类异常分类。
 
 ---
 
@@ -36,7 +36,7 @@ mvc.perform(post("/api/admin/banks").header(AUTH, adminToken)
 
 ### Q4. 写出含 `@RequestBody`、`@PathVariable`、`@RequestHeader`、`@Valid` 的 Controller 方法。
 
-真实示例（提交练习，[PracticeController.java:46-53](../../app/src/main/java/com/allen/questionbank/practice/PracticeController.java)；直接返回 Service 的 SubmitResult record，无额外包装层）：
+真实示例（提交练习，[PracticeController.java:49-55](../../app/src/main/java/com/allen/questionbank/practice/PracticeController.java)；直接返回 Service 的 SubmitResult record，无额外包装层）：
 ```java
 @PostMapping("/practices/{sessionId}/submit")
 public PracticeService.SubmitResult submit(@PathVariable Long sessionId,

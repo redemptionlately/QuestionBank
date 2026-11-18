@@ -9,7 +9,7 @@
       @NotBlank @Size(max = 200) String title,
       @NotEmpty List<@Valid QuestionInput> questions) {}
   ```
-- 源码索引（MustRemember）：[BankController.java](../../app/src/main/java/com/allen/questionbank/bank/BankController.java) 第 13-64 行的参数绑定、`@PreAuthorize` 和 record DTO（:58-64）；[PracticeController.java](../../app/src/main/java/com/allen/questionbank/practice/PracticeController.java) 第 40-53 行的路径变量/请求头（submit 含可选 Redis 锁分支）
+- 源码索引（MustRemember）：[BankController.java](../../app/src/main/java/com/allen/questionbank/bank/BankController.java) 第 15-80 行的参数绑定、`@PreAuthorize` 和 record DTO（:74-80）；[PracticeController.java](../../app/src/main/java/com/allen/questionbank/practice/PracticeController.java) 第 43-55 行的路径变量/请求头（submit 含可选 Redis 锁分支）
 
 # MustUnderstand
 

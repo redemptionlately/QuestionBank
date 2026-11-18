@@ -15,4 +15,4 @@
 - 不可变版本使历史练习成为可审计快照；版本 ID 是题面、答案、分值和发布状态的稳定引用（practice 以标量 paperVersionId 引用，不持有对象关联）
 - 事务提交把状态和时间作为原子事实，读请求只能看到已提交版本；事务失败不能留下半发布状态；缓存淘汰必须等提交后，否则回滚会留下空缓存/旧值回填窗口
 - 双层授权：Controller 方法级 @PreAuthorize 管角色（ADMIN），Service :68 管资源归属（owner），通过角色不等于拥有资源
-- 源码索引（MustUnderstand）：[BankController.java](../../app/src/main/java/com/allen/questionbank/bank/BankController.java) 第 34-38 行的发布协议；[PaperVersion.java](../../app/src/main/java/com/allen/questionbank/bank/PaperVersion.java) 第 9-17 行的不可变快照字段；[BankService.java](../../app/src/main/java/com/allen/questionbank/bank/BankService.java) 第 87-98 行 afterCommit 淘汰
+- 源码索引（MustUnderstand）：[BankController.java](../../app/src/main/java/com/allen/questionbank/bank/BankController.java) 第 40-44 行的发布协议；[PaperVersion.java](../../app/src/main/java/com/allen/questionbank/bank/PaperVersion.java) 第 9-17 行的不可变快照字段；[BankService.java](../../app/src/main/java/com/allen/questionbank/bank/BankService.java) 第 87-98 行 afterCommit 淘汰

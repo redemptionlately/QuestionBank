@@ -59,7 +59,7 @@ WHERE EXISTS (SELECT 1 FROM practice_session p WHERE p.student_id = u.id);
 
 ### E1. 比较窗口函数与相关子查询。
 - 相关子查询：对外层每行重新执行一次子查询，写 Top-N 常需要自连接/嵌套，可读性差、可能多次扫描；
-- 窗口函数：一次扫描内用 OVER 计算，保留原行、可同时取多个分析值，通常执行更高效、语义更清晰。现代 MySQL 8 优先用窗口函数；老版本或极复杂条件才退回相关子查询，并用执行计划对比。项目内"复杂只读查询"统一交给 MyBatis（WrongQuestionQueryMapper：动态 `<if>` 片段 filters、search 分页、summarize 用 COUNT/SUM/MAX + COALESCE 兜底），与 JPA 写入路径双栈共存，聚合正确性由 WrongQuestionQueryMapperTest.summarizeMatchesManualAggregationWithAndWithoutFilter（:119）与真 MySQL 对账用例 :368 锁死。
+- 窗口函数：一次扫描内用 OVER 计算，保留原行、可同时取多个分析值，通常执行更高效、语义更清晰。现代 MySQL 8 优先用窗口函数；老版本或极复杂条件才退回相关子查询，并用执行计划对比。项目内"复杂只读查询"统一交给 MyBatis（WrongQuestionQueryMapper：动态 `<if>` 片段 filters、search 分页、summarize 用 COUNT/SUM/MAX + COALESCE 兜底），与 JPA 写入路径双栈共存，聚合正确性由 WrongQuestionQueryMapperTest.summarizeMatchesManualAggregationWithAndWithoutFilter（:119）与真 MySQL 对账用例 [已失效 2026-09-23：WrongQuestionQueryMapperTest 现仅 164 行，原 :368 已不存在，MySQL 对账用例已迁至 MysqlRealDbIntegrationTest] 锁死。
 
 ### E2. 测 NULL 与时区。
 - **NULL**：`NULL = NULL` 结果是 NULL（未知），判空用 `IS NULL`；聚合 `COUNT(col)` 忽略 NULL、`COUNT(*)` 不忽略；窗口/排序中 NULL 顺序（MySQL 默认 ASC 时 NULL 在前）要显式处理；唯一键允许 NULL 且多 NULL 不冲突（项目唯一键如 uk_submission_question、uk_outbox_dedup 的列均 NOT NULL，不依赖该行为）；

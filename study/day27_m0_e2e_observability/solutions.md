@@ -5,7 +5,7 @@
 ## Current
 
 ### Q1. 按源码索引定位并默写、口述 I/O 边界。
-锚点：[M0FlowIntegrationTest.java:39-90](../../app/src/test/java/com/allen/questionbank/M0FlowIntegrationTest.java) 主链路 adminPublishesAndStudentSubmitsIdempotently（全类 8 个 @Test）；[M0OpsIntegrationTest.java](../../app/src/test/java/com/allen/questionbank/M0OpsIntegrationTest.java) 3 个探针/指标/requestId 用例（:28/:39/:55）；[application.yml:28-32](../../app/src/main/resources/application.yml) Actuator 暴露（health,info,metrics,prometheus + probes）；ops 包 ServiceLatencyAspect（慢调用阈值 200ms）、DatabaseLatencyHealthIndicator（SELECT 1、慢查询阈值 500ms）；真实 HTTP 证据日志 output/real_mysql_m0_verification_20260818.log。
+锚点：[M0FlowIntegrationTest.java:39-91](../../app/src/test/java/com/allen/questionbank/M0FlowIntegrationTest.java) 主链路 adminPublishesAndStudentSubmitsIdempotently（全类 8 个 @Test）；[M0OpsIntegrationTest.java](../../app/src/test/java/com/allen/questionbank/M0OpsIntegrationTest.java) 3 个探针/指标/requestId 用例（:28/:39/:55）；[application.yml:28-32](../../app/src/main/resources/application.yml) Actuator 暴露（health,info,metrics,prometheus + probes）；ops 包 ServiceLatencyAspect（慢调用阈值 200ms）、DatabaseLatencyHealthIndicator（SELECT 1、慢查询阈值 500ms）；真实 HTTP 证据日志 output/real_mysql_m0_verification_20260818.log。
 
 ---
 

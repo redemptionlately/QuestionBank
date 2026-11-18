@@ -6,7 +6,7 @@
 
 ### Q1. 按源码索引定位并默写、口述 I/O 边界。
 锚点（行号取自真实代码）：
-- [ImportJobController.java:13-16](../../app/src/main/java/com/allen/questionbank/importjob/ImportJobController.java)：POST（:20-21）建任务返回 202/Location，GET /{id}（:26）轮询，record CreateJobRequest/JobView（:32-33），类级 STUDENT（:15）；
+- [ImportJobController.java:13-18](../../app/src/main/java/com/allen/questionbank/importjob/ImportJobController.java)：POST（:22-23）建任务返回 202/Location，GET /{id}（:28）轮询，record CreateJobRequest/JobView（:34-35），类级 STUDENT（:17）；
 - [ImportJobService.java:11-12](../../app/src/main/java/com/allen/questionbank/importjob/ImportJobService.java)：submit（@Transactional :17）落库 RECEIVED，:27 注册 **afterCommit** 回调——事务提交后才调 worker.process；require 只读（:32）；
 - [ImportJobWorker.java:7-8](../../app/src/main/java/com/allen/questionbank/importjob/ImportJobWorker.java)：`@Async("importTaskExecutor")`（:12）+ `@Transactional`（:13），process(id) :14：start（:18，attempt++、progress=10）→ 处理 → succeed（:22）/fail(msg)（:24）；
 - [ImportJobRetrySweeper.java:26-28](../../app/src/main/java/com/allen/questionbank/importjob/ImportJobRetrySweeper.java)：`@Scheduled(fixedDelayString="${app.import.retry.sweep-ms:60000}")`（:43）默认 60s 扫一次；MAX_ATTEMPTS=3（:30）、BASE_BACKOFF_SECONDS=30（:31）、MAX_BACKOFF_SECONDS=600（:32）。

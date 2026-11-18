@@ -5,7 +5,7 @@
 ## Current
 
 ### Q1. 按源码索引定位并默写、口述 I/O 边界。
-锚点：[BankController.java:15-81](../../app/src/main/java/com/allen/questionbank/bank/BankController.java)（@RequestMapping("/api") :16，5 个端点 :26-58，6 个请求/响应 record :74-80）；[PracticeController.java:15-73](../../app/src/main/java/com/allen/questionbank/practice/PracticeController.java)（类级 `@PreAuthorize("hasRole('STUDENT')")` :17，5 个端点 :34-67，可选 RedisGuardedPracticeSubmitter 注入 :26-32，record :69-72）；[BankService.java:19-149](../../app/src/main/java/com/allen/questionbank/bank/BankService.java)、[PracticeService.java:18-178](../../app/src/main/java/com/allen/questionbank/practice/PracticeService.java) 的模块职责与 7/5 处事务边界。
+锚点：[BankController.java:15-81](../../app/src/main/java/com/allen/questionbank/bank/BankController.java)（@RequestMapping("/api") :16，5 个端点 :26-58，6 个请求/响应 record :74-80）；[PracticeController.java:15-76](../../app/src/main/java/com/allen/questionbank/practice/PracticeController.java)（类级 `@PreAuthorize("hasRole('STUDENT')")` :20，5 个端点 :37-70，可选 RedisGuardedPracticeSubmitter 注入 :29-35，record :72-75）；[BankService.java:19-152](../../app/src/main/java/com/allen/questionbank/bank/BankService.java)、[PracticeService.java:18-214](../../app/src/main/java/com/allen/questionbank/practice/PracticeService.java) 的模块职责与 7/5 处事务边界。
 
 ---
 

@@ -19,7 +19,7 @@
 - 实体 [bank/QuestionBank.java:6-33](../../app/src/main/java/com/allen/questionbank/bank/QuestionBank.java)、仓储 [bank/QuestionBankRepository.java:5](../../app/src/main/java/com/allen/questionbank/bank/QuestionBankRepository.java)（空体 JpaRepository）
 - 业务 [bank/BankService.java:19-20](../../app/src/main/java/com/allen/questionbank/bank/BankService.java)（构造器注入 6 个依赖：三个 Repository/ObjectMapper/`PublishedPaperCache`（:25）/`ObjectProvider<OutboxPublisher>`（:26，Kafka 关闭时可缺省）；createBank 在 :38-42）
 - 接口 [bank/BankController.java:15-17](../../app/src/main/java/com/allen/questionbank/bank/BankController.java)（`@RestController @RequestMapping("/api")`、`@PreAuthorize`、5 个端点，DTO record 在 :74-80）
-- [app/pom.xml](../../app/pom.xml)：parent 在 :7-11，artifactId=`question-bank-m0`（:13），dependencies 在 :17-125
+- [app/pom.xml](../../app/pom.xml)：parent 在 :7-11，artifactId=`question-bank-m0`（:13），dependencies 在 :17-143
 
 ---
 
@@ -84,7 +84,7 @@ public class BankService {
         if (user == null || name == null || name.isBlank()) throw bad("题库名称不能为空");
         return banks.save(new QuestionBank(user.userId(), name.trim(), description));
     }
-    // bad() 是类内异常工厂（:145）：new ApiException(HttpStatus.BAD_REQUEST, "INVALID_INPUT", message)
+    // bad() 是类内异常工厂（:149）：new ApiException(HttpStatus.BAD_REQUEST, "INVALID_INPUT", message)
 }
 ```
 
@@ -128,15 +128,15 @@ public class BankController {
 
 ### Q4. 指出 [pom.xml](../../app/pom.xml) 中运行时依赖和测试依赖，解释 runtime 与 test scope 的区别。
 
-**本项目 [app/pom.xml](../../app/pom.xml) 真实依赖分类（dependencies 在 :17-125，版本未写者由 spring-boot-dependencies BOM 管理）**：
+**本项目 [app/pom.xml](../../app/pom.xml) 真实依赖分类（dependencies 在 :17-143，版本未写者由 spring-boot-dependencies BOM 管理）**：
 
 - **runtime（运行时依赖，1 个，:87-91）**：`com.mysql:mysql-connector-j`。代码编译期不直接 import 驱动类，只在运行时由 JDBC 自动装配加载。
 - **test（测试依赖，6 个）**：
-  - `com.h2database:h2`（:93-97，test profile 内存库，MODE=MySQL）
-  - `org.springframework.boot:spring-boot-starter-test`（:98-102，JUnit5、MockMvc、AssertJ 等）
-  - `org.springframework.security:spring-security-test`（:103-107）
+  - `com.h2database:h2`（:111-115，test profile 内存库，MODE=MySQL）
+  - `org.springframework.boot:spring-boot-starter-test`（:116-120，JUnit5、MockMvc、AssertJ 等）
+  - `org.springframework.security:spring-security-test`（:121-125）
   - `com.tngtech.archunit:archunit-junit5:1.3.0`（:76-81，ArchitectureTest 架构约束测试）
-  - `org.apache.shardingsphere:shardingsphere-jdbc:5.5.2`（:110-115）与 `shardingsphere-infra-data-source-pool-hikari:5.5.2`（:119-124）——**仅 ShardingEvidenceTest 分库分表证据测试使用，不进生产 classpath**
+  - `org.apache.shardingsphere:shardingsphere-jdbc:5.5.2`（:128-133）与 `shardingsphere-infra-data-source-pool-hikari:5.5.2`（:137-142）——**仅 ShardingEvidenceTest 分库分表证据测试使用，不进生产 classpath**
 - **无 scope 标注（默认 compile，共 14 个）**：自研 `com.allen:monitor-spring-boot-starter`（:19-23，慢 SQL 监控 Starter）、`starter-web`、`starter-validation`、`starter-aop`（支撑 ServiceLatencyAspect）、`starter-data-jpa`、`starter-security`、`starter-actuator`、`micrometer-registry-prometheus`、`starter-data-redis`（缓存/锁/限流）、`spring-kafka`（Outbox）、`flyway-core`、`flyway-mysql`、`mybatis-spring-boot-starter:3.0.4`（:70-74，与 JPA 双栈）、`springdoc-openapi-starter-webmvc-ui:2.8.5`（:82-86）——编译/测试/运行都需要，并打进最终 JAR。
 
 **scope 区别**：

@@ -10,7 +10,7 @@
       .orElseGet(() -> new SubmissionItem(sessionId, questionId, normalized));
   return submissions.save(item);
   ```
-- 源码索引（MustRemember）：[PracticeController.java](../../app/src/main/java/com/allen/questionbank/practice/PracticeController.java) 第 34-53 行的 create/save/submit 入口（类级 @PreAuthorize STUDENT 在 :17）；[PracticeService.java](../../app/src/main/java/com/allen/questionbank/practice/PracticeService.java) 第 43-54 行的答案覆盖保存、第 120-130 行的 requireSession/requireQuestion
+- 源码索引（MustRemember）：[PracticeController.java](../../app/src/main/java/com/allen/questionbank/practice/PracticeController.java) 第 37-56 行的 create/save/submit 入口（类级 @PreAuthorize STUDENT 在 :20）；[PracticeService.java](../../app/src/main/java/com/allen/questionbank/practice/PracticeService.java) 第 43-54 行的答案覆盖保存、第 120-130 行的 requireSession/requireQuestion
 
 # MustUnderstand
 

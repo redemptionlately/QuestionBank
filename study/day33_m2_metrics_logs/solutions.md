@@ -41,7 +41,7 @@
 - Timer：`practice.submit.latency`，记录每次提交耗时分布；
 - Gauge：当前 IN_PROGRESS 会话数（瞬时值）；
 - 按 result/route 低基数标签拆分，区分成功、幂等重放、409 冲突。
-> 现状锚点：提交入口 [practice/PracticeController.java:46-47](../../app/src/main/java/com/allen/questionbank/practice/PracticeController.java)（强制 `Idempotency-Key` 头），核心逻辑 `practice/PracticeService.submit`（:56-57，幂等+判分+FOR UPDATE）；`app.lock.backend=redis` 时外层还有 `practice/RedisGuardedPracticeSubmitter`（锁 TTL 10s、抢锁失败 409 SUBMIT_IN_PROGRESS），这些都是 result 标签取值的真实来源。**当前代码未注册上述 Meter，属待实现设计。**
+> 现状锚点：提交入口 [practice/PracticeController.java:49-50](../../app/src/main/java/com/allen/questionbank/practice/PracticeController.java)（强制 `Idempotency-Key` 头），核心逻辑 `practice/PracticeService.submit`（:56-57，幂等+判分+FOR UPDATE）；`app.lock.backend=redis` 时外层还有 `practice/RedisGuardedPracticeSubmitter`（锁 TTL 10s、抢锁失败 409 SUBMIT_IN_PROGRESS），这些都是 result 标签取值的真实来源。**当前代码未注册上述 Meter，属待实现设计。**
 
 ---
 

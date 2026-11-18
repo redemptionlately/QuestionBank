@@ -77,7 +77,7 @@ chain.doFilter(request, response);
 ### Q5. 学生访问管理员接口、管理员访问学生接口分别验证 403。
 
 - **学生 → 管理接口**：已认证但角色是 `ROLE_STUDENT`，不满足 `hasRole('ADMIN')`，抛 `AccessDeniedException` → 安全层 `accessDeniedHandler`（[SecurityConfig.java:53-54](../../app/src/main/java/com/allen/questionbank/auth/SecurityConfig.java)）返回 403 `FORBIDDEN`；`M0FlowIntegrationTest.rolesAndValidationAreEnforced`（:93）即断言 `status().isForbidden()`。注意方法内抛出的 AccessDeniedException 也会被 `GlobalExceptionHandler.handleDenied`（:45-48）收敛为同形错误体。
-- **管理员 → 学生接口**：[PracticeController.java:17](../../app/src/main/java/com/allen/questionbank/practice/PracticeController.java) 类级 `@PreAuthorize("hasRole('STUDENT')")`（[ImportJobController.java:15](../../app/src/main/java/com/allen/questionbank/importjob/ImportJobController.java) 同形），ADMIN 不满足，同样 403。
+- **管理员 → 学生接口**：[PracticeController.java:20](../../app/src/main/java/com/allen/questionbank/practice/PracticeController.java) 类级 `@PreAuthorize("hasAnyRole('ADMIN','STUDENT')")`（[ImportJobController.java:17](../../app/src/main/java/com/allen/questionbank/importjob/ImportJobController.java) 同形），ADMIN 不满足，同样 403。
 - 注意区分：**401 = 你是谁没确认（未认证）**；**403 = 知道你是谁但你没权限（已认证、授权失败）**。
 
 ---
@@ -96,7 +96,7 @@ chain.doFilter(request, response);
 本项目 token 是 `UUID.randomUUID()`，作为 `ConcurrentHashMap` 的 key 精确匹配；改动任意字符后 `tokens.get(改后串)` 返回 null → 过滤器不建立认证 → 401。无法通过“改一个字符”命中他人会话。若改用 JWT，篡改一个字符会导致签名校验失败，同样被拒。
 
 ### E2. 等待或模拟过期 token，确认过滤器清理过期记录。
-`TokenService.resolve`（[TokenService.java:27-34](../../app/src/main/java/com/allen/questionbank/auth/TokenService.java)）中：记录存在但 `expiresAt` 早于当前时间时，会 `tokens.remove(token)`（:30）惰性清理并返回 null，请求得到 401。TTL 由 `@Value("${app.token-ttl:PT8H}")`（:17，主配置 [application.yml:37](../../app/src/main/resources/application.yml) 显式 PT8H）注入，测试配置 [application-test.yml:13](../../app/src/test/resources/application-test.yml) 调短为 `PT1H`，也可直接调用 resolve 验证过期分支。注意：内存 token 方案重启即失效、多实例不共享（这是 app 模块化单体的刻意简化；cloud/auth-service 里另有一套无状态 HMAC token 演示，二者不共享代码），生产需要 Redis/JWT 集中管理。
+`TokenService.resolve`（[TokenService.java:64-76](../../app/src/main/java/com/allen/questionbank/auth/TokenService.java)）中：记录存在但 `expiresAt` 早于当前时间时，会 `tokens.remove(token)`（:72）惰性清理并返回 null，请求得到 401。TTL 由 `@Value("${app.token-ttl:PT8H}")`（:42，主配置 [application.yml:37](../../app/src/main/resources/application.yml) 显式 PT8H）注入，测试配置 [application-test.yml:13](../../app/src/test/resources/application-test.yml) 调短为 `PT1H`，也可直接调用 resolve 验证过期分支。注意：内存 token 方案重启即失效、多实例不共享（这是 app 模块化单体的刻意简化；cloud/auth-service 里另有一套无状态 HMAC token 演示，二者不共享代码），生产需要 Redis/JWT 集中管理。
 
 ### E3. 检查响应和日志中没有密码、完整 token 或内部堆栈。
 - 登录失败统一文案，不回显密码、不回显“用户不存在 vs 密码错误”的差异；

@@ -10,7 +10,7 @@
   ./scripts/mvn.sh -B test 2>&1 | tee output/mvn_test_YYYYMMDD.log
   # PowerShell: .\mvnw.cmd -B test 2>&1 | Tee-Object output\mvn_test.log
   ```
-- 源码索引（MustRemember）：[M0FlowIntegrationTest.java](../../app/src/test/java/com/allen/questionbank/M0FlowIntegrationTest.java) 第 39-90 行主链路（全类 8 法）；[M0OpsIntegrationTest.java](../../app/src/test/java/com/allen/questionbank/M0OpsIntegrationTest.java) 探针/指标/requestId 三法
+- 源码索引（MustRemember）：[M0FlowIntegrationTest.java](../../app/src/test/java/com/allen/questionbank/M0FlowIntegrationTest.java) 第 39-91 行主链路（全类 8 法）；[M0OpsIntegrationTest.java](../../app/src/test/java/com/allen/questionbank/M0OpsIntegrationTest.java) 探针/指标/requestId 三法
 
 # MustUnderstand
 

@@ -5,7 +5,7 @@
 ## Current
 
 ### Q1. 按源码索引定位并默写、口述 I/O 边界。
-锚点（主代码在 `app/src/main/java/com/allen/questionbank/`）：[bank/BankController.java:74-80](../../app/src/main/java/com/allen/questionbank/bank/BankController.java) 的 6 个 record（QuestionInput 在 :76-77）；[bank/BankService.java:44-62](../../app/src/main/java/com/allen/questionbank/bank/BankService.java) createDraft 版本创建与题目循环、`:129-138` validateQuestion 题目校验（createBank 在 :38-42）。
+锚点（主代码在 `app/src/main/java/com/allen/questionbank/`）：[bank/BankController.java:74-80](../../app/src/main/java/com/allen/questionbank/bank/BankController.java) 的 6 个 record（QuestionInput 在 :76-77）；[bank/BankService.java:44-62](../../app/src/main/java/com/allen/questionbank/bank/BankService.java) createDraft 版本创建与题目循环、`:129-142` validateQuestion 题目校验（createBank 在 :38-42）。
 
 ---
 
@@ -17,7 +17,7 @@
 @Transactional
 public QuestionBank createBank(AuthPrincipal user, String name, String description) {
     if (user == null || name == null || name.isBlank()) throw bad("题库名称不能为空");
-    // bad()=类内工厂 :145 → new ApiException(HttpStatus.BAD_REQUEST, "INVALID_INPUT", msg)
+    // bad()=类内工厂 :149 → new ApiException(HttpStatus.BAD_REQUEST, "INVALID_INPUT", msg)
     return banks.save(new QuestionBank(user.userId(), name.trim(), description));
 }
 

@@ -93,7 +93,7 @@ class Caller {
     void run() { order.inner(); }      // ✅ 外部调用经过代理 → 切面生效
 }
 ```
-- Spring AOP 用代理包裹目标 Bean：外部调用 → 代理前置逻辑（开事务/缓存/鉴权）→ 目标方法 → 代理后置（提交事务）；项目里真实的切面是 [ops/ServiceLatencyAspect.java:23-24](../../app/src/main/java/com/allen/questionbank/ops/ServiceLatencyAspect.java)（`@Aspect @Component`，@Around 切 service 包记录方法延迟），它能生效正是因为调用方持有的是代理；
+- Spring AOP 用代理包裹目标 Bean：外部调用 → 代理前置逻辑（开事务/缓存/鉴权）→ 目标方法 → 代理后置（提交事务）；项目里真实的切面是 [ops/ServiceLatencyAspect.java:14-21](../../app/src/main/java/com/allen/questionbank/ops/ServiceLatencyAspect.java)（`@Aspect @Component`，@Around 切 service 包记录方法延迟），它能生效正是因为调用方持有的是代理；
 - 同类内部 `this.inner()` 直接调用原始对象、绕过代理，所以 `@Transactional/@Cacheable/@PreAuthorize` 等注解**不生效**；
 - 其他失效场景：方法非 public、类未被 Spring 管理（自己 new 的）、异常被 catch 吞掉、自调用；解决：拆到另一个 Bean，或注入自身代理（`@Lazy` 自注入 / `AopContext.currentProxy()`）。事务回滚规则本身（RuntimeException 回滚、checked 异常默认不回滚）由 TransactionFailureModeTest 5 个用例固化。
 

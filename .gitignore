@@ -66,3 +66,41 @@ scripts/start-all.sh
 # ---- 系统 / 编辑器 ----
 .DS_Store
 Thumbs.db
+
+# Security & Local Databases
+*.db
+*.db-shm
+*.db-wal
+*.sqlite
+*.sqlite3
+.master.key
+.vault_key
+.env
+.env.*
+!.env.example
+!.env.server.example
+kiro_config.json
+pipeline_config.json
+cards.csv
+out_vm2api_*.json
+out_kiro_lite.json
+kiro_pro_accounts.json
+
+# Virtualenvs, Build & Cache
+.venv/
+venv/
+__pycache__/
+*.py[cod]
+node_modules/
+target/
+dist/
+build/
+build_pyi/
+build_tmp/
+.workbuddy/
+.claude/
+*.log
+
+deploy/*.sql
+output/
+target/

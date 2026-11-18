@@ -6,7 +6,7 @@
 
 ### Q1. 按源码索引逐项定位文件、类/方法，独立写出代码并口述输入、输出与边界。
 固定动作（同 Day01）：定位 → 关源码默写 → 口述“输入/输出/失败边界/副作用”。本日锚点（主代码在 `app/src/main/java/com/allen/questionbank/`）：
-- [bank/BankController.java](../../app/src/main/java/com/allen/questionbank/bank/BankController.java)：createBank 第 20-25 行、createDraft 第 27-32 行两个 POST 接口，第 58-64 行 5 个 record DTO；
+- [bank/BankController.java](../../app/src/main/java/com/allen/questionbank/bank/BankController.java)：createBank 第 26-31 行、createDraft 第 33-38 行两个 POST 接口，第 74-80 行 5 个 record DTO；
 - [common/GlobalExceptionHandler.java:19-20](../../app/src/main/java/com/allen/questionbank/common/GlobalExceptionHandler.java)：6 个 @ExceptionHandler（ApiException :23、MethodArgumentNotValid :28、ConstraintViolation :35、缺头/坏 JSON :40、AccessDenied :45、兜底 Exception :50），统一出口 response() 在 :59-63；
 - [common/ErrorResponse.java:5](../../app/src/main/java/com/allen/questionbank/common/ErrorResponse.java)：`record ErrorResponse(String code, String message, String requestId, Instant timestamp)`；
 - Spring MVC 主链：`DispatcherServlet → HandlerMapping → HandlerAdapter → 参数解析器 → Controller → HttpMessageConverter`。

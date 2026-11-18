@@ -146,4 +146,20 @@ class FulltextParserTest {
         assertTrue(cs.stream().anyMatch(c -> c.title().contains("第一讲")),
                 "真正的第一讲抬头应成节");
     }
+
+    @Test
+    @DisplayName("行尾反斜杠 artefact 剥除：字面 \\n 还原残留不进正文，抬头判定不受挡")
+    void trailingBackslashStripped() {
+        String text = lines(
+                "第八章 查找\\",
+                "折半查找的平均查找长度是多少呢?\\",
+                "为了讨论方便，设有查找表的长度n=2\\",
+                "上式的计算结果约为log2n。\\");
+        List<FulltextParser.Chapter> cs = FulltextParser.split(text);
+        assertEquals(1, cs.size(), "带反斜杠的抬头也应正常开节：" + cs.size());
+        assertEquals("第八章 查找", cs.get(0).title(), "标题不应带反斜杠：" + cs.get(0).title());
+        assertFalse(cs.get(0).body().contains("\\"), "正文不应含行尾反斜杠：" + cs.get(0).body());
+        assertTrue(cs.get(0).body().contains("log2n"),
+                "正文内容应保留：" + cs.get(0).body());
+    }
 }

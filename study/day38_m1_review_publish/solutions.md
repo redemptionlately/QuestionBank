@@ -8,7 +8,7 @@
 真实锚点（行号取自真实代码）：
 - [bank/PaperVersion.java:8](../../app/src/main/java/com/allen/questionbank/bank/PaperVersion.java)：`@Entity paper_version`，**真实状态只有 DRAFT/PUBLISHED**（无 ARCHIVED），V1:21-33 建表、uk_paper_version_no UNIQUE(bank_id,version_no)（V1:30）；
 - [bank/BankController.java:26-58](../../app/src/main/java/com/allen/questionbank/bank/BankController.java)：POST /api/admin/banks（:26-27）、POST /api/admin/banks/{bankId}/versions（:33-34）、POST /api/admin/versions/{paperId}/publish（:40-41，均 ADMIN）；读：GET /api/papers/published（:46-47）、GET /api/papers/{paperId}（:50-51）；
-- [bank/BankService.java:19-20](../../app/src/main/java/com/allen/questionbank/bank/BankService.java)：写事务 :38/:44/:64，只读事务 :100/:105/:117/:124；发布时**同事务** OutboxPublisher.enqueue("paper", paperId, "PAPER_PUBLISHED", payload)（:74-77），并注册 afterCommit 回调（:79→:87）在**事务提交后** publishedCache.evict（:92，无活跃事务时直接 evict :96）；读路径走 PublishedPaperCache.getOrLoad（:107）。
+- [bank/BankService.java:19-20](../../app/src/main/java/com/allen/questionbank/bank/BankService.java)：写事务 :38/:44/:64，只读事务 :100/:105/:117/:124；发布时**同事务** OutboxPublisher.enqueue("paper", paperId, "PAPER_PUBLISHED", payload)（:74-78），并注册 afterCommit 回调（:79→:87）在**事务提交后** publishedCache.evict（:92，无活跃事务时直接 evict :96）；读路径走 PublishedPaperCache.getOrLoad（:107）。
 - 回滚证据：M0FlowIntegrationTest.invalidQuestionRollsBackTheWholeDraftTransaction（:154，坏题整笔草稿回滚）。
 候选审核层位于发布**之前**，审核通过后才创建正式草稿/版本——该层当前不存在。
 
@@ -46,7 +46,7 @@ CREATED → REVIEWING → ACCEPTED ─→ 创建新 DRAFT paper_version →（�
 | REVIEWING | accept | 审核员 | ACCEPTED（设计） | 其他状态→409 |
 | REVIEWING | reject(reason) | 审核员 | REJECTED（设计） | reason 必填，否则 400 |
 | ACCEPTED | createDraft | 系统/管理员 | 新 DRAFT paper_version（设计衔接真实建版本端点 BankController:27-28） | 重复创建→幂等/409，uk_paper_version_no 兜底 |
-| DRAFT | publish | ADMIN | PUBLISHED（**真实**：BankService 写事务 :64，同事务写 Outbox :74-77、afterCommit 淘汰缓存 :87-96） | 空题/坏题整笔回滚（:154 测试），非 DRAFT→409 |
+| DRAFT | publish | ADMIN | PUBLISHED（**真实**：BankService 写事务 :64，同事务写 Outbox :74-78、afterCommit 淘汰缓存 :87-96） | 空题/坏题整笔回滚（:154 测试），非 DRAFT→409 |
 | PUBLISHED | archive | ADMIN | ARCHIVED（设计，当前无此状态/端点） | 已归档→409 |
 规则：表中没有的边返回 409；actor 不满足角色/所有权返回 403；转换与审核记录在同一事务落库（参照真实发布：状态翻转与 Outbox 行同一事务提交，缓存失效刻意推迟到 afterCommit）。
 

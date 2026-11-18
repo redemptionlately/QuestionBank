@@ -14,7 +14,7 @@
 | 场景 | 请求 | 过滤器/授权结果 | HTTP / code |
 |---|---|---|---|
 | 缺 token | 不带 Authorization 访问受保护接口 | ApiTokenFilter 不写 SecurityContext，anyRequest().authenticated()（SecurityConfig:49）拦截，authenticationEntryPoint 输出错误体 | 401 `AUTH_REQUIRED` |
-| 无效 token | `Authorization: Bearer 不存在/过期` | `tokenService.resolve`（TokenService:27-34）返回 null（过期顺手 remove，:30），不写入 SecurityContext | 401 `AUTH_REQUIRED` |
+| 无效 token | `Authorization: Bearer 不存在/过期` | `tokenService.resolve`（TokenService:64-76）返回 null（过期顺手 remove，:72），不写入 SecurityContext | 401 `AUTH_REQUIRED` |
 | 格式错误 | `Authorization: abc`（无 `Bearer ` 前缀） | ApiTokenFilter:26 的 startsWith 不成立，当作未认证，继续 chain 交给授权层 | 401 `AUTH_REQUIRED` |
 | 学生访问 admin | STUDENT 调 `/api/admin/**` | 已认证但方法级 `@PreAuthorize("hasRole('ADMIN')")` 拒绝，accessDeniedHandler（SecurityConfig:53-54）输出 | 403 `FORBIDDEN` |
 
@@ -60,7 +60,7 @@ public class SecurityConfig {
 ### Q4. 写出 BCrypt 编码、matches 校验和 Bearer 过滤器三分支。
 
 ```java
-// SecurityConfig:27-30：强度由 app.security.bcrypt-strength 注入，默认 10（application.yml:40 显式 10）
+// SecurityConfig:27-30：强度由 app.security.bcrypt-strength 注入，默认 10（application.yml:44 显式 10）
 String hash = passwordEncoder.encode("admin123");    // 每次编码带随机 salt，同一密码两次密文不同
 // AuthService.login（:21-30，@Transactional(readOnly=true) 在 :21）
 UserAccount user = users.findByUsername(username)
@@ -91,10 +91,10 @@ BCrypt 特点：随机 salt（防彩虹表）、成本因子 strength 可调（�
 ## External
 
 ### E1. 设计过期 / 撤销 / 刷新机制。
-- **过期**：TokenRecord 带 `expiresAt`（TokenService:36），resolve 时发现过期惰性 remove 并返回 null（:29-31）；本项目 TTL 由 `app.token-ttl` 注入，默认 PT8H（TokenService:17，[application.yml:37](../../app/src/main/resources/application.yml)），test profile 为 PT1H（[application-test.yml:13](../../app/src/test/resources/application-test.yml)）；
+- **过期**：TokenRecord 带 `expiresAt`（TokenService:96），resolve 时发现过期惰性 remove 并返回 null（:71-73）；本项目 TTL 由 `app.token-ttl` 注入，默认 PT8H（TokenService:42，[application.yml:37](../../app/src/main/resources/application.yml)），test profile 为 PT1H（[application-test.yml:13](../../app/src/test/resources/application-test.yml)）；
 - **撤销**：内存方案从 ConcurrentHashMap 删除即失效；生产用数据库/Redis 存 token 并加 `revoked` 标志，或用无状态 JWT + 服务端黑名单/短 TTL + refresh token；
 - **刷新**：access token 短 TTL，另发 refresh token（更长 TTL、可轮换、可撤销），access 过期后用 refresh 换新，refresh 用一次即旋转（rotation）并检测重放盗用。
-本项目是单实例教学用内存 token（TokenService:15 一个 ConcurrentHashMap），多实例需共享存储。注意 cloud/auth-service 走的是另一条路线：自研无状态 HMAC-SHA256 token（`com.allen.cloud.auth.TokenService`），与 app 不共享代码，不要混为一谈。
+本项目是单实例教学用内存 token（TokenService:40 一个 ConcurrentHashMap），多实例需共享存储。注意 cloud/auth-service 走的是另一条路线：自研无状态 HMAC-SHA256 token（`com.allen.cloud.auth.TokenService`），与 app 不共享代码，不要混为一谈。
 
 ### E2. 检查日志不泄露 token。
 - 日志只记录 token 指纹（如 SHA-256 前 8 位）或 `Bearer ***`，绝不打印完整 Authorization 头；

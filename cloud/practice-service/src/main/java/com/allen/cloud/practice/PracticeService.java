@@ -42,22 +42,30 @@ public class PracticeService {
      */
     @Transactional
     public SessionView createSession(Long paperId, Long userId, String clientToken) {
-        return sessions.findByClientToken(clientToken)
-                .map(existing -> new SessionView(existing.getId(), existing.getPaperId(), existing.getStatus(),
+        var existingOpt = sessions.findByClientToken(clientToken);
+        if (existingOpt.isPresent()) {
+            PracticeSession existing = existingOpt.get();
+            if (!existing.getUserId().equals(userId)) {
+                throw new ResponseStatusException(HttpStatus.FORBIDDEN, "幂等令牌已归属其他用户");
+            }
+            if (!"SUBMITTED".equals(existing.getStatus()) || !clientToken.startsWith("auto:")) {
+                return new SessionView(existing.getId(), existing.getPaperId(), existing.getStatus(),
                         items.findBySessionIdOrderByOrdinalAsc(existing.getId()).stream()
-                                .map(PracticeItem::getQuestionId).toList()))
-                .orElseGet(() -> {
-                    PaperSnapshot snapshot = bankGateway.fetchSnapshot(paperId);
-                    PracticeSession session = sessions.save(
-                            new PracticeSession(paperId, userId, clientToken, snapshot.items().size()));
-                    int ordinal = 0;
-                    for (PaperSnapshot.Item item : snapshot.items()) {
-                        items.save(new PracticeItem(session.getId(), item.questionId(), ordinal++,
-                                normalizeAnswer(item.answer())));
-                    }
-                    return new SessionView(session.getId(), paperId, session.getStatus(),
-                            snapshot.items().stream().map(PaperSnapshot.Item::questionId).toList());
-                });
+                                .map(PracticeItem::getQuestionId).toList());
+            }
+            // 默认 auto: 令牌命中已提交会话时，生成带时间戳的新令牌以允许用户再次练习同一试卷
+            clientToken = clientToken + ":" + System.currentTimeMillis();
+        }
+        PaperSnapshot snapshot = bankGateway.fetchSnapshot(paperId);
+        PracticeSession session = sessions.save(
+                new PracticeSession(paperId, userId, clientToken, snapshot.items().size()));
+        int ordinal = 0;
+        for (PaperSnapshot.Item item : snapshot.items()) {
+            items.save(new PracticeItem(session.getId(), item.questionId(), ordinal++,
+                    normalizeAnswer(item.answer())));
+        }
+        return new SessionView(session.getId(), paperId, session.getStatus(),
+                snapshot.items().stream().map(PaperSnapshot.Item::questionId).toList());
     }
 
     /**
@@ -67,9 +75,12 @@ public class PracticeService {
      * 所以这一步不依赖 bank-service——下游挂了，已开会话照样能交卷。
      */
     @Transactional
-    public SubmitView submit(Long sessionId, Map<Long, String> answers) {
+    public SubmitView submit(Long sessionId, Long userId, Map<Long, String> answers) {
         PracticeSession session = sessions.findById(sessionId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "会话不存在"));
+        if (!session.getUserId().equals(userId)) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "只能提交自己的会话");
+        }
         List<PracticeItem> practiceItems = items.findBySessionIdOrderByOrdinalAsc(sessionId);
 
         if ("SUBMITTED".equals(session.getStatus())) {

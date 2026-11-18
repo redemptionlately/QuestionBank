@@ -5,7 +5,7 @@
 ## Current
 
 ### Q1. 按源码索引定位并默写、口述 I/O 边界。
-锚点（主代码在 `app/src/main/java/com/allen/questionbank/practice/`）：[PracticeService.java:56-89](../../app/src/main/java/com/allen/questionbank/practice/PracticeService.java) submit 判分/总分/错题循环（FOR UPDATE 加锁在 :61，错题归集 :77-81）、`:146-155` canonical JSON 规范化、`:132-139` validateChoices 选项归属校验、`:141-144` normalize；[SubmissionItem.java:29-30](../../app/src/main/java/com/allen/questionbank/practice/SubmissionItem.java) replaceAnswer/grade 逐题分数状态。
+锚点（主代码在 `app/src/main/java/com/allen/questionbank/practice/`）：[PracticeService.java:56-89](../../app/src/main/java/com/allen/questionbank/practice/PracticeService.java) submit 判分/总分/错题循环（FOR UPDATE 加锁在 :61，错题归集 :77-81）、`:163-172` canonical JSON 规范化、`:132-141` validateChoices 选项归属校验、`:143-151` normalize；[SubmissionItem.java:29-30](../../app/src/main/java/com/allen/questionbank/practice/SubmissionItem.java) replaceAnswer/grade 逐题分数状态。
 
 ---
 
@@ -28,7 +28,7 @@ for (QuestionVersion question : paperQuestions) {
 }
 int maxScore = paperQuestions.stream().mapToInt(QuestionVersion::getScore).sum();
 ```
-**canonical 规范化（顺序无关的关键，[PracticeService.java:146-155](../../app/src/main/java/com/allen/questionbank/practice/PracticeService.java)）**：
+**canonical 规范化（顺序无关的关键，[PracticeService.java:163-172](../../app/src/main/java/com/allen/questionbank/practice/PracticeService.java)）**：
 ```java
 String canonical(String json) {
     JsonNode node = objectMapper.readTree(json);
